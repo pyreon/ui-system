@@ -1,0 +1,28 @@
+{
+  "name": "@pyreon/coolgrid",
+  "version": "0.0.1",
+  "description": "Responsive grid system for Pyreon",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target browser --format esm --sourcemap --external @pyreon/core --external @pyreon/reactivity",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@pyreon/core": "^0.0.1",
+    "@pyreon/reactivity": "^0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "*"
+  }
+}
