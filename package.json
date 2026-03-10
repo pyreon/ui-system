@@ -30,7 +30,7 @@
     "@vitus-labs/tools-lint": "1.9.1-alpha.19",
     "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
     "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
-    "@vitus-labs/tools-vitest": "1.9.1-alpha.1",
+    "@vitus-labs/tools-vitest": "1.11.0",
     "jsdom": "^28.1.0",
     "lerna": "^9.0.5",
     "typescript": "^5.9.3",
