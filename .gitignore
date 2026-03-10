@@ -1,8 +1,15 @@
 node_modules
 dist
+lib
 .turbo
 *.tsbuildinfo
 .env
 .env.local
+.env.*
 .DS_Store
 coverage
+.temp
+stats.html
+npm-debug.*
+.idea
+.vscode

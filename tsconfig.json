@@ -1,20 +1,12 @@
 {
+  "extends": "@vitus-labs/tools-typescript/lib",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "jsx": "preserve",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "strict": true,
     "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
     "customConditions": ["bun"]
   },
-  "exclude": ["node_modules", "**/dist/**"]
+  "exclude": ["node_modules", "**/dist/**", "**/lib/**"]
 }

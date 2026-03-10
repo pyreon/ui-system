@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      pyreon:
+        patterns:
+          - "@pyreon/*"
+      testing:
+        patterns:
+          - "@testing-library/*"
+      biome:
+        patterns:
+          - "@biomejs/*"
+      types:
+        patterns:
+          - "@types/*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
