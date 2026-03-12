@@ -104,6 +104,22 @@
         "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
       },
     },
+    "packages/rocketstyle": {
+      "name": "@pyreon/rocketstyle",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@pyreon/core": "workspace:*",
+        "@pyreon/reactivity": "workspace:*",
+        "@pyreon/styler": "workspace:*",
+        "@pyreon/ui-core": "workspace:*",
+      },
+      "peerDependencies": {
+        "@pyreon/core": "*",
+        "@pyreon/reactivity": "*",
+        "@pyreon/styler": "*",
+        "@pyreon/ui-core": "*",
+      },
+    },
     "packages/styler": {
       "name": "@pyreon/styler",
       "version": "0.0.1",
@@ -425,6 +441,8 @@
     "@pyreon/kinetic-presets": ["@pyreon/kinetic-presets@workspace:packages/kinetic-presets"],
 
     "@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/rocketstyle": ["@pyreon/rocketstyle@workspace:packages/rocketstyle"],
 
     "@pyreon/styler": ["@pyreon/styler@workspace:packages/styler"],
 
@@ -1610,6 +1628,14 @@
 
     "@pyreon/kinetic/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
+    "@pyreon/rocketstyle/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
+
+    "@pyreon/rocketstyle/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
+
+    "@pyreon/rocketstyle/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/rocketstyle/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
     "@pyreon/styler/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
     "@pyreon/styler/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
@@ -1823,6 +1849,10 @@
     "@pyreon/hooks/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@pyreon/kinetic/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/rocketstyle/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/rocketstyle/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@pyreon/styler/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 

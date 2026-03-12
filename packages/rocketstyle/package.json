@@ -1,0 +1,35 @@
+{
+  "name": "@pyreon/rocketstyle",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "source": "./src/index.ts",
+    "import": "./lib/index.js",
+    "types": "./lib/index.d.ts"
+  },
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
+  "files": [
+    "lib",
+    "!lib/**/*.map"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@pyreon/core": "*",
+    "@pyreon/reactivity": "*",
+    "@pyreon/ui-core": "*",
+    "@pyreon/styler": "*"
+  },
+  "devDependencies": {
+    "@pyreon/core": "workspace:*",
+    "@pyreon/reactivity": "workspace:*",
+    "@pyreon/ui-core": "workspace:*",
+    "@pyreon/styler": "workspace:*"
+  }
+}

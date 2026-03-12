@@ -1,7 +1,7 @@
 import path from "node:path"
 import createConfig from "../../vitest.shared"
 
-const config = createConfig({ name: "@pyreon/attrs" })
+const config = createConfig({ name: "@pyreon/rocketstyle" })
 
 export default {
   ...config,
