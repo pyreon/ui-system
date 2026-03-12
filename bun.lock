@@ -37,12 +37,16 @@
       "name": "@pyreon/elements",
       "version": "0.0.1",
       "devDependencies": {
+        "@pyreon/ui-core": "workspace:*",
+        "@pyreon/unistyle": "workspace:*",
         "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
         "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
       },
       "peerDependencies": {
-        "@pyreon/core": "0.0.1",
-        "@pyreon/reactivity": "0.0.1",
+        "@pyreon/core": ">=0.0.1",
+        "@pyreon/reactivity": ">=0.0.1",
+        "@pyreon/ui-core": ">=0.0.1",
+        "@pyreon/unistyle": ">=0.0.1",
       },
     },
     "packages/hooks": {

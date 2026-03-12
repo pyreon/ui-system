@@ -1,246 +1,430 @@
 import { describe, expect, it, vi } from 'vitest'
-import { h, Fragment } from '@pyreon/core'
-import type { VNode, VNodeChild } from '@pyreon/core'
-import { Overlay } from '../Overlay'
-import type { OverlayContext } from '../Overlay'
+import type { ComponentFn, VNode, VNodeChild } from '@pyreon/core'
+
+// ---------------------------------------------------------------------------
+// Mocks — signal() in @pyreon/reactivity returns a Signal object (callable
+// with .set/.update methods), but useOverlay destructures it as a tuple
+// [getter, setter]. We mock signal() to return a simple tuple.
+// ---------------------------------------------------------------------------
+
+vi.mock('@pyreon/reactivity', () => {
+  const signal = <T>(initial: T): [() => T, (v: T | ((c: T) => T)) => void] => {
+    let value = initial
+    const getter = () => value
+    const setter = (v: T | ((c: T) => T)) => {
+      value = typeof v === 'function' ? (v as (c: T) => T)(value) : v
+    }
+    return [getter, setter]
+  }
+
+  return { signal }
+})
+
+// onMount / onUnmount are no-ops outside a renderer
+vi.mock('@pyreon/core', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>
+  return {
+    ...actual,
+    onMount: vi.fn(),
+    onUnmount: vi.fn(),
+    Portal: actual.Fragment, // Portal stub — just renders children like a Fragment
+  }
+})
+
+// render + throttle from @pyreon/ui-core
+vi.mock('@pyreon/ui-core', async () => {
+  const { h } = await import('@pyreon/core')
+
+  const render = (content: unknown, attachProps?: Record<string, unknown>) => {
+    if (!content) return null
+    const t = typeof content
+    if (t === 'string' || t === 'number' || t === 'boolean' || t === 'bigint') {
+      return content as VNodeChild
+    }
+    if (Array.isArray(content)) return content as VNodeChild
+    if (typeof content === 'function') {
+      return h(content as ComponentFn, (attachProps ?? {}) as any)
+    }
+    if (typeof content === 'object' && content !== null) {
+      return content as VNodeChild
+    }
+    return content as VNodeChild
+  }
+
+  const throttle = <F extends (...args: any[]) => any>(fn: F, _delay: number) => {
+    const wrapped = (...args: any[]) => fn(...args)
+    wrapped.cancel = () => {}
+    return wrapped as F & { cancel: () => void }
+  }
+
+  return { render, throttle }
+})
+
+// @pyreon/unistyle — value() used in assignContentPosition
+vi.mock('@pyreon/unistyle', () => ({
+  value: (v: unknown) => (typeof v === 'number' ? `${v}px` : v),
+}))
+
+import { Fragment, h } from '@pyreon/core'
+import { Overlay, useOverlay } from '../Overlay'
 
 const asVNode = (v: unknown) => v as VNode
 
-function captureContext(
-  triggerResult: VNode | null = h('button', null, 'Trigger'),
-): { ctx: OverlayContext; result: VNode } {
-  let ctx: OverlayContext | undefined
-  const result = asVNode(Overlay({
-    trigger: (c) => {
-      ctx = c
-      return triggerResult
-    },
-    content: (c) => h('div', { id: 'content' }, 'Visible Content'),
-  }))
-  if (!ctx) throw new Error('Context was not captured')
-  return { ctx, result }
-}
+// ---------------------------------------------------------------------------
+// useOverlay
+// ---------------------------------------------------------------------------
+describe('useOverlay', () => {
+  describe('active state', () => {
+    it('starts inactive by default', () => {
+      const overlay = useOverlay()
+      expect(overlay.active()).toBe(false)
+    })
 
-describe('Overlay', () => {
-  describe('basic rendering', () => {
+    it('starts active when isOpen is true', () => {
+      const overlay = useOverlay({ isOpen: true })
+      expect(overlay.active()).toBe(true)
+    })
+
+    it('showContent sets active to true', () => {
+      const overlay = useOverlay()
+      overlay.showContent()
+      expect(overlay.active()).toBe(true)
+    })
+
+    it('hideContent sets active to false', () => {
+      const overlay = useOverlay({ isOpen: true })
+      overlay.hideContent()
+      expect(overlay.active()).toBe(false)
+    })
+
+    it('showContent is idempotent', () => {
+      const overlay = useOverlay()
+      overlay.showContent()
+      overlay.showContent()
+      expect(overlay.active()).toBe(true)
+    })
+
+    it('hideContent is idempotent', () => {
+      const overlay = useOverlay()
+      overlay.hideContent()
+      overlay.hideContent()
+      expect(overlay.active()).toBe(false)
+    })
+
+    it('toggle between show/hide works', () => {
+      const overlay = useOverlay()
+      overlay.showContent()
+      expect(overlay.active()).toBe(true)
+      overlay.hideContent()
+      expect(overlay.active()).toBe(false)
+      overlay.showContent()
+      expect(overlay.active()).toBe(true)
+    })
+  })
+
+  describe('callbacks', () => {
+    it('calls onOpen when showing content', () => {
+      let opened = false
+      const overlay = useOverlay({ onOpen: () => { opened = true } })
+      overlay.showContent()
+      expect(opened).toBe(true)
+    })
+
+    it('calls onClose when hiding content', () => {
+      let closed = false
+      const overlay = useOverlay({ isOpen: true, onClose: () => { closed = true } })
+      overlay.hideContent()
+      expect(closed).toBe(true)
+    })
+  })
+
+  describe('alignment signals', () => {
+    it('exposes alignX signal with default', () => {
+      const overlay = useOverlay({ alignX: 'center' })
+      expect(overlay.alignX()).toBe('center')
+    })
+
+    it('exposes alignY signal with default', () => {
+      const overlay = useOverlay({ alignY: 'top' })
+      expect(overlay.alignY()).toBe('top')
+    })
+
+    it('defaults alignX to left', () => {
+      const overlay = useOverlay()
+      expect(overlay.alignX()).toBe('left')
+    })
+
+    it('defaults alignY to bottom', () => {
+      const overlay = useOverlay()
+      expect(overlay.alignY()).toBe('bottom')
+    })
+  })
+
+  describe('ref callbacks', () => {
+    it('provides triggerRef callback', () => {
+      const overlay = useOverlay()
+      expect(typeof overlay.triggerRef).toBe('function')
+    })
+
+    it('provides contentRef callback', () => {
+      const overlay = useOverlay()
+      expect(typeof overlay.contentRef).toBe('function')
+    })
+  })
+
+  describe('blocked state', () => {
+    it('starts unblocked', () => {
+      const overlay = useOverlay()
+      expect(overlay.blocked()).toBe(false)
+    })
+
+    it('setBlocked increments blocked count', () => {
+      const overlay = useOverlay()
+      overlay.setBlocked()
+      expect(overlay.blocked()).toBe(true)
+    })
+
+    it('setUnblocked decrements blocked count', () => {
+      const overlay = useOverlay()
+      overlay.setBlocked()
+      overlay.setUnblocked()
+      expect(overlay.blocked()).toBe(false)
+    })
+
+    it('multiple setBlocked calls require equal setUnblocked calls', () => {
+      const overlay = useOverlay()
+      overlay.setBlocked()
+      overlay.setBlocked()
+      overlay.setUnblocked()
+      expect(overlay.blocked()).toBe(true)
+      overlay.setUnblocked()
+      expect(overlay.blocked()).toBe(false)
+    })
+
+    it('setUnblocked does not go below zero', () => {
+      const overlay = useOverlay()
+      overlay.setUnblocked()
+      overlay.setUnblocked()
+      expect(overlay.blocked()).toBe(false)
+    })
+  })
+
+  describe('setupListeners', () => {
+    it('returns a cleanup function', () => {
+      const overlay = useOverlay()
+      const cleanup = overlay.setupListeners()
+      expect(typeof cleanup).toBe('function')
+      cleanup()
+    })
+  })
+
+  describe('disabled state', () => {
+    it('forces active to false when disabled', () => {
+      const overlay = useOverlay({ isOpen: true, disabled: true })
+      expect(overlay.active()).toBe(false)
+    })
+  })
+
+  describe('each hook instance has independent state', () => {
+    it('two useOverlay instances do not share state', () => {
+      const overlay1 = useOverlay()
+      const overlay2 = useOverlay()
+
+      overlay1.showContent()
+      expect(overlay1.active()).toBe(true)
+      expect(overlay2.active()).toBe(false)
+
+      overlay2.showContent()
+      expect(overlay1.active()).toBe(true)
+      expect(overlay2.active()).toBe(true)
+
+      overlay1.hideContent()
+      expect(overlay1.active()).toBe(false)
+      expect(overlay2.active()).toBe(true)
+    })
+  })
+
+  describe('Provider', () => {
+    it('exposes Provider component', () => {
+      const overlay = useOverlay()
+      expect(typeof overlay.Provider).toBe('function')
+    })
+  })
+
+  describe('static align property', () => {
+    it('returns align value passed in props', () => {
+      const overlay = useOverlay({ align: 'top' })
+      expect(overlay.align).toBe('top')
+    })
+
+    it('defaults align to bottom', () => {
+      const overlay = useOverlay()
+      expect(overlay.align).toBe('bottom')
+    })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Overlay component
+// ---------------------------------------------------------------------------
+describe('Overlay component', () => {
+  describe('VNode structure', () => {
     it('returns a Fragment', () => {
-      const { result } = captureContext()
+      const result = asVNode(Overlay({
+        trigger: h('button', null, 'Click'),
+        children: h('div', null, 'Panel'),
+      }))
       expect(result.type).toBe(Fragment)
     })
 
-    it('renders the trigger VNode as first child', () => {
-      const { result } = captureContext()
-      const trigger = asVNode(result.children[0])
-      expect(trigger.type).toBe('button')
-      expect(trigger.children).toContain('Trigger')
-    })
-
-    it('has a reactive function as second child for content', () => {
-      const { result } = captureContext()
+    it('has trigger as first child and reactive function as second child', () => {
+      const result = asVNode(Overlay({
+        trigger: h('button', null, 'Click'),
+        children: h('div', null, 'Panel'),
+      }))
+      expect(result.children.length).toBe(2)
       expect(typeof result.children[1]).toBe('function')
     })
-  })
 
-  describe('overlay context (isOpen, open, close, toggle)', () => {
-    it('starts closed (isOpen returns false)', () => {
-      const { ctx } = captureContext()
-      expect(ctx.isOpen()).toBe(false)
-    })
-
-    it('open() sets isOpen to true', () => {
-      const { ctx } = captureContext()
-      ctx.open()
-      expect(ctx.isOpen()).toBe(true)
-    })
-
-    it('close() sets isOpen to false', () => {
-      const { ctx } = captureContext()
-      ctx.open()
-      expect(ctx.isOpen()).toBe(true)
-      ctx.close()
-      expect(ctx.isOpen()).toBe(false)
-    })
-
-    it('toggle() flips isOpen from false to true', () => {
-      const { ctx } = captureContext()
-      expect(ctx.isOpen()).toBe(false)
-      ctx.toggle()
-      expect(ctx.isOpen()).toBe(true)
-    })
-
-    it('toggle() flips isOpen from true to false', () => {
-      const { ctx } = captureContext()
-      ctx.open()
-      expect(ctx.isOpen()).toBe(true)
-      ctx.toggle()
-      expect(ctx.isOpen()).toBe(false)
-    })
-
-    it('multiple toggles work correctly', () => {
-      const { ctx } = captureContext()
-      ctx.toggle() // false -> true
-      ctx.toggle() // true -> false
-      ctx.toggle() // false -> true
-      expect(ctx.isOpen()).toBe(true)
-    })
-
-    it('open() is idempotent', () => {
-      const { ctx } = captureContext()
-      ctx.open()
-      ctx.open()
-      expect(ctx.isOpen()).toBe(true)
-    })
-
-    it('close() is idempotent', () => {
-      const { ctx } = captureContext()
-      ctx.close()
-      ctx.close()
-      expect(ctx.isOpen()).toBe(false)
-    })
-  })
-
-  describe('reactive content rendering', () => {
     it('content function returns null when closed', () => {
-      const { result } = captureContext()
+      const result = asVNode(Overlay({
+        trigger: h('button', null, 'Click'),
+        children: h('div', null, 'Panel'),
+      }))
       const contentFn = result.children[1] as () => VNodeChild
       expect(contentFn()).toBeNull()
     })
 
-    it('content function returns content VNode when open', () => {
-      const { ctx, result } = captureContext()
-      ctx.open()
+    it('content function returns Portal VNode when opened via isOpen', () => {
+      const result = asVNode(Overlay({
+        trigger: h('button', null, 'Click'),
+        children: h('div', null, 'Panel'),
+        isOpen: true,
+      }))
       const contentFn = result.children[1] as () => VNodeChild
-      const contentResult = asVNode(contentFn())
-      expect(contentResult.type).toBe('div')
-      expect(contentResult.props.id).toBe('content')
-      expect(contentResult.children).toContain('Visible Content')
-    })
-
-    it('content function reflects toggle state changes', () => {
-      const { ctx, result } = captureContext()
-      const contentFn = result.children[1] as () => VNodeChild
-
-      // Initially closed
-      expect(contentFn()).toBeNull()
-
-      // Open
-      ctx.toggle()
+      // Portal is mocked as Fragment, so we just check it returns something
       expect(contentFn()).not.toBeNull()
-
-      // Close
-      ctx.toggle()
-      expect(contentFn()).toBeNull()
     })
   })
 
-  describe('context passed to both trigger and content', () => {
-    it('provides the same context to trigger and content', () => {
-      let triggerCtx: OverlayContext | undefined
-      let contentCtx: OverlayContext | undefined
+  describe('trigger rendered via ComponentFn receives overlay props', () => {
+    it('passes active and aria props to trigger component', () => {
+      const TriggerComp: ComponentFn = (props: any) =>
+        h('button', null, props.active ? 'Open' : 'Closed')
 
       const result = asVNode(Overlay({
-        trigger: (ctx) => {
-          triggerCtx = ctx
-          return h('button', null, 'Trigger')
-        },
-        content: (ctx) => {
-          contentCtx = ctx
-          return h('div', null, 'Content')
-        },
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
       }))
-
-      if (!triggerCtx) throw new Error('trigger ctx missing')
-
-      // Open so content function runs
-      triggerCtx.open()
-      const contentFn = result.children[1] as () => VNodeChild
-      contentFn() // This invokes the content render function
-
-      if (!contentCtx) throw new Error('content ctx missing')
-
-      expect(triggerCtx.isOpen).toBe(contentCtx.isOpen)
-      expect(triggerCtx.open).toBe(contentCtx.open)
-      expect(triggerCtx.close).toBe(contentCtx.close)
-      expect(triggerCtx.toggle).toBe(contentCtx.toggle)
+      const triggerVNode = asVNode(result.children[0])
+      expect(triggerVNode.type).toBe(TriggerComp)
+      expect(triggerVNode.props.active).toBe(false)
+      expect(triggerVNode.props['aria-expanded']).toBe(false)
+      expect(triggerVNode.props['aria-haspopup']).toBe('menu')
     })
 
-    it('content render function can use close to close overlay', () => {
-      let triggerCtx: OverlayContext | undefined
-      let contentCtx: OverlayContext | undefined
+    it('passes active=true when isOpen is true', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
 
       const result = asVNode(Overlay({
-        trigger: (ctx) => {
-          triggerCtx = ctx
-          return h('button', null, 'Trigger')
-        },
-        content: (ctx) => {
-          contentCtx = ctx
-          return h('div', null, h('button', { onClick: ctx.close }, 'Close'))
-        },
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        isOpen: true,
       }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(triggerVNode.props.active).toBe(true)
+      expect(triggerVNode.props['aria-expanded']).toBe(true)
+    })
 
-      if (!triggerCtx) throw new Error('trigger ctx missing')
-      triggerCtx.open()
-      expect(triggerCtx.isOpen()).toBe(true)
+    it('passes aria-haspopup=dialog for modal type', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
 
-      // Invoke the reactive content function to trigger content render
-      const contentFn = result.children[1] as () => VNodeChild
-      contentFn()
+      const result = asVNode(Overlay({
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        type: 'modal',
+      }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(triggerVNode.props['aria-haspopup']).toBe('dialog')
+    })
 
-      if (!contentCtx) throw new Error('content ctx missing')
-      contentCtx.close()
-      expect(triggerCtx.isOpen()).toBe(false)
+    it('passes aria-haspopup=true for tooltip type', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
+
+      const result = asVNode(Overlay({
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        type: 'tooltip',
+      }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(triggerVNode.props['aria-haspopup']).toBe('true')
+    })
+
+    it('passes ref via triggerRefName prop', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
+
+      const result = asVNode(Overlay({
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        triggerRefName: 'innerRef',
+      }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(typeof triggerVNode.props.innerRef).toBe('function')
+      // default 'ref' should not be set
+      expect(triggerVNode.props.ref).toBeUndefined()
+    })
+
+    it('passes showContent/hideContent for manual openOn', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
+
+      const result = asVNode(Overlay({
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        openOn: 'manual',
+      }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(typeof triggerVNode.props.showContent).toBe('function')
+      expect(typeof triggerVNode.props.hideContent).toBe('function')
+    })
+
+    it('does not pass showContent/hideContent for click openOn', () => {
+      const TriggerComp: ComponentFn = (props: any) => h('button', null, 'T')
+
+      const result = asVNode(Overlay({
+        trigger: TriggerComp,
+        children: h('div', null, 'Panel'),
+        openOn: 'click',
+        closeOn: 'click',
+      }))
+      const triggerVNode = asVNode(result.children[0])
+      expect(triggerVNode.props.showContent).toBeUndefined()
+      expect(triggerVNode.props.hideContent).toBeUndefined()
     })
   })
 
-  describe('trigger and content render functions', () => {
-    it('calls trigger render function once', () => {
-      const triggerFn = vi.fn((_ctx: OverlayContext) => h('button', null, 'Trigger'))
-      Overlay({
-        trigger: triggerFn,
-        content: (_ctx) => h('div', null, 'Content'),
-      })
-      expect(triggerFn).toHaveBeenCalledTimes(1)
-    })
-
-    it('trigger can return null', () => {
-      const { result } = captureContext(null)
-      expect(result.children[0]).toBeNull()
-    })
-
-    it('content can return null', () => {
-      let ctx: OverlayContext | undefined
+  describe('trigger as VNode is passed through', () => {
+    it('returns trigger VNode as-is when not a function', () => {
+      const trigger = h('button', { id: 'btn' }, 'Click')
       const result = asVNode(Overlay({
-        trigger: (c) => {
-          ctx = c
-          return h('button', null, 'Trigger')
-        },
-        content: (_c) => null,
+        trigger,
+        children: h('div', null, 'Panel'),
       }))
-
-      if (!ctx) throw new Error('ctx missing')
-      ctx.open()
-      const contentFn = result.children[1] as () => VNodeChild
-      expect(contentFn()).toBeNull()
+      // render() passes VNode objects through directly
+      const triggerChild = asVNode(result.children[0])
+      expect(triggerChild.type).toBe('button')
+      expect(triggerChild.props.id).toBe('btn')
     })
   })
 
-  describe('each Overlay instance has independent state', () => {
-    it('two overlays do not share state', () => {
-      const { ctx: ctx1 } = captureContext()
-      const { ctx: ctx2 } = captureContext()
+  describe('displayName and metadata', () => {
+    it('has displayName set', () => {
+      expect(Overlay.displayName).toBeDefined()
+      expect(Overlay.displayName).toContain('Overlay')
+    })
 
-      ctx1.open()
-      expect(ctx1.isOpen()).toBe(true)
-      expect(ctx2.isOpen()).toBe(false)
-
-      ctx2.toggle()
-      expect(ctx1.isOpen()).toBe(true)
-      expect(ctx2.isOpen()).toBe(true)
-
-      ctx1.close()
-      expect(ctx1.isOpen()).toBe(false)
-      expect(ctx2.isOpen()).toBe(true)
+    it('has PYREON__COMPONENT set', () => {
+      expect(Overlay.PYREON__COMPONENT).toBeDefined()
+      expect(Overlay.PYREON__COMPONENT).toContain('Overlay')
     })
   })
 })

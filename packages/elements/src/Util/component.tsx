@@ -1,0 +1,44 @@
+/**
+ * Utility wrapper that injects className and/or style props into its
+ * children without adding any DOM nodes of its own. Uses the core `render`
+ * helper to clone children with the merged props.
+ */
+import { render } from '@pyreon/ui-core'
+import type { VNodeChild } from '@pyreon/core'
+import { PKG_NAME } from '~/constants'
+import type { PyreonComponent } from '~/types'
+
+export interface Props {
+  /**
+   * Children to be rendered within **Util** component.
+   */
+  children: VNodeChild
+  /**
+   * Class name(s) to be added to children component.
+   */
+  className?: string | string[]
+  /**
+   * Style property to extend children component inline styles
+   */
+  style?: Record<string, unknown>
+}
+
+const Component: PyreonComponent<Props> = ({ children, className, style }) => {
+  const mergedClasses = Array.isArray(className)
+    ? className.join(' ')
+    : className
+
+  const finalProps: Record<string, any> = {}
+  if (style) finalProps.style = style
+  if (mergedClasses) finalProps.className = mergedClasses
+
+  return render(children, finalProps)
+}
+
+const name = `${PKG_NAME}/Util` as const
+
+Component.displayName = name
+Component.pkgName = PKG_NAME
+Component.PYREON__COMPONENT = name
+
+export default Component

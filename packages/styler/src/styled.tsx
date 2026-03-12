@@ -1,108 +1,183 @@
+/**
+ * styled() component factory. Creates Pyreon components that inject CSS
+ * class names from tagged template literals.
+ *
+ * Supports:
+ * - styled('div')`...` and styled(Component)`...`
+ * - styled.div`...` (via Proxy)
+ * - `as` prop for polymorphic rendering
+ * - $-prefixed transient props (not forwarded to DOM)
+ * - Custom shouldForwardProp for per-component prop filtering
+ * - Static path optimization (templates with no dynamic interpolations)
+ * - Boost specificity via doubled selector
+ *
+ * CSS nesting (`&` selectors) works natively — the resolver passes CSS
+ * through without transformation, so `&:hover`, `&::before`, etc. work
+ * as-is in browsers supporting CSS Nesting (all modern browsers).
+ */
+import type { ComponentFn, VNode } from '@pyreon/core'
 import { h } from '@pyreon/core'
-import type { Props, ComponentFn } from '@pyreon/core'
+import { buildProps } from './forward'
+import { type Interpolation, normalizeCSS, resolve } from './resolve'
+import { isDynamic } from './shared'
 import { sheet } from './sheet'
-import { CSSResult, resolveCSS } from './css'
-import type { Interpolation } from './css'
+import { useTheme } from './ThemeProvider'
 
-/** Set of known HTML attributes + events to forward to DOM elements. */
-const HTML_PROPS = new Set([
-  'id', 'class', 'className', 'style', 'title', 'role', 'tabIndex', 'tabindex',
-  'href', 'src', 'alt', 'type', 'name', 'value', 'checked', 'disabled', 'readonly',
-  'placeholder', 'for', 'htmlFor', 'action', 'method', 'target', 'rel',
-  'width', 'height', 'min', 'max', 'step', 'pattern', 'required', 'autofocus',
-  'autoComplete', 'autocomplete', 'hidden', 'draggable', 'contentEditable',
-  'spellCheck', 'lang', 'dir', 'loading', 'crossOrigin', 'referrerPolicy',
-  'ref', 'key', 'children',
-])
-
-function shouldForward(key: string): boolean {
-  if (HTML_PROPS.has(key)) return true
-  if (key.startsWith('on')) return true
-  if (key.startsWith('data-') || key.startsWith('aria-')) return true
-  return false
-}
+type Tag = string | ComponentFn<any>
 
 export interface StyledOptions {
-  /** Custom prop filter. Return true to forward to DOM. */
+  /** Custom prop filter. Return true to forward the prop to the DOM element. */
   shouldForwardProp?: (prop: string) => boolean
+  /**
+   * Double the class selector to raise specificity from (0,1,0) to (0,2,0).
+   * Ensures this component's styles override inner library components
+   * regardless of CSS source order.
+   */
+  boost?: boolean
 }
 
-type StyledTagFn = (
+const getDisplayName = (tag: Tag): string =>
+  typeof tag === 'string'
+    ? tag
+    : (tag as any).displayName || (tag as any).name || 'Component'
+
+// Component cache: same template literal + tag + no options → same component.
+// WeakMap on `strings` (TemplateStringsArray is object-identity per source location).
+const staticComponentCache = new WeakMap<
+  TemplateStringsArray,
+  Map<Tag, ComponentFn>
+>()
+
+// Single-entry hot cache — just 3 reference comparisons, no Map/WeakMap overhead.
+let _hotStrings: TemplateStringsArray | null = null
+let _hotTag: Tag | null = null
+let _hotComponent: ComponentFn | null = null
+
+const createStyledComponent = (
+  tag: Tag,
   strings: TemplateStringsArray,
-  ...values: Interpolation[]
-) => ComponentFn
+  values: Interpolation[],
+  options?: StyledOptions,
+): ComponentFn => {
+  // Ultra-fast hot cache: 3 reference comparisons → return immediately
+  if (values.length === 0 && !options) {
+    if (strings === _hotStrings && tag === _hotTag) return _hotComponent!
+
+    // WeakMap fallback for alternating patterns
+    const tagMap = staticComponentCache.get(strings)
+    if (tagMap) {
+      const cached = tagMap.get(tag)
+      if (cached) {
+        _hotStrings = strings
+        _hotTag = tag
+        _hotComponent = cached
+        return cached
+      }
+    }
+  }
+
+  // Fast check: no values means no dynamic interpolations — avoids .some() scan
+  const hasDynamicValues = values.length > 0 && values.some(isDynamic)
+  const customFilter = options ? options.shouldForwardProp : undefined
+  const boost = options ? (options.boost ?? false) : false
+
+  // STATIC FAST PATH: no function interpolations → compute class once at creation time
+  if (!hasDynamicValues) {
+    // Inline resolve for the common no-values case
+    const raw = values.length === 0 ? strings[0]! : resolve(strings, values, {})
+    const cssText = normalizeCSS(raw)
+    const hasCss = cssText.length > 0
+
+    const staticClassName = hasCss ? sheet.insert(cssText, boost) : ''
+
+    const StaticStyled: ComponentFn = (rawProps: Record<string, any>): VNode | null => {
+      const finalTag = rawProps.as || tag
+      const isDOM = typeof finalTag === 'string'
+      const finalProps = buildProps(
+        rawProps,
+        staticClassName,
+        isDOM,
+        customFilter,
+      )
+
+      return h(finalTag as string, finalProps, ...(Array.isArray(rawProps.children) ? rawProps.children : rawProps.children != null ? [rawProps.children] : []))
+    }
+
+    ;(StaticStyled as any).displayName = `styled(${getDisplayName(tag)})`
+
+    // Store in component cache + hot cache for future reuse
+    if (!options && values.length === 0) {
+      let tagMap = staticComponentCache.get(strings)
+      if (!tagMap) {
+        tagMap = new Map()
+        staticComponentCache.set(strings, tagMap)
+      }
+      tagMap.set(tag, StaticStyled)
+      _hotStrings = strings
+      _hotTag = tag
+      _hotComponent = StaticStyled
+    }
+
+    return StaticStyled
+  }
+
+  // DYNAMIC PATH: resolve CSS on every render with theme/props.
+  const DynamicStyled: ComponentFn = (rawProps: Record<string, any>): VNode | null => {
+    const theme = useTheme()
+    const allProps = { ...rawProps, theme }
+    const cssText = normalizeCSS(resolve(strings, values, allProps))
+
+    const className = cssText.length > 0 ? sheet.insert(cssText, boost) : ''
+
+    const finalTag = rawProps.as || tag
+    const isDOM = typeof finalTag === 'string'
+    const finalProps = buildProps(
+      rawProps,
+      className,
+      isDOM,
+      customFilter,
+    )
+
+    return h(finalTag as string, finalProps, ...(Array.isArray(rawProps.children) ? rawProps.children : rawProps.children != null ? [rawProps.children] : []))
+  }
+
+  ;(DynamicStyled as any).displayName = `styled(${getDisplayName(tag)})`
+  return DynamicStyled
+}
+
+/** Factory function: styled(tag) returns a tagged template function. */
+const styledFactory = (tag: Tag, options?: StyledOptions) => {
+  const templateFn = (
+    strings: TemplateStringsArray,
+    ...values: Interpolation[]
+  ) => createStyledComponent(tag, strings, values, options)
+
+  return templateFn
+}
 
 /**
- * Create a styled Nova component.
- *
- * @example
- * const Button = styled('button')`
- *   background: ${props => props.primary ? 'blue' : 'gray'};
- *   color: white;
- *   padding: 8px 16px;
- * `
- *
- * // Usage: h(Button, { primary: true }, "Click me")
+ * Main styled export. Supports both calling conventions:
+ * - `styled('div')` or `styled(Component)` → returns tagged template function
+ * - `styled('div', { shouldForwardProp })` → with custom prop filtering
+ * - `styled.div` → shorthand via Proxy (no options)
  */
-export function styled(tag: string, options?: StyledOptions): StyledTagFn {
-  const filter = options?.shouldForwardProp ?? shouldForward
+// Cache template functions per tag to avoid closure allocation on every Proxy get
+const proxyCache = new Map<string, Function>()
 
-  return (strings: TemplateStringsArray, ...values: Interpolation[]): ComponentFn => {
-    const template = new CSSResult(strings, values)
-    const isDynamic = values.some(v => typeof v === 'function')
-
-    // Static fast path — compute class once
-    let staticClass: string | undefined
-    if (!isDynamic) {
-      const css = resolveCSS(template)
-      staticClass = css ? sheet.insert(css) : undefined
+export const styled: typeof styledFactory &
+  Record<
+    string,
+    (strings: TemplateStringsArray, ...values: Interpolation[]) => ComponentFn
+  > = new Proxy(styledFactory as any, {
+  get(_target: unknown, prop: string) {
+    if (prop === 'prototype' || prop === '$$typeof') return undefined
+    // styled.div`...`, styled.span`...`, etc.
+    let fn = proxyCache.get(prop)
+    if (!fn) {
+      fn = (strings: TemplateStringsArray, ...values: Interpolation[]) =>
+        createStyledComponent(prop, strings, values)
+      proxyCache.set(prop, fn)
     }
-
-    const Component: ComponentFn = (props: Props) => {
-      // Resolve CSS (static or dynamic)
-      let className: string | undefined
-      if (staticClass) {
-        className = staticClass
-      } else {
-        const css = resolveCSS(template, props as Record<string, unknown>)
-        className = css ? sheet.insert(css) : undefined
-      }
-
-      // Merge className with any existing class prop
-      const existingClass = props.class || props.className
-      const finalClass = existingClass
-        ? `${className ?? ''} ${existingClass}`.trim()
-        : className
-
-      // Filter props for DOM forwarding
-      const domProps: Record<string, unknown> = {}
-      for (const key in props) {
-        if (key === 'class' || key === 'className' || key === 'children') continue
-        if (filter(key)) {
-          domProps[key] = props[key]
-        }
-      }
-
-      if (finalClass) domProps.class = finalClass
-
-      // Support `as` prop for polymorphic rendering
-      const renderTag = (props as Record<string, unknown>).as as string ?? tag
-
-      return h(renderTag, domProps as Props, ...(Array.isArray(props.children) ? props.children : props.children != null ? [props.children] : []))
-    }
-
-    return Component
-  }
-}
-
-/** Proxy for styled.div`...`, styled.span`...` etc. */
-const styledProxy = new Proxy(styled, {
-  get(target, prop: string) {
-    if (typeof prop === 'string') {
-      return target(prop)
-    }
-    return undefined
+    return fn
   },
-}) as typeof styled & Record<string, StyledTagFn>
-
-export { styledProxy as styledElements }
+})

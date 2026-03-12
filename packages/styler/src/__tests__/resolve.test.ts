@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { css, CSSResult, resolveCSS } from '../css'
+import { css } from '../css'
+import { CSSResult, normalizeCSS, resolve, resolveValue } from '../resolve'
 
 // Helper to create a TemplateStringsArray
 const tsa = (strings: readonly string[]): TemplateStringsArray => {
@@ -8,35 +9,35 @@ const tsa = (strings: readonly string[]): TemplateStringsArray => {
   return arr
 }
 
-describe('resolveCSS', () => {
+describe('resolve', () => {
   describe('primitive interpolations', () => {
     it('resolves strings', () => {
-      const result = resolveCSS(new CSSResult(tsa(['color: ', ';']), ['red']))
+      const result = resolve(tsa(['color: ', ';']), ['red'], {})
       expect(result).toBe('color: red;')
     })
 
     it('resolves numbers', () => {
-      const result = resolveCSS(new CSSResult(tsa(['flex: ', ';']), [1]))
+      const result = resolve(tsa(['flex: ', ';']), [1], {})
       expect(result).toBe('flex: 1;')
     })
 
     it('resolves null as empty string', () => {
-      const result = resolveCSS(new CSSResult(tsa(['a', 'b']), [null]))
+      const result = resolve(tsa(['a', 'b']), [null], {})
       expect(result).toBe('ab')
     })
 
     it('resolves undefined as empty string', () => {
-      const result = resolveCSS(new CSSResult(tsa(['a', 'b']), [undefined]))
+      const result = resolve(tsa(['a', 'b']), [undefined], {})
       expect(result).toBe('ab')
     })
 
     it('resolves false as empty string', () => {
-      const result = resolveCSS(new CSSResult(tsa(['a', 'b']), [false]))
+      const result = resolve(tsa(['a', 'b']), [false], {})
       expect(result).toBe('ab')
     })
 
     it('resolves true as empty string', () => {
-      const result = resolveCSS(new CSSResult(tsa(['a', 'b']), [true]))
+      const result = resolve(tsa(['a', 'b']), [true], {})
       expect(result).toBe('ab')
     })
   })
@@ -44,39 +45,33 @@ describe('resolveCSS', () => {
   describe('function interpolations', () => {
     it('calls functions with props and uses return value', () => {
       const fn = (props: Record<string, unknown>) => props.color as string
-      const result = resolveCSS(
-        new CSSResult(tsa(['color: ', ';']), [fn]),
-        { color: 'blue' },
-      )
+      const result = resolve(tsa(['color: ', ';']), [fn], { color: 'blue' })
       expect(result).toBe('color: blue;')
     })
 
     it('resolves nested function results recursively', () => {
       const fn = () => () => 'red'
-      const result = resolveCSS(new CSSResult(tsa(['color: ', ';']), [fn]))
+      const result = resolve(tsa(['color: ', ';']), [fn], {})
       expect(result).toBe('color: red;')
     })
 
     it('handles functions returning null', () => {
       const fn = () => null
-      const result = resolveCSS(new CSSResult(tsa(['a', 'b']), [fn]))
+      const result = resolve(tsa(['a', 'b']), [fn], {})
       expect(result).toBe('ab')
     })
 
     it('handles functions returning false (conditional)', () => {
       const fn = (props: Record<string, unknown>) =>
         props.active ? 'color: red;' : false
-      const result = resolveCSS(
-        new CSSResult(tsa(['', '']), [fn]),
-        { active: false },
-      )
+      const result = resolve(tsa(['', '']), [fn], { active: false })
       expect(result).toBe('')
     })
 
     it('uses empty object when no props provided', () => {
       const fn = (props: Record<string, unknown>) =>
         Object.keys(props).length === 0 ? 'empty' : 'has-props'
-      const result = resolveCSS(new CSSResult(tsa(['', '']), [fn]))
+      const result = resolve(tsa(['', '']), [fn], {})
       expect(result).toBe('empty')
     })
   })
@@ -84,34 +79,43 @@ describe('resolveCSS', () => {
   describe('CSSResult interpolations', () => {
     it('resolves nested CSSResult', () => {
       const inner = css`color: red;`
-      const result = resolveCSS(new CSSResult(tsa(['', '']), [inner]))
+      const result = resolveValue(inner, {})
       expect(result).toBe('color: red;')
     })
 
     it('resolves deeply nested CSSResults', () => {
       const inner1 = css`color: red;`
       const inner2 = css`${inner1} display: flex;`
-      const result = resolveCSS(new CSSResult(tsa(['', '']), [inner2]))
+      const result = resolveValue(inner2, {})
       expect(result).toBe('color: red; display: flex;')
     })
 
     it('resolves CSSResult with function interpolations', () => {
       const inner = css`color: ${((p: Record<string, unknown>) => p.color) as any};`
-      const result = resolveCSS(
-        new CSSResult(tsa(['', '']), [inner]),
-        { color: 'green' },
-      )
+      const result = resolveValue(inner, { color: 'green' })
       expect(result).toBe('color: green;')
+    })
+  })
+
+  describe('array interpolations', () => {
+    it('resolves arrays of values', () => {
+      const result = resolve(tsa(['', '']), [['a', 'b', 'c']], {})
+      expect(result).toBe('abc')
+    })
+
+    it('resolves arrays with CSSResults', () => {
+      const inner = css`color: red;`
+      const result = resolveValue([inner, ' display: flex;'], {})
+      expect(result).toBe('color: red; display: flex;')
     })
   })
 
   describe('combined patterns', () => {
     it('handles multiple interpolation types', () => {
-      const result = resolveCSS(
-        new CSSResult(
-          tsa(['display: ', '; color: ', '; flex: ', ';']),
-          ['flex', 'red', 1],
-        ),
+      const result = resolve(
+        tsa(['display: ', '; color: ', '; flex: ', ';']),
+        ['flex', 'red', 1],
+        {},
       )
       expect(result).toBe('display: flex; color: red; flex: 1;')
     })
@@ -119,54 +123,66 @@ describe('resolveCSS', () => {
     it('handles conditional CSS with logical AND (truthy)', () => {
       const condition = true
       const conditionalCss = condition && css`color: red;`
-      const result = resolveCSS(new CSSResult(tsa(['', '']), [conditionalCss]))
+      const result = resolveValue(conditionalCss, {})
       expect(result).toBe('color: red;')
     })
 
     it('handles conditional CSS with logical AND (falsy)', () => {
       const condition = false
       const conditionalCss = condition && css`color: red;`
-      const result = resolveCSS(new CSSResult(tsa(['', '']), [conditionalCss]))
+      const result = resolveValue(conditionalCss, {})
       expect(result).toBe('')
     })
   })
 })
 
-describe('normalizeCSS (via resolveCSS)', () => {
-  const normalize = (raw: string) =>
-    resolveCSS(new CSSResult(tsa([raw]), []))
+describe('CSSResult', () => {
+  it('stores strings and values as readonly properties', () => {
+    const strings = ['color: ', ';'] as unknown as TemplateStringsArray
+    const values = ['red']
+    const result = new CSSResult(strings, values)
+    expect(result.strings).toBe(strings)
+    expect(result.values).toBe(values)
+  })
 
+  it('toString resolves with empty props', () => {
+    const result = css`color: red;`
+    expect(result.toString()).toBe('color: red;')
+  })
+})
+
+describe('normalizeCSS', () => {
   describe('comment stripping', () => {
     it('strips CSS block comments', () => {
-      expect(normalize('/* comment */ color: red;')).toBe('color: red;')
+      expect(normalizeCSS('/* comment */ color: red;')).toBe('color: red;')
     })
 
     it('strips multiple block comments', () => {
       expect(
-        normalize('/* BASE */ color: red; /* HOVER */ font-size: 1rem;'),
+        normalizeCSS('/* BASE */ color: red; /* HOVER */ font-size: 1rem;'),
       ).toBe('color: red; font-size: 1rem;')
     })
 
     it('strips multiline block comments', () => {
       expect(
-        normalize('/* --------\n   BASE STATE\n   -------- */\nheight: 3rem;'),
+        normalizeCSS('/* --------\n   BASE STATE\n   -------- */\nheight: 3rem;'),
       ).toBe('height: 3rem;')
     })
 
     it('strips JS-style line comments', () => {
-      expect(normalize('// this is not valid CSS\ncolor: red;')).toBe(
+      expect(normalizeCSS('// this is not valid CSS\ncolor: red;')).toBe(
         'color: red;',
       )
     })
 
     it('preserves :// in URLs', () => {
       expect(
-        normalize('background: url(https://example.com/img.png);'),
+        normalizeCSS('background: url(https://example.com/img.png);'),
       ).toContain('https://example.com/img.png')
     })
 
     it('strips line comments but preserves URL protocols', () => {
-      const result = normalize(
+      const result = normalizeCSS(
         '// comment\nbackground: url(https://example.com/img.png);',
       )
       expect(result).toContain('https://example.com/img.png')
@@ -174,57 +190,67 @@ describe('normalizeCSS (via resolveCSS)', () => {
     })
 
     it('handles unterminated block comment', () => {
-      expect(normalize('color: red; /* never closed')).toBe('color: red;')
+      expect(normalizeCSS('color: red; /* never closed')).toBe('color: red;')
     })
 
     it('handles unterminated line comment', () => {
-      expect(normalize('color: red;\n// trailing comment')).toBe('color: red;')
+      expect(normalizeCSS('color: red;\n// trailing comment')).toBe('color: red;')
     })
   })
 
   describe('whitespace handling', () => {
     it('collapses whitespace', () => {
-      expect(normalize('  color:  red;   font-size:  1rem;  ')).toBe(
+      expect(normalizeCSS('  color:  red;   font-size:  1rem;  ')).toBe(
         'color: red; font-size: 1rem;',
       )
     })
 
     it('converts tabs and newlines to spaces', () => {
-      expect(normalize('color:\tred;\nfont-size:\t1rem;')).toBe(
+      expect(normalizeCSS('color:\tred;\nfont-size:\t1rem;')).toBe(
         'color: red; font-size: 1rem;',
       )
     })
 
     it('collapses multiple spaces', () => {
-      expect(normalize('color:    red;')).toBe('color: red;')
+      expect(normalizeCSS('color:    red;')).toBe('color: red;')
     })
 
     it('trims leading and trailing whitespace', () => {
-      expect(normalize('   color: red;   ')).toBe('color: red;')
+      expect(normalizeCSS('   color: red;   ')).toBe('color: red;')
     })
 
     it('handles carriage returns', () => {
-      expect(normalize('color: red;\r\nfont-size: 1rem;')).toBe(
+      expect(normalizeCSS('color: red;\r\nfont-size: 1rem;')).toBe(
         'color: red; font-size: 1rem;',
       )
     })
   })
 
+  describe('semicolon handling', () => {
+    it('removes redundant semicolons after {', () => {
+      expect(normalizeCSS('.foo {; color: red; }')).toBe('.foo { color: red; }')
+    })
+
+    it('removes redundant semicolons after }', () => {
+      expect(normalizeCSS('.foo { color: red; }; .bar { }')).toBe('.foo { color: red; } .bar { }')
+    })
+  })
+
   describe('edge cases', () => {
     it('returns empty string for empty input', () => {
-      expect(normalize('')).toBe('')
+      expect(normalizeCSS('')).toBe('')
     })
 
     it('returns empty string for whitespace-only input', () => {
-      expect(normalize('   \n\t  ')).toBe('')
+      expect(normalizeCSS('   \n\t  ')).toBe('')
     })
 
     it('handles CSS with braces', () => {
-      expect(normalize('.foo { color: red; }')).toBe('.foo { color: red; }')
+      expect(normalizeCSS('.foo { color: red; }')).toBe('.foo { color: red; }')
     })
 
     it('handles @media rules', () => {
-      const result = normalize(
+      const result = normalizeCSS(
         '@media (min-width: 48em) { color: blue; }',
       )
       expect(result).toContain('@media')

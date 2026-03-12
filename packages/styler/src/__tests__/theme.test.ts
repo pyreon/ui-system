@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ThemeContext, useTheme } from '../theme'
+import { ThemeContext, useTheme } from '../ThemeProvider'
 
 describe('ThemeContext', () => {
   it('is a Context object', () => {
@@ -18,7 +18,6 @@ describe('useTheme', () => {
   })
 
   it('returns the default theme (empty object) when called outside a provider', () => {
-    // useTheme calls useContext(ThemeContext) which returns the default value
     const theme = useTheme()
     expect(theme).toEqual({})
   })
@@ -28,7 +27,6 @@ describe('useTheme', () => {
       primary: string
       spacing: number
     }
-    // Type-level test: useTheme<MyTheme>() should compile
     const theme = useTheme<MyTheme>()
     expect(theme).toBeDefined()
   })

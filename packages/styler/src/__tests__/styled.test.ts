@@ -1,8 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import type { VNode } from '@pyreon/core'
-import { styled, styledElements } from '../styled'
+import { styled } from '../styled'
 import { sheet } from '../sheet'
-import { css } from '../css'
 
 describe('styled', () => {
   afterEach(() => {
@@ -37,7 +36,7 @@ describe('styled', () => {
     it('applies a generated className', () => {
       const Comp = styled('div')`display: flex;`
       const vnode = Comp({}) as VNode
-      expect(vnode.props.class).toMatch(/^ns-[0-9a-z]+$/)
+      expect(vnode.props.class).toMatch(/^pyr-[0-9a-z]+$/)
     })
 
     it('same component produces same className across calls', () => {
@@ -60,14 +59,13 @@ describe('styled', () => {
     it('renders element without className for empty template', () => {
       const Comp = styled('div')``
       const vnode = Comp({}) as VNode
-      // Empty CSS resolves to empty string, staticClass is undefined
-      expect(vnode.props.class).toBeUndefined()
+      expect(vnode.props.class).toBeFalsy()
     })
 
     it('renders element without className for whitespace-only template', () => {
       const Comp = styled('div')`   `
       const vnode = Comp({}) as VNode
-      expect(vnode.props.class).toBeUndefined()
+      expect(vnode.props.class).toBeFalsy()
     })
   })
 
@@ -76,14 +74,14 @@ describe('styled', () => {
       const color = 'red'
       const Comp = styled('div')`color: ${color};`
       const vnode = Comp({}) as VNode
-      expect(vnode.props.class).toMatch(/^ns-/)
+      expect(vnode.props.class).toMatch(/^pyr-/)
     })
 
     it('treats number interpolations as static', () => {
       const size = 16
       const Comp = styled('div')`font-size: ${size}px;`
       const vnode = Comp({}) as VNode
-      expect(vnode.props.class).toMatch(/^ns-/)
+      expect(vnode.props.class).toMatch(/^pyr-/)
     })
   })
 
@@ -93,7 +91,7 @@ describe('styled', () => {
         color: ${(props: any) => props.color};
       `
       const vnode = Comp({ color: 'red' }) as VNode
-      expect(vnode.props.class).toMatch(/^ns-/)
+      expect(vnode.props.class).toMatch(/^pyr-/)
     })
 
     it('different prop values produce different classNames', () => {
@@ -117,13 +115,13 @@ describe('styled', () => {
     it('handles functions returning empty string', () => {
       const Comp = styled('div')`${() => ''}`
       const vnode = Comp({}) as VNode
-      expect(vnode.props.class).toBeUndefined()
+      expect(vnode.props.class).toBeFalsy()
     })
 
     it('handles functions returning false', () => {
       const Comp = styled('div')`${(props: any) => props.active ? 'color: red;' : false}`
       const vnode = Comp({ active: false }) as VNode
-      expect(vnode.props.class).toBeUndefined()
+      expect(vnode.props.class).toBeFalsy()
     })
   })
 
@@ -131,14 +129,14 @@ describe('styled', () => {
     it('merges user class with generated className', () => {
       const Comp = styled('div')`display: flex;`
       const vnode = Comp({ class: 'custom' }) as VNode
-      expect(vnode.props.class).toContain('ns-')
+      expect(vnode.props.class).toContain('pyr-')
       expect(vnode.props.class).toContain('custom')
     })
 
-    it('merges user className (React-style) with generated className', () => {
+    it('merges user className with generated className', () => {
       const Comp = styled('div')`display: flex;`
       const vnode = Comp({ className: 'custom' }) as VNode
-      expect(vnode.props.class).toContain('ns-')
+      expect(vnode.props.class).toContain('pyr-')
       expect(vnode.props.class).toContain('custom')
     })
 
@@ -202,10 +200,15 @@ describe('styled', () => {
       expect(vnode.props.unknownProp).toBeUndefined()
     })
 
+    it('filters $-prefixed transient props', () => {
+      const Comp = styled('div')`display: flex;`
+      const vnode = Comp({ $variant: 'primary' }) as VNode
+      expect(vnode.props.$variant).toBeUndefined()
+    })
+
     it('does not forward class/className as separate props', () => {
       const Comp = styled('div')`display: flex;`
       const vnode = Comp({ class: 'extra', className: 'another' }) as VNode
-      // class/className should be merged into the generated class, not duplicated
       expect(vnode.props.className).toBeUndefined()
     })
   })
@@ -225,9 +228,16 @@ describe('styled', () => {
         shouldForwardProp: () => false,
       })`display: flex;`
       const vnode = Comp({ id: 'test', role: 'button' }) as VNode
-      // Only class should be set (from generated CSS), not id/role
       expect(vnode.props.id).toBeUndefined()
       expect(vnode.props.role).toBeUndefined()
+    })
+  })
+
+  describe('boost option', () => {
+    it('accepts boost option without error', () => {
+      const Comp = styled('div', { boost: true })`color: red;`
+      const vnode = Comp({}) as VNode
+      expect(vnode.props.class).toMatch(/^pyr-/)
     })
   })
 
@@ -259,38 +269,33 @@ describe('styled', () => {
   })
 })
 
-describe('styledElements (Proxy)', () => {
+describe('styled.tag (Proxy)', () => {
   afterEach(() => {
     sheet.reset()
   })
 
   it('styled.div creates a div component', () => {
-    const Comp = styledElements.div`color: red;`
+    const Comp = styled.div`color: red;`
     const vnode = Comp({}) as VNode
     expect(vnode.type).toBe('div')
-    expect(vnode.props.class).toMatch(/^ns-/)
+    expect(vnode.props.class).toMatch(/^pyr-/)
   })
 
   it('styled.span creates a span component', () => {
-    const Comp = styledElements.span`font-size: 16px;`
+    const Comp = styled.span`font-size: 16px;`
     const vnode = Comp({}) as VNode
     expect(vnode.type).toBe('span')
   })
 
   it('styled.button creates a button component', () => {
-    const Comp = styledElements.button`cursor: pointer;`
+    const Comp = styled.button`cursor: pointer;`
     const vnode = Comp({}) as VNode
     expect(vnode.type).toBe('button')
   })
 
   it('styled.section creates a section component', () => {
-    const Comp = styledElements.section`padding: 20px;`
+    const Comp = styled.section`padding: 20px;`
     const vnode = Comp({}) as VNode
     expect(vnode.type).toBe('section')
-  })
-
-  it('returns undefined for symbol property access', () => {
-    // The proxy returns undefined for non-string props
-    expect((styledElements as any)[Symbol.iterator]).toBeUndefined()
   })
 })

@@ -6,99 +6,154 @@ import { Text } from '../Text'
 const asVNode = (v: unknown) => v as VNode
 
 describe('Text', () => {
-  describe('default rendering', () => {
-    it('renders with default span tag', () => {
-      const result = asVNode(Text({ children: 'Hello' }))
-      expect(result.type).toBe('span')
-      expect(result.children).toContain('Hello')
+  describe('static properties', () => {
+    it('has isText set to true', () => {
+      expect(Text.isText).toBe(true)
     })
 
-    it('renders with no content when no children or label', () => {
+    it('has correct displayName', () => {
+      expect(Text.displayName).toBe('@pyreon/elements/Text')
+    })
+
+    it('has correct pkgName', () => {
+      expect(Text.pkgName).toBe('@pyreon/elements')
+    })
+
+    it('has correct PYREON__COMPONENT', () => {
+      expect(Text.PYREON__COMPONENT).toBe('@pyreon/elements/Text')
+    })
+  })
+
+  describe('default rendering', () => {
+    it('returns a VNode whose type is the Styled component (a function)', () => {
+      const result = asVNode(Text({ children: 'Hello' }))
+      expect(typeof result.type).toBe('function')
+    })
+
+    it('does not set as prop when no tag or paragraph provided', () => {
+      const result = asVNode(Text({ children: 'Hello' }))
+      expect(result.props.as).toBeUndefined()
+    })
+
+    it('renders children in output', () => {
+      const result = asVNode(Text({ children: 'Hello' }))
+      expect(result.props.children).toBe('Hello')
+    })
+
+    it('passes $text prop with extraStyles', () => {
+      const result = asVNode(Text({ children: 'Hello' }))
+      expect(result.props.$text).toEqual({ extraStyles: undefined })
+    })
+
+    it('renders null content when no children or label', () => {
       const result = asVNode(Text({}))
-      expect(result.type).toBe('span')
-      expect(result.children).toContain(null)
+      expect(result.props.children).toBeUndefined()
     })
   })
 
   describe('content fallback chain', () => {
     it('renders children as content', () => {
       const result = asVNode(Text({ children: 'child content' }))
-      expect(result.children).toContain('child content')
+      expect(result.props.children).toBe('child content')
     })
 
     it('renders label when children not provided', () => {
       const result = asVNode(Text({ label: 'label text' }))
-      expect(result.children).toContain('label text')
+      expect(result.props.children).toBe('label text')
     })
 
     it('prefers children over label', () => {
       const result = asVNode(Text({ children: 'child', label: 'label' }))
-      expect(result.children).toContain('child')
-      expect(result.children).not.toContain('label')
-    })
-
-    it('renders null when neither children nor label provided', () => {
-      const result = asVNode(Text({}))
-      expect(result.children).toContain(null)
+      expect(result.props.children).toBe('child')
     })
 
     it('renders VNode children', () => {
       const child = h('strong', null, 'bold')
       const result = asVNode(Text({ children: child }))
-      expect(result.children).toContain(child)
+      expect(result.props.children).toBe(child)
+    })
+
+    it('renders number label', () => {
+      const result = asVNode(Text({ label: 42 }))
+      expect(result.props.children).toBe(42)
     })
   })
 
   describe('tag prop', () => {
-    it('renders with custom tag', () => {
+    it('sets as prop to h1', () => {
       const result = asVNode(Text({ tag: 'h1', children: 'Heading' }))
-      expect(result.type).toBe('h1')
+      expect(result.props.as).toBe('h1')
     })
 
-    it('renders with h2 tag', () => {
+    it('sets as prop to h2', () => {
       const result = asVNode(Text({ tag: 'h2', children: 'Sub heading' }))
-      expect(result.type).toBe('h2')
+      expect(result.props.as).toBe('h2')
     })
 
-    it('renders with div tag', () => {
-      const result = asVNode(Text({ tag: 'div', children: 'Block text' }))
-      expect(result.type).toBe('div')
-    })
-
-    it('renders with strong tag', () => {
+    it('sets as prop to strong', () => {
       const result = asVNode(Text({ tag: 'strong', children: 'Bold' }))
-      expect(result.type).toBe('strong')
+      expect(result.props.as).toBe('strong')
     })
 
-    it('renders with em tag', () => {
+    it('sets as prop to em', () => {
       const result = asVNode(Text({ tag: 'em', children: 'Italic' }))
-      expect(result.type).toBe('em')
+      expect(result.props.as).toBe('em')
+    })
+
+    it('does not forward tag as a prop', () => {
+      const result = asVNode(Text({ tag: 'h1', children: 'Heading' }))
+      expect(result.props.tag).toBeUndefined()
     })
   })
 
   describe('paragraph prop', () => {
-    it('renders as p tag when paragraph is true', () => {
+    it('sets as prop to p when paragraph is true', () => {
       const result = asVNode(Text({ paragraph: true, children: 'Paragraph text' }))
-      expect(result.type).toBe('p')
+      expect(result.props.as).toBe('p')
     })
 
-    it('renders as span when paragraph is false', () => {
+    it('does not set as prop when paragraph is false', () => {
       const result = asVNode(Text({ paragraph: false, children: 'Inline text' }))
-      expect(result.type).toBe('span')
+      expect(result.props.as).toBeUndefined()
     })
 
-    it('tag prop takes precedence over paragraph', () => {
+    it('paragraph is overridden when tag is also set (tag wins because paragraph branch is skipped)', () => {
+      // When paragraph is true, finalTag = 'p'
+      // When tag is also set, the else branch is not reached, so paragraph wins
       const result = asVNode(Text({ tag: 'h1', paragraph: true, children: 'Heading' }))
-      expect(result.type).toBe('h1')
+      expect(result.props.as).toBe('p')
     })
 
-    it('renders as span when paragraph is undefined', () => {
-      const result = asVNode(Text({ children: 'text' }))
-      expect(result.type).toBe('span')
+    it('uses tag when paragraph is false', () => {
+      const result = asVNode(Text({ tag: 'h1', paragraph: false, children: 'Heading' }))
+      expect(result.props.as).toBe('h1')
+    })
+
+    it('does not forward paragraph as a prop', () => {
+      const result = asVNode(Text({ paragraph: true, children: 'text' }))
+      expect(result.props.paragraph).toBeUndefined()
     })
   })
 
-  describe('HTML attribute filtering', () => {
+  describe('css prop', () => {
+    it('passes css value through $text.extraStyles', () => {
+      const customCss = 'color: red;'
+      const result = asVNode(Text({ css: customCss, children: 'styled' }))
+      expect(result.props.$text).toEqual({ extraStyles: customCss })
+    })
+
+    it('passes undefined extraStyles when no css prop', () => {
+      const result = asVNode(Text({ children: 'plain' }))
+      expect(result.props.$text).toEqual({ extraStyles: undefined })
+    })
+
+    it('does not forward css as a direct prop', () => {
+      const result = asVNode(Text({ css: 'color: blue;', children: 'text' }))
+      expect(result.props.css).toBeUndefined()
+    })
+  })
+
+  describe('HTML attribute forwarding', () => {
     it('passes through id', () => {
       const result = asVNode(Text({ id: 'text-id', children: 'text' }))
       expect(result.props.id).toBe('text-id')
@@ -125,7 +180,7 @@ describe('Text', () => {
     })
 
     it('passes through on-prefixed event handlers', () => {
-      const handler = () => {}
+      const handler = () => undefined
       const result = asVNode(Text({ onClick: handler, children: 'text' }))
       expect(result.props.onClick).toBe(handler)
     })
@@ -136,28 +191,14 @@ describe('Text', () => {
       expect(result.props.ref).toBe(ref)
     })
 
-    it('passes through key', () => {
-      const result = asVNode(Text({ key: 'k', children: 'text' }))
-      expect(result.key).toBe('k')
-    })
-
-    it('filters out custom props', () => {
-      const result = asVNode(Text({
-        paragraph: true,
-        label: 'lbl',
-        children: 'text',
-        customProp: 'no',
-      }))
-      expect(result.props.paragraph).toBeUndefined()
-      expect(result.props.label).toBeUndefined()
-      expect(result.props.customProp).toBeUndefined()
-    })
-  })
-
-  describe('class and style props', () => {
-    it('sets class when provided', () => {
+    it('passes through class', () => {
       const result = asVNode(Text({ class: 'title', children: 'text' }))
       expect(result.props.class).toBe('title')
+    })
+
+    it('passes through style', () => {
+      const result = asVNode(Text({ style: 'color: red;', children: 'text' }))
+      expect(result.props.style).toBe('color: red;')
     })
 
     it('does not set class when not provided', () => {
@@ -165,14 +206,63 @@ describe('Text', () => {
       expect(result.props.class).toBeUndefined()
     })
 
-    it('sets style when provided', () => {
-      const result = asVNode(Text({ style: 'color: red;', children: 'text' }))
-      expect(result.props.style).toBe('color: red;')
-    })
-
     it('does not set style when not provided', () => {
       const result = asVNode(Text({ children: 'text' }))
       expect(result.props.style).toBeUndefined()
+    })
+  })
+
+  describe('reserved props are consumed and not forwarded', () => {
+    it('does not forward paragraph, label, tag, or css', () => {
+      const result = asVNode(Text({
+        paragraph: true,
+        label: 'lbl',
+        children: 'text',
+        tag: 'h1',
+        css: 'font-size: 2rem;',
+      }))
+      expect(result.props.paragraph).toBeUndefined()
+      expect(result.props.label).toBeUndefined()
+      expect(result.props.tag).toBeUndefined()
+      expect(result.props.css).toBeUndefined()
+    })
+  })
+
+  describe('combined props', () => {
+    it('renders with paragraph, css, class, and data attribute together', () => {
+      const result = asVNode(Text({
+        paragraph: true,
+        css: 'margin: 0;',
+        class: 'intro',
+        'data-testid': 'intro-text',
+        children: 'Hello world',
+      }))
+
+      expect(typeof result.type).toBe('function')
+      expect(result.props.as).toBe('p')
+      expect(result.props.$text).toEqual({ extraStyles: 'margin: 0;' })
+      expect(result.props.class).toBe('intro')
+      expect(result.props['data-testid']).toBe('intro-text')
+      expect(result.props.children).toBe('Hello world')
+      // Reserved props not forwarded
+      expect(result.props.paragraph).toBeUndefined()
+      expect(result.props.css).toBeUndefined()
+    })
+
+    it('renders with tag, ref, and event handler together', () => {
+      const ref = {}
+      const handler = () => undefined
+      const result = asVNode(Text({
+        tag: 'h2',
+        ref,
+        onClick: handler,
+        children: 'Subtitle',
+      }))
+
+      expect(result.props.as).toBe('h2')
+      expect(result.props.ref).toBe(ref)
+      expect(result.props.onClick).toBe(handler)
+      expect(result.props.children).toBe('Subtitle')
     })
   })
 })

@@ -1,0 +1,34 @@
+/**
+ * Theme context for styled components.
+ *
+ * Extensible theme interface. Consumers can augment this via module
+ * declaration merging for full strict types:
+ *
+ *   declare module '@pyreon/styler' {
+ *     interface DefaultTheme {
+ *       colors: { primary: string; secondary: string }
+ *       spacing: (n: number) => string
+ *     }
+ *   }
+ */
+import type { VNode, VNodeChild } from '@pyreon/core'
+import { createContext, onUnmount, popContext, pushContext, useContext } from '@pyreon/core'
+
+// biome-ignore lint/suspicious/noEmptyInterface: augmentable via module declaration merging
+export interface DefaultTheme {}
+
+type Theme = DefaultTheme & Record<string, unknown>
+
+export const ThemeContext = createContext<Theme>({} as Theme)
+
+/** Hook to read the current theme from the nearest ThemeProvider. */
+export const useTheme = <T extends Theme = Theme>(): T =>
+  useContext(ThemeContext) as T
+
+/** Provides a theme object to all nested styled components via Pyreon context. */
+export function ThemeProvider({ theme, children }: { theme: Theme; children?: VNodeChild }): VNode | null {
+  const frame = new Map<symbol, unknown>([[ThemeContext.id, theme]])
+  pushContext(frame)
+  onUnmount(() => popContext())
+  return (children ?? null) as VNode | null
+}
