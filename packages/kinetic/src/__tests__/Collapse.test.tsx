@@ -207,7 +207,7 @@ describe('Collapse', () => {
     expect(wrapperEl.style.transition).toBe('height 500ms ease-in-out')
   })
 
-  it('appear=true animates on initial mount', () => {
+  it('appear=true animates on initial mount', async () => {
     const show = signal(true)
     const onEnter = vi.fn()
 
@@ -217,6 +217,9 @@ describe('Collapse', () => {
       onEnter,
       children: { type: 'div', props: {}, children: ['Hello'], key: undefined },
     })
+
+    // appear defers via queueMicrotask so all refs are wired first
+    await Promise.resolve()
 
     expect(onEnter).toHaveBeenCalledTimes(1)
     expect(wrapperEl.style.height).toBe('200px')

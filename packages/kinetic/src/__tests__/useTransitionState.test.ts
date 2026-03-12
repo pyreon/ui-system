@@ -61,12 +61,20 @@ describe('useTransitionState', () => {
     expect(result.shouldMount()).toBe(false)
   })
 
-  it('appear=true starts hidden then enters', () => {
+  it('appear=true enters after ref is connected', () => {
     const show = signal(true)
     const result = useTransitionState({ show, appear: true })
-    // After watch runs immediately, stage should be entering
-    expect(result.stage()).toBe('entering')
+    // Before ref is wired, element should be mounted but stage is 'entered'
+    expect(result.stage()).toBe('entered')
     expect(result.shouldMount()).toBe(true)
+
+    // Simulate ref connection (as the renderer would do)
+    const el = document.createElement('div')
+    if (typeof result.ref === 'function') {
+      result.ref(el)
+    }
+    // Now the appear animation should trigger
+    expect(result.stage()).toBe('entering')
   })
 
   it('complete() is a no-op in entered state', () => {
@@ -115,10 +123,10 @@ describe('useTransitionState', () => {
     expect(result.stage()).toBe('leaving')
   })
 
-  it('provides a ref object', () => {
+  it('provides a ref (callback or object)', () => {
     const show = signal(false)
     const result = useTransitionState({ show })
     expect(result.ref).toBeDefined()
-    expect(result.ref.current).toBeNull()
+    expect(typeof result.ref === 'function' || 'current' in result.ref).toBe(true)
   })
 })

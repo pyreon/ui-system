@@ -109,8 +109,8 @@ export type CollapseProps = TransitionCallbacks & {
 export type TransitionStateResult = {
   /** Current lifecycle stage (signal) */
   stage: Signal<TransitionStage>
-  /** Ref to attach to the transitioning element */
-  ref: Ref<HTMLElement>
+  /** Ref callback to attach to the transitioning element */
+  ref: Ref<HTMLElement> | ((node: HTMLElement | null) => void)
   /** Reactive accessor: whether the element should be rendered */
   shouldMount: () => boolean
   /** Call when the current animation finishes */

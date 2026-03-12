@@ -9,20 +9,31 @@ export type UseTransitionState = (options: {
 
 const useTransitionState: UseTransitionState = ({ show, appear = false }) => {
   const initialShow = show()
+  // When appear=true and show starts true, mount the element (stage='entered')
+  // but defer the enter animation until the ref is connected.
+  const needsAppear = appear && initialShow
   const stage = signal<TransitionStage>(
-    initialShow && !appear ? 'entered' : 'hidden',
+    initialShow ? 'entered' : 'hidden',
   )
   const elementRef = createRef<HTMLElement>()
   let isInitialMount = true
+  let appearTriggered = false
+
+  // Ref callback that triggers the appear animation once the element is wired
+  const refCallback = (node: HTMLElement | null) => {
+    elementRef.current = node
+    if (node && needsAppear && !appearTriggered) {
+      appearTriggered = true
+      stage.set('entering')
+    }
+  }
 
   watch(
     show,
     (showVal) => {
       if (isInitialMount) {
         isInitialMount = false
-        if (showVal && appear) {
-          stage.set('entering')
-        }
+        // appear case is handled by refCallback above
         return
       }
 
@@ -47,7 +58,7 @@ const useTransitionState: UseTransitionState = ({ show, appear = false }) => {
 
   return {
     stage,
-    ref: elementRef,
+    ref: refCallback,
     shouldMount: () => stage() !== 'hidden',
     complete,
   }

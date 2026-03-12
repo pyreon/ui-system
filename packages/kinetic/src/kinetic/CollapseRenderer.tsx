@@ -33,7 +33,7 @@ const CollapseRenderer = ({
 }: CollapseRendererProps): VNode | null => {
   // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
   const reducedMotion = () => false
-  const wrapperRef = createRef<HTMLElement>()
+  let wrapperRef: { current: HTMLElement | null } = createRef<HTMLElement>()
   const contentRef = createRef<HTMLDivElement>()
 
   const effectiveAppear = appear ?? config.appear ?? false
@@ -42,10 +42,29 @@ const CollapseRenderer = ({
     transition ?? config.transition ?? 'height 300ms ease'
 
   const initialShow = show()
+  const needsAppear = effectiveAppear && initialShow
   const stage = signal<TransitionStage>(
-    initialShow && !effectiveAppear ? 'entered' : 'hidden',
+    initialShow ? 'entered' : 'hidden',
   )
   let isInitialMount = true
+  let appearTriggered = false
+
+  // Intercept ref assignment to trigger appear after all refs are wired
+  if (needsAppear) {
+    const orig = wrapperRef
+    const proxy = { current: null as HTMLElement | null }
+    Object.defineProperty(proxy, 'current', {
+      get() { return orig.current },
+      set(node: HTMLElement | null) {
+        orig.current = node
+        if (node && !appearTriggered) {
+          appearTriggered = true
+          queueMicrotask(() => stage.set('entering'))
+        }
+      },
+    })
+    wrapperRef = proxy
+  }
 
   // State machine transitions
   watch(
@@ -53,9 +72,7 @@ const CollapseRenderer = ({
     (showVal) => {
       if (isInitialMount) {
         isInitialMount = false
-        if (showVal && effectiveAppear) {
-          stage.set('entering')
-        }
+        // appear case is handled by ref proxy above
         return
       }
 

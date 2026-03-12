@@ -87,9 +87,10 @@ const wireRef = (vnode: VNode | null, el: HTMLElement) => {
 }
 
 /**
- * Recursively resolve component-type VNodes by calling the function.
+ * Resolve the outermost component-type VNode by calling the function.
  * kinetic() returns VNodes where type is a component function (e.g. TransitionRenderer).
- * We need to call it to execute the component and set up watches/refs.
+ * We call it once to execute the component and set up watches/refs,
+ * but do NOT recurse into framework components like Show.
  */
 const resolveComponent = (vnode: VNode | null): VNode | null => {
   if (!vnode) return null
@@ -97,12 +98,10 @@ const resolveComponent = (vnode: VNode | null): VNode | null => {
     const props = vnode.props as Record<string, unknown>
     const children = vnode.children
     // Call the component function with props (children merged in)
-    const resolved = (vnode.type as (p: Record<string, unknown>) => VNode | null)({
+    return (vnode.type as (p: Record<string, unknown>) => VNode | null)({
       ...props,
       ...(children != null ? { children } : {}),
     })
-    // Recursively resolve in case there are nested component VNodes
-    return resolveComponent(resolved)
   }
   return vnode
 }

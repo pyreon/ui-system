@@ -17,7 +17,7 @@ const Collapse = ({
 }: CollapseProps): VNode | null => {
   // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
   const reducedMotion = () => false
-  const wrapperRef = createRef<HTMLDivElement>()
+  let wrapperRef: { current: HTMLDivElement | null } = createRef<HTMLDivElement>()
   const contentRef = createRef<HTMLDivElement>()
 
   const callbacks = {
@@ -28,10 +28,31 @@ const Collapse = ({
   }
 
   const initialShow = show()
+  // When appear=true and show starts true, mount but defer animation until ref is wired
+  const needsAppear = appear && initialShow
   const stage = signal<TransitionStage>(
-    initialShow && !appear ? 'entered' : 'hidden',
+    initialShow ? 'entered' : 'hidden',
   )
   let isInitialMount = true
+  let appearTriggered = false
+
+  // Intercept ref assignment to detect when element connects and trigger appear.
+  // Uses queueMicrotask so all sibling refs are wired before the animation starts.
+  if (needsAppear) {
+    const orig = wrapperRef
+    const proxy = { current: null as HTMLDivElement | null }
+    Object.defineProperty(proxy, 'current', {
+      get() { return orig.current },
+      set(node: HTMLDivElement | null) {
+        orig.current = node
+        if (node && !appearTriggered) {
+          appearTriggered = true
+          queueMicrotask(() => stage.set('entering'))
+        }
+      },
+    })
+    wrapperRef = proxy
+  }
 
   // State machine transitions
   watch(
@@ -39,9 +60,7 @@ const Collapse = ({
     (showVal) => {
       if (isInitialMount) {
         isInitialMount = false
-        if (showVal && appear) {
-          stage.set('entering')
-        }
+        // appear case is handled by wrapperRefCallback above
         return
       }
 
