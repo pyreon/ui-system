@@ -1,0 +1,6 @@
+export { default as stripUnit } from './stripUnit'
+export type { StripUnit } from './stripUnit'
+export { default as value } from './value'
+export type { Value } from './value'
+export { default as values } from './values'
+export type { Values } from './values'

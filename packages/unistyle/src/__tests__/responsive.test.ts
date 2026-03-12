@@ -1,240 +1,177 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeResponsive, makeResponsive } from '../responsive'
-import type { ResponsiveValue } from '../responsive'
+import sortBreakpoints from '../responsive/sortBreakpoints'
+import normalizeTheme from '../responsive/normalizeTheme'
+import transformTheme from '../responsive/transformTheme'
+import optimizeTheme from '../responsive/optimizeTheme'
+import breakpoints from '../responsive/breakpoints'
 
-const bps = { xs: 0, sm: 576, md: 768, lg: 992, xl: 1200 }
-
-describe('normalizeResponsive', () => {
-  it('expands scalar to all breakpoints', () => {
-    const result = normalizeResponsive(16, bps)
-    expect(result).toEqual({
-      xs: 16,
-      sm: 16,
-      md: 16,
-      lg: 16,
-      xl: 16,
-    })
+describe('breakpoints', () => {
+  it('has expected default config', () => {
+    expect(breakpoints.rootSize).toBe(16)
+    expect(breakpoints.breakpoints).toHaveProperty('xs')
+    expect(breakpoints.breakpoints).toHaveProperty('sm')
+    expect(breakpoints.breakpoints).toHaveProperty('md')
+    expect(breakpoints.breakpoints).toHaveProperty('lg')
+    expect(breakpoints.breakpoints).toHaveProperty('xl')
+    expect(breakpoints.breakpoints).toHaveProperty('xxl')
   })
 
-  it('expands string scalar to all breakpoints', () => {
-    const result = normalizeResponsive('red', bps)
-    expect(result).toEqual({
-      xs: 'red',
-      sm: 'red',
-      md: 'red',
-      lg: 'red',
-      xl: 'red',
-    })
-  })
-
-  it('expands null to all breakpoints', () => {
-    const result = normalizeResponsive(null, bps)
-    expect(result).toEqual({
-      xs: null,
-      sm: null,
-      md: null,
-      lg: null,
-      xl: null,
-    })
-  })
-
-  it('expands array to all breakpoints (treated as scalar)', () => {
-    const arr = [1, 2, 3]
-    const result = normalizeResponsive(arr, bps)
-    expect(result.xs).toBe(arr)
-    expect(result.md).toBe(arr)
-  })
-
-  it('inherits from previous breakpoint for partial objects', () => {
-    const result = normalizeResponsive({ xs: 12, md: 16 }, bps)
-    expect(result).toEqual({
-      xs: 12,
-      sm: 12,
-      md: 16,
-      lg: 16,
-      xl: 16,
-    })
-  })
-
-  it('handles object with all breakpoints', () => {
-    const result = normalizeResponsive(
-      { xs: 10, sm: 20, md: 30, lg: 40, xl: 50 },
-      bps,
-    )
-    expect(result).toEqual({
-      xs: 10,
-      sm: 20,
-      md: 30,
-      lg: 40,
-      xl: 50,
-    })
-  })
-
-  it('skips breakpoints before first defined key', () => {
-    const result = normalizeResponsive({ md: 16 }, bps)
-    // xs and sm are not set because md is the first defined key
-    expect(result).toEqual({
-      md: 16,
-      lg: 16,
-      xl: 16,
-    })
-  })
-
-  it('handles zero values correctly', () => {
-    const result = normalizeResponsive({ xs: 0, md: 16 }, bps)
-    expect(result).toEqual({
-      xs: 0,
-      sm: 0,
-      md: 16,
-      lg: 16,
-      xl: 16,
-    })
-  })
-
-  it('handles empty object', () => {
-    const result = normalizeResponsive({}, bps)
-    expect(result).toEqual({})
-  })
-
-  it('handles single breakpoint map', () => {
-    const result = normalizeResponsive(42, { only: 0 })
-    expect(result).toEqual({ only: 42 })
-  })
-
-  it('handles empty breakpoint map', () => {
-    const result = normalizeResponsive(42, {})
-    expect(result).toEqual({})
-  })
-
-  it('ignores keys not in breakpoint map', () => {
-    const result = normalizeResponsive({ xs: 10, nonexistent: 99 } as any, bps)
-    // nonexistent is ignored since it's not in sorted breakpoints
-    expect(result).not.toHaveProperty('nonexistent')
-    expect(result.xs).toBe(10)
+  it('has correct pixel values', () => {
+    expect(breakpoints.breakpoints.xs).toBe(0)
+    expect(breakpoints.breakpoints.sm).toBe(576)
+    expect(breakpoints.breakpoints.md).toBe(768)
+    expect(breakpoints.breakpoints.lg).toBe(992)
+    expect(breakpoints.breakpoints.xl).toBe(1200)
+    expect(breakpoints.breakpoints.xxl).toBe(1440)
   })
 })
 
-describe('makeResponsive', () => {
-  it('generates plain CSS for scalar values', () => {
-    const result = makeResponsive({ fontSize: 16, color: 'red' }, bps)
-    expect(result).toContain('font-size: 16px')
-    expect(result).toContain('color: red')
+describe('sortBreakpoints', () => {
+  it('sorts breakpoints by value ascending, returns keys', () => {
+    const bps = { md: 768, xs: 0, xl: 1200, sm: 576 }
+    const sorted = sortBreakpoints(bps)
+    expect(sorted).toEqual(['xs', 'sm', 'md', 'xl'])
   })
 
-  it('does not wrap smallest breakpoint in media query', () => {
-    const result = makeResponsive({ fontSize: 16 }, bps)
-    expect(result).not.toContain('@media')
-    expect(result).toContain('font-size: 16px')
+  it('handles already sorted breakpoints', () => {
+    const sorted = sortBreakpoints({ xs: 0, sm: 576, md: 768 })
+    expect(sorted).toEqual(['xs', 'sm', 'md'])
   })
 
-  it('wraps non-zero breakpoint values in media queries', () => {
-    const result = makeResponsive(
-      { fontSize: { xs: 14, md: 18 } },
-      bps,
-    )
-    expect(result).toContain('font-size: 14px')
-    expect(result).toContain('@media (min-width: 48em)')
-    expect(result).toContain('font-size: 18px')
+  it('handles single breakpoint', () => {
+    expect(sortBreakpoints({ xs: 0 })).toEqual(['xs'])
   })
 
-  it('deduplicates identical values across breakpoints', () => {
-    // Same value for xs through xl - should only appear once
-    const result = makeResponsive({ color: 'red' }, bps)
-    const occurrences = result.split('color: red').length - 1
-    expect(occurrences).toBe(1)
+  it('handles empty object', () => {
+    expect(sortBreakpoints({})).toEqual([])
   })
 
-  it('converts camelCase to kebab-case', () => {
-    const result = makeResponsive({ backgroundColor: 'blue' }, bps)
-    expect(result).toContain('background-color: blue')
-    expect(result).not.toContain('backgroundColor')
+  it('sorts full default breakpoint set', () => {
+    const sorted = sortBreakpoints(breakpoints.breakpoints)
+    expect(sorted).toEqual(['xs', 'sm', 'md', 'lg', 'xl', 'xxl'])
+  })
+})
+
+describe('normalizeTheme', () => {
+  const bpKeys = ['xs', 'sm', 'md', 'lg', 'xl']
+
+  it('returns theme as-is when no nested objects/arrays', () => {
+    const theme = { color: 'red', fontSize: 16 }
+    const result = normalizeTheme({ theme, breakpoints: bpKeys })
+    expect(result).toEqual(theme)
   })
 
-  it('converts number values to px', () => {
-    const result = makeResponsive({ fontSize: 16 }, bps)
-    expect(result).toContain('font-size: 16px')
+  it('expands array values across breakpoints', () => {
+    const theme = { fontSize: [12, 14, 16, 18, 20] }
+    const result = normalizeTheme({ theme, breakpoints: bpKeys })
+    expect(result.fontSize).toEqual({
+      xs: 12,
+      sm: 14,
+      md: 16,
+      lg: 18,
+      xl: 20,
+    })
   })
 
-  it('passes string values through', () => {
-    const result = makeResponsive({ display: 'flex' }, bps)
-    expect(result).toContain('display: flex')
+  it('array values use last value for extra breakpoints', () => {
+    const theme = { fontSize: [12, 14] }
+    const result = normalizeTheme({ theme, breakpoints: bpKeys })
+    expect((result.fontSize as Record<string, unknown>).xs).toBe(12)
+    expect((result.fontSize as Record<string, unknown>).sm).toBe(14)
+    expect((result.fontSize as Record<string, unknown>).md).toBe(14)
   })
 
-  it('handles responsive object values', () => {
-    const result = makeResponsive(
-      { color: { xs: 'red', md: 'blue', xl: 'green' } },
-      bps,
-    )
-    expect(result).toContain('color: red')
-    expect(result).toContain('color: blue')
-    expect(result).toContain('color: green')
+  it('expands object values with carry-forward', () => {
+    const theme = { fontSize: { xs: 12, md: 16 } }
+    const result = normalizeTheme({ theme, breakpoints: bpKeys })
+    const fs = result.fontSize as Record<string, unknown>
+    expect(fs.xs).toBe(12)
+    expect(fs.sm).toBe(12) // carried from xs
+    expect(fs.md).toBe(16)
+    expect(fs.lg).toBe(16) // carried from md
   })
 
-  it('handles multiple responsive properties', () => {
-    const result = makeResponsive(
-      {
-        fontSize: { xs: 14, md: 18 },
-        color: { xs: 'red', lg: 'blue' },
-      },
-      bps,
-    )
-    expect(result).toContain('font-size: 14px')
-    expect(result).toContain('font-size: 18px')
-    expect(result).toContain('color: red')
-    expect(result).toContain('color: blue')
+  it('skips null values', () => {
+    const theme = { color: null, fontSize: 16 }
+    const result = normalizeTheme({ theme, breakpoints: bpKeys })
+    expect(result.color).toBeUndefined()
+  })
+})
+
+describe('transformTheme', () => {
+  const bpKeys = ['xs', 'sm', 'md']
+
+  it('pivots scalar values to first breakpoint', () => {
+    const theme = { color: 'red' }
+    const result = transformTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toEqual({ color: 'red' })
   })
 
-  it('respects custom rootSize for media queries', () => {
-    const result = makeResponsive({ color: { xs: 'red', md: 'blue' } }, bps, 10)
-    // 768 / 10 = 76.8em
-    expect(result).toContain('76.8em')
+  it('pivots object values to breakpoints', () => {
+    const theme = { color: { xs: 'red', md: 'blue' } }
+    const result = transformTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toEqual({ color: 'red' })
+    expect(result.md).toEqual({ color: 'blue' })
+  })
+
+  it('pivots array values by index', () => {
+    const theme = { fontSize: [12, 14, 16] }
+    const result = transformTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toEqual({ fontSize: 12 })
+    expect(result.sm).toEqual({ fontSize: 14 })
+    expect(result.md).toEqual({ fontSize: 16 })
+  })
+
+  it('returns empty object for empty theme', () => {
+    expect(transformTheme({ theme: {}, breakpoints: bpKeys })).toEqual({})
+  })
+
+  it('returns empty object for empty breakpoints', () => {
+    expect(transformTheme({ theme: { color: 'red' }, breakpoints: [] })).toEqual({})
+  })
+
+  it('filters out unexpected breakpoint keys', () => {
+    const theme = { color: { xs: 'red', unknown: 'green' } }
+    const result = transformTheme({ theme, breakpoints: bpKeys })
+    expect(result).not.toHaveProperty('unknown')
+  })
+})
+
+describe('optimizeTheme', () => {
+  const bpKeys = ['xs', 'sm', 'md', 'lg']
+
+  it('keeps first breakpoint', () => {
+    const theme = {
+      xs: { color: 'red' },
+      sm: { color: 'blue' },
+    }
+    const result = optimizeTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toEqual({ color: 'red' })
+  })
+
+  it('removes duplicate breakpoints', () => {
+    const theme = {
+      xs: { color: 'red' },
+      sm: { color: 'red' },
+      md: { color: 'blue' },
+    }
+    const result = optimizeTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toEqual({ color: 'red' })
+    expect(result.sm).toBeUndefined()
+    expect(result.md).toEqual({ color: 'blue' })
+  })
+
+  it('keeps breakpoints with different values', () => {
+    const theme = {
+      xs: { color: 'red', fontSize: 12 },
+      sm: { color: 'red', fontSize: 14 },
+    }
+    const result = optimizeTheme({ theme, breakpoints: bpKeys })
+    expect(result.xs).toBeDefined()
+    expect(result.sm).toBeDefined()
   })
 
   it('handles empty theme', () => {
-    const result = makeResponsive({}, bps)
-    expect(result).toBe('')
-  })
-
-  it('handles empty breakpoints', () => {
-    const result = makeResponsive({ fontSize: 16 }, {})
-    expect(result).toBe('')
-  })
-
-  it('groups multiple rules in same breakpoint', () => {
-    const result = makeResponsive(
-      {
-        fontSize: { xs: 14, md: 18 },
-        color: { xs: 'red', md: 'blue' },
-      },
-      bps,
-    )
-    // The md media query block should contain both properties
-    const mdBlock = result.match(/@media.*?48em.*?\{([^}]+)\}/)
-    expect(mdBlock).toBeTruthy()
-    expect(mdBlock![1]).toContain('font-size: 18px')
-    expect(mdBlock![1]).toContain('color: blue')
-  })
-
-  it('skips breakpoints with no rules', () => {
-    const result = makeResponsive(
-      { color: { xs: 'red', xl: 'blue' } },
-      bps,
-    )
-    // Should not have media queries for sm, md, lg since color stays 'red'
-    expect(result).not.toContain('36em')  // sm
-    expect(result).not.toContain('48em')  // md
-    expect(result).not.toContain('62em')  // lg
-    expect(result).toContain('75em')      // xl
-  })
-
-  it('only emits a value when it changes from previous breakpoint', () => {
-    // color is 'red' at xs, stays 'red' through sm/md, changes at lg
-    const result = makeResponsive(
-      { color: { xs: 'red', lg: 'blue' } },
-      bps,
-    )
-    // count how many times 'color: red' appears
-    const redCount = result.split('color: red').length - 1
-    expect(redCount).toBe(1) // only once at xs
+    expect(optimizeTheme({ theme: {}, breakpoints: bpKeys })).toEqual({})
   })
 })

@@ -1,7 +1,7 @@
 {
-  "name": "@pyreon/unistyle",
+  "name": "@pyreon/ui-core",
   "version": "0.0.1",
-  "description": "Responsive theming and breakpoint utilities for Pyreon",
+  "description": "Core utilities, config, and context for Pyreon UI System",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -12,34 +12,20 @@
   },
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
-  "files": [
-    "lib",
-    "!lib/**/*.map",
-    "!lib/analysis"
-  ],
-  "engines": {
-    "node": ">= 18"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
+  "files": ["lib", "!lib/**/*.map"],
+  "engines": { "node": ">= 18" },
+  "publishConfig": { "access": "public" },
   "scripts": {
-    "prepublish": "bun run build",
     "build": "bun run vl_rolldown_build",
-    "build:watch": "bun run vl_rolldown_build-watch",
     "lint": "biome check src/",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@pyreon/core": ">=0.0.1",
-    "@pyreon/reactivity": ">=0.0.1",
-    "@pyreon/ui-core": ">=0.0.1"
+    "@pyreon/styler": ">=0.0.1"
   },
   "devDependencies": {
-    "@pyreon/ui-core": "workspace:*",
     "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
     "@vitus-labs/tools-typescript": "1.9.1-alpha.19"
   }

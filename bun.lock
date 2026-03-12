@@ -77,12 +77,30 @@
         "@pyreon/reactivity": "0.0.1",
       },
     },
-    "packages/unistyle": {
-      "name": "@pyreon/unistyle",
+    "packages/ui-core": {
+      "name": "@pyreon/ui-core",
       "version": "0.0.1",
       "devDependencies": {
         "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
         "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
+      },
+      "peerDependencies": {
+        "@pyreon/core": ">=0.0.1",
+        "@pyreon/styler": ">=0.0.1",
+      },
+    },
+    "packages/unistyle": {
+      "name": "@pyreon/unistyle",
+      "version": "0.0.1",
+      "devDependencies": {
+        "@pyreon/ui-core": "workspace:*",
+        "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
+        "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
+      },
+      "peerDependencies": {
+        "@pyreon/core": ">=0.0.1",
+        "@pyreon/reactivity": ">=0.0.1",
+        "@pyreon/ui-core": ">=0.0.1",
       },
     },
   },
@@ -355,7 +373,7 @@
 
     "@pyreon/coolgrid": ["@pyreon/coolgrid@workspace:packages/coolgrid"],
 
-    "@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" }, "devDependencies": { "typescript": "*" } }],
+    "@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
     "@pyreon/elements": ["@pyreon/elements@workspace:packages/elements"],
 
@@ -363,9 +381,11 @@
 
     "@pyreon/kinetic-presets": ["@pyreon/kinetic-presets@workspace:packages/kinetic-presets"],
 
-    "@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@pyreon/styler": ["@pyreon/styler@workspace:packages/styler"],
+
+    "@pyreon/ui-core": ["@pyreon/ui-core@workspace:packages/ui-core"],
 
     "@pyreon/unistyle": ["@pyreon/unistyle@workspace:packages/unistyle"],
 
@@ -1527,23 +1547,29 @@
 
     "@nx/devkit/minimatch": ["minimatch@10.2.4", "", { "dependencies": { "brace-expansion": "^5.0.2" } }, "sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg=="],
 
-    "@pyreon/coolgrid/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" }, "devDependencies": { "typescript": "*" } }],
+    "@pyreon/coolgrid/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
-    "@pyreon/coolgrid/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/coolgrid/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/elements/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" }, "devDependencies": { "typescript": "*" } }],
+    "@pyreon/elements/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
-    "@pyreon/elements/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/elements/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/hooks/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" }, "devDependencies": { "typescript": "*" } }],
+    "@pyreon/hooks/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
-    "@pyreon/hooks/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/hooks/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/styler/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" }, "devDependencies": { "typescript": "*" } }],
+    "@pyreon/styler/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
-    "@pyreon/styler/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/styler/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/ui-core/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
+
+    "@pyreon/unistyle/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
+
+    "@pyreon/unistyle/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@rolldown/binding-wasm32-wasi/@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.1", "", { "dependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1", "@tybys/wasm-util": "^0.10.1" } }, "sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A=="],
 
@@ -1739,13 +1765,17 @@
 
     "@nx/devkit/minimatch/brace-expansion": ["brace-expansion@5.0.4", "", { "dependencies": { "balanced-match": "^4.0.2" } }, "sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg=="],
 
-    "@pyreon/coolgrid/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/coolgrid/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/elements/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/elements/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/hooks/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/hooks/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
-    "@pyreon/styler/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", { "devDependencies": { "typescript": "*" } }],
+    "@pyreon/styler/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/ui-core/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
+
+    "@pyreon/unistyle/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@rolldown/binding-wasm32-wasi/@napi-rs/wasm-runtime/@tybys/wasm-util": ["@tybys/wasm-util@0.10.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg=="],
 

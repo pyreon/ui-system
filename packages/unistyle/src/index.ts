@@ -1,7 +1,91 @@
-export { defaultBreakpoints, getBreakpoint, sortBreakpoints } from './breakpoints'
-export type { BreakpointKey, BreakpointMap } from './breakpoints'
-export { createBetweenQuery, createMediaQueries } from './media-queries'
-export type { MediaQueryMap } from './media-queries'
-export { makeResponsive, normalizeResponsive } from './responsive'
-export type { ResponsiveValue } from './responsive'
-export { stripUnit, value, values } from './units'
+import type { TProvider } from './context'
+import Provider, { context } from './context'
+import type {
+  Breakpoints,
+  CreateMediaQueries,
+  MakeItResponsive,
+  MakeItResponsiveStyles,
+  NormalizeTheme,
+  SortBreakpoints,
+  TransformTheme,
+} from './responsive'
+import {
+  breakpoints,
+  createMediaQueries,
+  makeItResponsive,
+  normalizeTheme,
+  sortBreakpoints,
+  transformTheme,
+} from './responsive'
+import type {
+  AlignContent,
+  AlignContentAlignXKeys,
+  AlignContentAlignYKeys,
+  AlignContentDirectionKeys,
+  ExtendCss,
+  Styles,
+  StylesTheme,
+} from './styles'
+import {
+  ALIGN_CONTENT_DIRECTION,
+  ALIGN_CONTENT_MAP_X,
+  ALIGN_CONTENT_MAP_Y,
+  alignContent,
+  extendCss,
+  styles,
+} from './styles'
+import type {
+  BrowserColors,
+  Color,
+  Defaults,
+  PropertyValue,
+  UnitValue,
+} from './types'
+import type { StripUnit, Value, Values } from './units'
+import { stripUnit, value, values } from './units'
+
+export type {
+  TProvider,
+  Breakpoints,
+  CreateMediaQueries,
+  MakeItResponsive,
+  MakeItResponsiveStyles,
+  NormalizeTheme,
+  SortBreakpoints,
+  TransformTheme,
+  Styles,
+  StylesTheme,
+  AlignContent,
+  AlignContentAlignXKeys,
+  AlignContentAlignYKeys,
+  AlignContentDirectionKeys,
+  ExtendCss,
+  StripUnit,
+  Value,
+  Values,
+  BrowserColors,
+  Color,
+  PropertyValue,
+  UnitValue,
+  Defaults,
+}
+
+export {
+  breakpoints,
+  Provider,
+  context,
+  makeItResponsive,
+  sortBreakpoints,
+  createMediaQueries,
+  transformTheme,
+  normalizeTheme,
+  styles,
+  alignContent,
+  ALIGN_CONTENT_DIRECTION,
+  ALIGN_CONTENT_MAP_X,
+  ALIGN_CONTENT_MAP_Y,
+  extendCss,
+  stripUnit,
+  value,
+  values,
+}
