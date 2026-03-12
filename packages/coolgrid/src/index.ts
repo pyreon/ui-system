@@ -1,8 +1,7 @@
-export { Container } from './Container'
-export type { ContainerProps } from './Container'
-export { Row } from './Row'
-export type { RowProps } from './Row'
-export { Col } from './Col'
-export type { ColProps } from './Col'
-export { defaultBreakpoints, defaultContainerWidths, defaultGridConfig } from './config'
-export type { GridConfig } from './config'
+import { Provider } from '@pyreon/unistyle'
+import Col from './Col'
+import Container from './Container'
+import Row from './Row'
+import theme from './theme'
+
+export { Container, Row, Col, Provider, theme }

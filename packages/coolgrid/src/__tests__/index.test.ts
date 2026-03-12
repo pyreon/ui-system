@@ -1,14 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
-
-// Mock @pyreon/core since all modules depend on it
-vi.mock('@pyreon/core', () => ({
-  h: vi.fn(),
-  createContext: vi.fn(() => ({ id: Symbol('ctx'), defaultValue: null })),
-  useContext: vi.fn(),
-  pushContext: vi.fn(),
-  popContext: vi.fn(),
-  onUnmount: vi.fn(),
-}))
+import { describe, expect, it } from 'vitest'
 
 describe('index exports', () => {
   it('exports Container', async () => {
@@ -29,50 +19,17 @@ describe('index exports', () => {
     expect(typeof mod.Col).toBe('function')
   })
 
-  it('exports defaultGridConfig', async () => {
+  it('exports Provider', async () => {
     const mod = await import('../index')
-    expect(mod.defaultGridConfig).toBeDefined()
-    expect(mod.defaultGridConfig).toEqual({
-      columns: 12,
-      containerWidth: '100%',
-      gap: 0,
-      gutter: 0,
-      padding: 0,
-    })
+    expect(mod.Provider).toBeDefined()
+    expect(typeof mod.Provider).toBe('function')
   })
 
-  it('exports defaultBreakpoints', async () => {
+  it('exports theme', async () => {
     const mod = await import('../index')
-    expect(mod.defaultBreakpoints).toBeDefined()
-    expect(mod.defaultBreakpoints).toEqual({
-      xs: 0,
-      sm: 576,
-      md: 768,
-      lg: 992,
-      xl: 1200,
-    })
-  })
-
-  it('exports defaultContainerWidths', async () => {
-    const mod = await import('../index')
-    expect(mod.defaultContainerWidths).toBeDefined()
-    expect(mod.defaultContainerWidths).toEqual({
-      xs: '100%',
-      sm: 540,
-      md: 720,
-      lg: 960,
-      xl: 1140,
-    })
-  })
-
-  it('does not export unexpected items', async () => {
-    const mod = await import('../index')
-    const exportedKeys = Object.keys(mod)
-    expect(exportedKeys).toContain('Container')
-    expect(exportedKeys).toContain('Row')
-    expect(exportedKeys).toContain('Col')
-    expect(exportedKeys).toContain('defaultGridConfig')
-    expect(exportedKeys).toContain('defaultBreakpoints')
-    expect(exportedKeys).toContain('defaultContainerWidths')
+    expect(mod.theme).toBeDefined()
+    expect(mod.theme).toHaveProperty('rootSize')
+    expect(mod.theme).toHaveProperty('breakpoints')
+    expect(mod.theme).toHaveProperty('grid')
   })
 })

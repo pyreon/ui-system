@@ -1,3 +1,16 @@
+import path from 'node:path'
 import createConfig from "../../vitest.shared"
 
-export default createConfig({ name: "@pyreon/coolgrid" })
+const base = createConfig({ name: "@pyreon/coolgrid" })
+const baseResolve = (base as any).resolve ?? {}
+
+export default {
+  ...base,
+  resolve: {
+    ...baseResolve,
+    alias: {
+      ...baseResolve.alias,
+      '~': path.resolve(import.meta.dirname, 'src'),
+    },
+  },
+}

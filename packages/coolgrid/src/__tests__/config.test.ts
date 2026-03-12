@@ -1,41 +1,35 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import type { Context } from '@pyreon/core'
-
-// Mock @pyreon/core before importing config
-const mockCreateContext = vi.fn()
-const mockUseContext = vi.fn()
-
-vi.mock('@pyreon/core', () => ({
-  createContext: mockCreateContext,
-  useContext: mockUseContext,
-}))
+import { describe, expect, it } from 'vitest'
 
 describe('config', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    // createContext returns a Context-shaped object
-    mockCreateContext.mockImplementation((defaultVal: unknown) => ({
-      id: Symbol('test-context'),
-      defaultValue: defaultVal,
-    }))
-  })
-
-  describe('defaultGridConfig', () => {
-    it('has correct default values', async () => {
-      const { defaultGridConfig } = await import('../config')
-      expect(defaultGridConfig).toEqual({
-        columns: 12,
-        containerWidth: '100%',
-        gap: 0,
-        gutter: 0,
-        padding: 0,
+  describe('theme defaults', () => {
+    it('has correct default theme', async () => {
+      const theme = (await import('../theme')).default
+      expect(theme).toEqual({
+        rootSize: 16,
+        breakpoints: {
+          xs: 0,
+          sm: 576,
+          md: 768,
+          lg: 992,
+          xl: 1200,
+        },
+        grid: {
+          columns: 12,
+          container: {
+            xs: '100%',
+            sm: 540,
+            md: 720,
+            lg: 960,
+            xl: 1140,
+          },
+        },
       })
     })
   })
 
   describe('defaultBreakpoints', () => {
     it('has all standard breakpoints', async () => {
-      const { defaultBreakpoints } = await import('../config')
+      const { defaultBreakpoints } = await import('../theme')
       expect(defaultBreakpoints).toEqual({
         xs: 0,
         sm: 576,
@@ -46,7 +40,7 @@ describe('config', () => {
     })
 
     it('breakpoints are in ascending order', async () => {
-      const { defaultBreakpoints } = await import('../config')
+      const { defaultBreakpoints } = await import('../theme')
       const values = Object.values(defaultBreakpoints)
       for (let i = 1; i < values.length; i++) {
         expect(values[i]).toBeGreaterThan(values[i - 1] as number)
@@ -56,7 +50,7 @@ describe('config', () => {
 
   describe('defaultContainerWidths', () => {
     it('has widths for all breakpoints', async () => {
-      const { defaultContainerWidths } = await import('../config')
+      const { defaultContainerWidths } = await import('../theme')
       expect(defaultContainerWidths).toEqual({
         xs: '100%',
         sm: 540,
@@ -67,7 +61,7 @@ describe('config', () => {
     })
 
     it('xs is percentage, others are numbers', async () => {
-      const { defaultContainerWidths } = await import('../config')
+      const { defaultContainerWidths } = await import('../theme')
       expect(typeof defaultContainerWidths.xs).toBe('string')
       expect(typeof defaultContainerWidths.sm).toBe('number')
       expect(typeof defaultContainerWidths.md).toBe('number')
@@ -76,7 +70,7 @@ describe('config', () => {
     })
 
     it('numeric widths are in ascending order', async () => {
-      const { defaultContainerWidths } = await import('../config')
+      const { defaultContainerWidths } = await import('../theme')
       const numericWidths = [
         defaultContainerWidths.sm,
         defaultContainerWidths.md,
@@ -90,68 +84,37 @@ describe('config', () => {
   })
 
   describe('ContainerContext', () => {
-    it('is created via createContext with null default', async () => {
-      const { ContainerContext } = await import('../config')
-      // createContext was called; the returned object has an id
+    it('is created via createContext with an id', async () => {
+      const { ContainerContext } = await import('../context')
       expect(ContainerContext).toHaveProperty('id')
     })
   })
 
   describe('RowContext', () => {
-    it('is created via createContext with null default', async () => {
-      const { RowContext } = await import('../config')
+    it('is created via createContext with an id', async () => {
+      const { RowContext } = await import('../context')
       expect(RowContext).toHaveProperty('id')
     })
   })
 
-  describe('useContainerContext', () => {
-    it('calls useContext with ContainerContext', async () => {
-      const mockConfig = { columns: 12, containerWidth: '100%', gap: 0, gutter: 0, padding: 0 }
-      mockUseContext.mockReturnValue(mockConfig)
-      const { useContainerContext, ContainerContext } = await import('../config')
-      const result = useContainerContext()
-      expect(mockUseContext).toHaveBeenCalledWith(ContainerContext)
-      expect(result).toBe(mockConfig)
+  describe('constants', () => {
+    it('has correct PKG_NAME', async () => {
+      const { PKG_NAME } = await import('../constants')
+      expect(PKG_NAME).toBe('@pyreon/coolgrid')
     })
 
-    it('returns null when no context is provided', async () => {
-      mockUseContext.mockReturnValue(null)
-      const { useContainerContext } = await import('../config')
-      const result = useContainerContext()
-      expect(result).toBeNull()
-    })
-  })
-
-  describe('useRowContext', () => {
-    it('calls useContext with RowContext', async () => {
-      const mockConfig = { columns: 12, containerWidth: '100%', gap: 8, gutter: 0, padding: 0 }
-      mockUseContext.mockReturnValue(mockConfig)
-      const { useRowContext, RowContext } = await import('../config')
-      const result = useRowContext()
-      expect(mockUseContext).toHaveBeenCalledWith(RowContext)
-      expect(result).toBe(mockConfig)
-    })
-
-    it('returns null when no context is provided', async () => {
-      mockUseContext.mockReturnValue(null)
-      const { useRowContext } = await import('../config')
-      const result = useRowContext()
-      expect(result).toBeNull()
-    })
-  })
-
-  describe('GridConfig type contract', () => {
-    it('defaultGridConfig satisfies GridConfig interface', async () => {
-      const { defaultGridConfig } = await import('../config')
-      expect(defaultGridConfig).toHaveProperty('columns')
-      expect(defaultGridConfig).toHaveProperty('containerWidth')
-      expect(defaultGridConfig).toHaveProperty('gap')
-      expect(defaultGridConfig).toHaveProperty('gutter')
-      expect(defaultGridConfig).toHaveProperty('padding')
-      expect(typeof defaultGridConfig.columns).toBe('number')
-      expect(typeof defaultGridConfig.gap).toBe('number')
-      expect(typeof defaultGridConfig.gutter).toBe('number')
-      expect(typeof defaultGridConfig.padding).toBe('number')
+    it('has CONTEXT_KEYS', async () => {
+      const { CONTEXT_KEYS } = await import('../constants')
+      expect(CONTEXT_KEYS).toContain('columns')
+      expect(CONTEXT_KEYS).toContain('size')
+      expect(CONTEXT_KEYS).toContain('gap')
+      expect(CONTEXT_KEYS).toContain('padding')
+      expect(CONTEXT_KEYS).toContain('gutter')
+      expect(CONTEXT_KEYS).toContain('colCss')
+      expect(CONTEXT_KEYS).toContain('colComponent')
+      expect(CONTEXT_KEYS).toContain('rowCss')
+      expect(CONTEXT_KEYS).toContain('rowComponent')
+      expect(CONTEXT_KEYS).toContain('contentAlignX')
     })
   })
 })

@@ -1,0 +1,158 @@
+import { Show, createRef } from '@pyreon/core'
+import type { VNode } from '@pyreon/core'
+import { runUntracked, signal, watch } from '@pyreon/reactivity'
+import type { CollapseProps, TransitionStage } from './types'
+import useAnimationEnd from './useAnimationEnd'
+
+const Collapse = ({
+  show,
+  transition = 'height 300ms ease',
+  appear = false,
+  timeout = 5000,
+  onEnter,
+  onAfterEnter,
+  onLeave,
+  onAfterLeave,
+  children,
+}: CollapseProps): VNode | null => {
+  // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
+  const reducedMotion = () => false
+  const wrapperRef = createRef<HTMLDivElement>()
+  const contentRef = createRef<HTMLDivElement>()
+
+  const callbacks = {
+    onEnter,
+    onAfterEnter,
+    onLeave,
+    onAfterLeave,
+  }
+
+  const initialShow = show()
+  const stage = signal<TransitionStage>(
+    initialShow && !appear ? 'entered' : 'hidden',
+  )
+  let isInitialMount = true
+
+  // State machine transitions
+  watch(
+    show,
+    (showVal) => {
+      if (isInitialMount) {
+        isInitialMount = false
+        if (showVal && appear) {
+          stage.set('entering')
+        }
+        return
+      }
+
+      const currentStage = runUntracked(() => stage())
+      if (showVal && (currentStage === 'hidden' || currentStage === 'leaving')) {
+        stage.set('entering')
+      } else if (
+        !showVal &&
+        (currentStage === 'entered' || currentStage === 'entering')
+      ) {
+        stage.set('leaving')
+      }
+    },
+    { immediate: true },
+  )
+
+  // Animate height
+  watch(
+    () => stage(),
+    (currentStage) => {
+      const wrapper = wrapperRef.current
+      const content = contentRef.current
+      if (!wrapper || !content) return
+
+      if (reducedMotion()) {
+        if (currentStage === 'entering') {
+          callbacks.onEnter?.()
+          wrapper.style.height = 'auto'
+          wrapper.style.overflow = ''
+          callbacks.onAfterEnter?.()
+          stage.set('entered')
+        } else if (currentStage === 'leaving') {
+          callbacks.onLeave?.()
+          wrapper.style.height = '0px'
+          wrapper.style.overflow = 'hidden'
+          callbacks.onAfterLeave?.()
+          stage.set('hidden')
+        }
+        return
+      }
+
+      if (currentStage === 'entering') {
+        callbacks.onEnter?.()
+        const height = content.scrollHeight
+        wrapper.style.transition = 'none'
+        wrapper.style.height = '0px'
+        wrapper.style.overflow = 'hidden'
+        // Force reflow so the browser registers height: 0
+        void wrapper.offsetHeight
+        wrapper.style.transition = transition
+        wrapper.style.height = `${height}px`
+      }
+
+      if (currentStage === 'leaving') {
+        callbacks.onLeave?.()
+        const height = content.scrollHeight
+        wrapper.style.transition = 'none'
+        wrapper.style.height = `${height}px`
+        wrapper.style.overflow = 'hidden'
+        // Force reflow
+        void wrapper.offsetHeight
+        wrapper.style.transition = transition
+        wrapper.style.height = '0px'
+      }
+    },
+    { immediate: true },
+  )
+
+  // Listen for animation end
+  useAnimationEnd({
+    ref: wrapperRef,
+    active: () =>
+      (stage() === 'entering' || stage() === 'leaving') &&
+      !reducedMotion(),
+    timeout,
+    onEnd: () => {
+      const wrapper = wrapperRef.current
+      if (stage() === 'entering') {
+        if (wrapper) {
+          wrapper.style.height = 'auto'
+          wrapper.style.overflow = ''
+          wrapper.style.transition = ''
+        }
+        callbacks.onAfterEnter?.()
+        stage.set('entered')
+      } else if (stage() === 'leaving') {
+        callbacks.onAfterLeave?.()
+        stage.set('hidden')
+      }
+    },
+  })
+
+  const shouldRender = () => stage() !== 'hidden'
+
+  return (
+    <div
+      ref={wrapperRef}
+      style={{
+        ...(stage() !== 'entered' ? { overflow: 'hidden' } : {}),
+        ...(stage() === 'hidden'
+          ? { height: '0px' }
+          : stage() === 'entered'
+            ? { height: 'auto' }
+            : {}),
+      }}
+    >
+      <Show when={shouldRender}>
+        <div ref={contentRef}>{children}</div>
+      </Show>
+    </div>
+  )
+}
+
+export default Collapse
