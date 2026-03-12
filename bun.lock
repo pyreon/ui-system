@@ -21,6 +21,19 @@
         "vitest": "^4.0.18",
       },
     },
+    "packages/attrs": {
+      "name": "@pyreon/attrs",
+      "version": "0.0.1",
+      "devDependencies": {
+        "@pyreon/ui-core": "workspace:*",
+        "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
+        "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
+      },
+      "peerDependencies": {
+        "@pyreon/core": ">=0.0.1",
+        "@pyreon/ui-core": ">=0.0.1",
+      },
+    },
     "packages/coolgrid": {
       "name": "@pyreon/coolgrid",
       "version": "0.0.1",
@@ -75,13 +88,11 @@
       "name": "@pyreon/kinetic",
       "version": "0.0.1",
       "devDependencies": {
-        "@pyreon/hooks": "workspace:*",
         "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
         "@vitus-labs/tools-typescript": "1.9.1-alpha.19",
       },
       "peerDependencies": {
         "@pyreon/core": ">=0.0.1",
-        "@pyreon/hooks": ">=0.0.1",
         "@pyreon/reactivity": ">=0.0.1",
       },
     },
@@ -398,6 +409,8 @@
     "@oxc-project/types": ["@oxc-project/types@0.115.0", "", {}, "sha512-4n91DKnebUS4yjUHl2g3/b2T+IUdCfmoZGhmwsovZCDaJSs+QkVAM+0AqqTxHSsHfeiMuueT75cZaZcT/m0pSw=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
+
+    "@pyreon/attrs": ["@pyreon/attrs@workspace:packages/attrs"],
 
     "@pyreon/coolgrid": ["@pyreon/coolgrid@workspace:packages/coolgrid"],
 
@@ -1577,6 +1590,8 @@
 
     "@nx/devkit/minimatch": ["minimatch@10.2.4", "", { "dependencies": { "brace-expansion": "^5.0.2" } }, "sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg=="],
 
+    "@pyreon/attrs/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
+
     "@pyreon/coolgrid/@pyreon/core": ["@pyreon/core@file:../pyreon/packages/core", { "dependencies": { "@pyreon/reactivity": "workspace:*" } }],
 
     "@pyreon/coolgrid/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
@@ -1798,6 +1813,8 @@
     "@npmcli/package-json/glob/minimatch": ["minimatch@10.2.4", "", { "dependencies": { "brace-expansion": "^5.0.2" } }, "sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg=="],
 
     "@nx/devkit/minimatch/brace-expansion": ["brace-expansion@5.0.4", "", { "dependencies": { "balanced-match": "^4.0.2" } }, "sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg=="],
+
+    "@pyreon/attrs/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
     "@pyreon/coolgrid/@pyreon/core/@pyreon/reactivity": ["@pyreon/reactivity@file:../pyreon/packages/reactivity", {}],
 
