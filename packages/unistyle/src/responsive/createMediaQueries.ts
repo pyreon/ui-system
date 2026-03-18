@@ -10,9 +10,19 @@ export type CreateMediaQueries = <
   css: C
 }) => Record<keyof B, (...args: any[]) => string>
 
-const createMediaQueries: CreateMediaQueries = ({ breakpoints, rootSize, css }) =>
-  Object.keys(breakpoints).reduce<Record<string, any>>((acc, key) => {
-    const breakpointValue = (breakpoints as Record<string, number>)[key]
+// Implementation uses Record<string, ...> which is widened from Record<keyof B, ...>;
+// the generic constraint on CreateMediaQueries ensures callers get the narrower type.
+const createMediaQueries: CreateMediaQueries = ((props: {
+  breakpoints: Record<string, number>
+  rootSize: number
+  css: Css
+}) => {
+  const { breakpoints, rootSize, css } = props
+
+  return Object.keys(breakpoints).reduce<
+    Record<string, (...args: [TemplateStringsArray, ...any[]]) => string>
+  >((acc, key) => {
+    const breakpointValue = breakpoints[key]
 
     if (breakpointValue === 0) {
       acc[key] = (...args: [TemplateStringsArray, ...any[]]) => css(...args)
@@ -27,6 +37,7 @@ const createMediaQueries: CreateMediaQueries = ({ breakpoints, rootSize, css }) 
     }
 
     return acc
-  }, {}) as any
+  }, {})
+}) as CreateMediaQueries
 
 export default createMediaQueries

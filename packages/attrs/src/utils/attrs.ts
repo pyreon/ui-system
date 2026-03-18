@@ -10,12 +10,12 @@ type RemoveUndefinedProps = <T extends Record<string, any>>(
   props: T,
 ) => { [I in keyof T as T[I] extends undefined ? never : I]: T[I] }
 
-export const removeUndefinedProps: RemoveUndefinedProps = (props) =>
-  Object.keys(props).reduce((acc, key) => {
+export const removeUndefinedProps = (<T extends Record<string, any>>(props: T) =>
+  Object.keys(props).reduce<Record<string, unknown>>((acc, key) => {
     const currentValue = props[key]
     if (currentValue !== undefined) acc[key] = currentValue
     return acc
-  }, {} as any)
+  }, {})) as RemoveUndefinedProps
 
 /**
  * Reduces an array of option functions (from chained `.attrs()` calls)

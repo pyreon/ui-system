@@ -69,7 +69,8 @@ type GetKeys = <T extends Record<string, unknown>>(obj: T) => Array<keyof T>
 export const getKeys: GetKeys = (obj) => Object.keys(obj)
 
 type GetValues = <T extends Record<string, unknown>, K extends keyof T>(obj: T) => T[K][]
-export const getValues: GetValues = (obj) => Object.values(obj) as any
+export const getValues = (<T extends Record<string, unknown>>(obj: T) =>
+  Object.values(obj)) as GetValues
 
 // --------------------------------------------------------
 // get dimensions values array
@@ -78,14 +79,14 @@ export const getValues: GetValues = (obj) => Object.values(obj) as any
 type ValueType<T> = T extends string ? T : T[][0]
 type GetDimensionsValues = <T extends Dimensions, K extends keyof T>(obj: T) => ValueType<T[K]>[]
 
-export const getDimensionsValues: GetDimensionsValues = (obj) =>
+export const getDimensionsValues = (<T extends Dimensions>(obj: T) =>
   getValues(obj).map((item: DimensionValue) => {
     if (typeof item === "object") {
-      return item.propName as any
+      return item.propName as string
     }
 
     return item
-  })
+  })) as GetDimensionsValues
 
 // --------------------------------------------------------
 // get multiple dimensions map

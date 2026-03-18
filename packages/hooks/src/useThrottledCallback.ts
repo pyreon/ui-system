@@ -24,7 +24,7 @@ export const useThrottledCallback: UseThrottledCallback = (callback, delay) => {
 
   onUnmount(() => throttled.cancel())
 
-  return throttled as any
+  return throttled as ThrottledFn<typeof callback>
 }
 
 export default useThrottledCallback
