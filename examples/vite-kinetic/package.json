@@ -1,0 +1,27 @@
+{
+  "name": "@pyreon/example-vite-kinetic",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@pyreon/core": "*",
+    "@pyreon/reactivity": "*",
+    "@pyreon/runtime-dom": "*",
+    "@pyreon/kinetic": "workspace:*",
+    "@pyreon/kinetic-presets": "workspace:*",
+    "@pyreon/hooks": "workspace:*",
+    "@pyreon/styler": "workspace:*",
+    "@pyreon/ui-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@pyreon/vite-plugin": "*",
+    "@pyreon/compiler": "*",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  }
+}
