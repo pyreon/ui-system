@@ -11,11 +11,11 @@
     "release": "bun run build && bun run scripts/publish.ts",
     "lint": "biome check packages/*/src/",
     "format": "biome format --write packages/*/src/",
-    "pkgs:build": "bun run --filter='*' build",
+    "pkgs:build": "bun run --filter='./packages/*' build",
     "pkgs:clean": "rm -rf node_modules packages/*/node_modules && bun install",
-    "build": "bun run --filter='*' build",
+    "build": "bun run --filter='./packages/*' build",
     "test": "vitest run",
-    "typecheck": "bun run --filter='*' typecheck",
+    "typecheck": "bun run --filter='./packages/*' typecheck",
     "atlas": "vl_atlas"
   },
   "devDependencies": {
