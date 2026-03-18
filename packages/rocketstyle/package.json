@@ -15,8 +15,19 @@
     "lib",
     "!lib/**/*.map"
   ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "prepublish": "bun run build",
+    "build": "bun run vl_rolldown_build",
+    "build:watch": "bun run vl_rolldown_build-watch",
+    "lint": "biome check src/",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
@@ -30,6 +41,8 @@
     "@pyreon/core": "workspace:*",
     "@pyreon/reactivity": "workspace:*",
     "@pyreon/ui-core": "workspace:*",
-    "@pyreon/styler": "workspace:*"
+    "@pyreon/styler": "workspace:*",
+    "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
+    "@vitus-labs/tools-typescript": "1.9.1-alpha.19"
   }
 }
