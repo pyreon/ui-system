@@ -15,10 +15,11 @@ Ported from `vitus-labs/ui-system` (React) to Pyreon's signal-based architecture
 | `@pyreon/coolgrid` | Responsive 12-column grid (Container, Row, Col) | `@pyreon/core` |
 
 ## Local Development
-Framework deps are linked from the sibling `pyreon/pyreon` repo via `file:` in root package.json.
+Framework deps (`@pyreon/core`, `@pyreon/reactivity`, etc.) are installed from npm via root `devDependencies`.
+Workspace packages use `workspace:^` for both `peerDependencies` and cross-package references.
 ```bash
-bun install    # resolves @pyreon/core + @pyreon/reactivity from ../pyreon/packages/*
-bun test       # run all tests
+bun install    # resolves framework deps from npm, workspace packages locally
+bun test       # run all tests (uses vitest with jsdom)
 ```
 
 ## Key Patterns (Pyreon-specific)
