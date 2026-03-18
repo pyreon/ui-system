@@ -37,12 +37,10 @@
   "peerDependencies": {
     "@pyreon/core": ">=0.3.0",
     "@pyreon/reactivity": ">=0.3.0",
-    "@pyreon/styler": ">=0.2.0",
-    "@pyreon/ui-core": ">=0.2.0"
+    "@pyreon/styler": "workspace:^",
+    "@pyreon/ui-core": "workspace:^"
   },
   "devDependencies": {
-    "@pyreon/styler": "workspace:*",
-    "@pyreon/ui-core": "workspace:*",
     "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
     "@vitus-labs/tools-typescript": "1.9.1-alpha.19"
   }
