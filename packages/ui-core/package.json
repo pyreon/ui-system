@@ -26,7 +26,7 @@
     "@pyreon/styler": "workspace:^"
   },
   "devDependencies": {
-    "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",
-    "@vitus-labs/tools-typescript": "1.9.1-alpha.19"
+    "@vitus-labs/tools-rolldown": "^1.15.0",
+    "@vitus-labs/tools-typescript": "^1.15.0"
   }
 }
