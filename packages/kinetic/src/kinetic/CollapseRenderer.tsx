@@ -3,6 +3,7 @@ import { createRef, h, Show } from "@pyreon/core"
 import { runUntracked, signal, watch } from "@pyreon/reactivity"
 import type { CSSProperties, TransitionCallbacks, TransitionStage } from "../types"
 import useAnimationEnd from "../useAnimationEnd"
+import { useReducedMotion } from "../useReducedMotion"
 import type { KineticConfig } from "./types"
 
 type CollapseRendererProps = {
@@ -31,8 +32,7 @@ const CollapseRenderer = ({
   callbacks,
   children,
 }: CollapseRendererProps): VNode | null => {
-  // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
-  const reducedMotion = () => false
+  const reducedMotion = useReducedMotion()
   let wrapperRef: { current: HTMLElement | null } = createRef<HTMLElement>()
   const contentRef = createRef<HTMLDivElement>()
 

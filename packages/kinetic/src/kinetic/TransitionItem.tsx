@@ -3,6 +3,7 @@ import { createRef, Show } from "@pyreon/core"
 import { watch } from "@pyreon/reactivity"
 import type { ClassTransitionProps, StyleTransitionProps, TransitionCallbacks } from "../types"
 import useAnimationEnd from "../useAnimationEnd"
+import { useReducedMotion } from "../useReducedMotion"
 import useTransitionState from "../useTransitionState"
 import { addClasses, cloneVNode, mergeRefs, mergeStyles, nextFrame, removeClasses } from "../utils"
 
@@ -91,8 +92,7 @@ const TransitionItem = ({
   onAfterLeave,
   children,
 }: TransitionItemProps): VNode | null => {
-  // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
-  const reducedMotion = () => false
+  const reducedMotion = useReducedMotion()
   const { stage, ref: stateRef, shouldMount, complete } = useTransitionState({ show, appear })
 
   const elementRef = createRef<HTMLElement>()

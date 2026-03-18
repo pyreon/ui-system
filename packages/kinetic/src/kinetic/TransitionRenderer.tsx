@@ -3,6 +3,7 @@ import { createRef, h, Show } from "@pyreon/core"
 import { watch } from "@pyreon/reactivity"
 import type { CSSProperties, TransitionCallbacks } from "../types"
 import useAnimationEnd from "../useAnimationEnd"
+import { useReducedMotion } from "../useReducedMotion"
 import useTransitionState from "../useTransitionState"
 import { addClasses, mergeRefs, nextFrame, removeClasses } from "../utils"
 import type { KineticConfig } from "./types"
@@ -77,8 +78,7 @@ const TransitionRenderer = ({
   callbacks,
   children,
 }: TransitionRendererProps): VNode | null => {
-  // TODO: useReducedMotion requires @pyreon/hooks — stubbed to false for now
-  const reducedMotion = () => false
+  const reducedMotion = useReducedMotion()
   const {
     stage,
     ref: stateRef,

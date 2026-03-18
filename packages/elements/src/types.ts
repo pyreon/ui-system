@@ -3,8 +3,8 @@
  * value types (single | array | breakpoint-map) for layout props like
  * alignment and direction, plus utility types for merging prop objects.
  */
-import type { BreakpointKeys, ComponentFn } from "@pyreon/core"
-import type { config, render } from "@pyreon/ui-core"
+import type { ComponentFn } from "@pyreon/core"
+import type { BreakpointKeys, config, render } from "@pyreon/ui-core"
 import type { MakeItResponsiveStyles } from "@pyreon/unistyle"
 
 export type ResponsiveStylesCallback = MakeItResponsiveStyles
