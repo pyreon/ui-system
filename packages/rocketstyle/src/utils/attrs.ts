@@ -1,4 +1,3 @@
-import { isEmpty } from "@pyreon/ui-core"
 import type { MultiKeys } from "~/types/dimensions"
 
 // --------------------------------------------------------
@@ -19,17 +18,19 @@ export const removeUndefinedProps: RemoveUndefinedProps = (props) => {
 // pick styled props
 // --------------------------------------------------------
 /** Picks only the props whose keys exist in the dimension keywords lookup and have truthy values. */
-type PickStyledAttrs = <T extends Record<string, any>, K extends { [I in keyof T]?: true }>(
+export const pickStyledAttrs = <
+  T extends Record<string, any>,
+  K extends Record<string, true | undefined>,
+>(
   props: T,
   keywords: K,
-  // @ts-expect-error
-) => { [I in keyof K]: T[I] }
-
-export const pickStyledAttrs: PickStyledAttrs = (props, keywords) =>
-  Object.keys(props).reduce((acc, key) => {
-    if (keywords[key] && props[key]) acc[key] = props[key]
-    return acc
-  }, {} as any)
+): { [I in keyof K & keyof T]: T[I] } => {
+  const result: Record<string, unknown> = {}
+  for (const key of Object.keys(props)) {
+    if (keywords[key] && props[key]) result[key] = props[key]
+  }
+  return result as { [I in keyof K & keyof T]: T[I] }
+}
 
 // --------------------------------------------------------
 // combine values
@@ -44,11 +45,12 @@ type CalculateChainOptions = <A>(
 ) => (args: A[]) => ReturnType<OptionFunc<A>>
 
 export const calculateChainOptions: CalculateChainOptions = (options) => (args) => {
-  const result = {}
-  if (isEmpty(options)) return result
+  if (!options || options.length === 0) return {}
 
-  // @ts-expect-error
-  return options.reduce((acc, item) => Object.assign(acc, item(...args)), {})
+  return options.reduce<Record<string, unknown>>(
+    (acc, item) => Object.assign(acc, item(...args)),
+    {},
+  )
 }
 
 // --------------------------------------------------------
@@ -102,8 +104,7 @@ export const calculateStylingAttrs: CalculateStylingAttrs =
 
       // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
       Object.entries(result).forEach(([key, value]) => {
-        // @ts-expect-error
-        const isMultiKey = multiKeys[key]
+        const isMultiKey = multiKeys?.[key]
 
         // when value in result is not assigned yet
         if (!value) {

@@ -52,8 +52,8 @@ const Component: ElementType<["containerWidth"]> = ({
 
   const finalWidth = (() => {
     if (!width) return containerWidth
-    // @ts-expect-error
-    return typeof width === "function" ? width(containerWidth) : width
+    if (typeof width === "function") return width(containerWidth as Record<string, any>)
+    return width
   })()
 
   const finalProps = {

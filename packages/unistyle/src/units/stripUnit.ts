@@ -6,7 +6,7 @@ export type StripUnit = <V extends string | number, UR extends boolean = false>(
   unitReturn?: UR,
 ) => UR extends true ? [Value<V>, Unit<V>] : Value<V>
 
-const stripUnit: StripUnit = (value, unitReturn) => {
+const stripUnit = ((value: string | number, unitReturn?: boolean) => {
   const cssRegex = /^([+-]?(?:\d+|\d*\.\d+))([a-z]*|%)$/
 
   if (typeof value !== "string") return unitReturn ? [value, undefined] : value
@@ -19,7 +19,7 @@ const stripUnit: StripUnit = (value, unitReturn) => {
   }
 
   if (matchedValue) return parseFloat(value)
-  return value as any
-}
+  return value
+}) as StripUnit
 
 export default stripUnit

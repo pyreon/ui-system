@@ -14,7 +14,7 @@ export const themeModeCallback: ThemeModeCallback = (light, dark) => {
     if (!mode || mode === "light") return light
     return dark
   }
-  ;(fn as any).__brand = MODE_CALLBACK_BRAND
+  ;(fn as unknown as Record<string, unknown>).__brand = MODE_CALLBACK_BRAND
   return fn
 }
 
@@ -24,7 +24,8 @@ export const themeModeCallback: ThemeModeCallback = (light, dark) => {
 /** Detects whether a value is a `themeModeCallback` function via Symbol brand. */
 type IsModeCallback = (value: unknown) => boolean
 const isModeCallback: IsModeCallback = (value: unknown) =>
-  typeof value === "function" && (value as any).__brand === MODE_CALLBACK_BRAND
+  typeof value === "function" &&
+  (value as unknown as Record<string, unknown>).__brand === MODE_CALLBACK_BRAND
 
 // --------------------------------------------------------
 // Get Theme From Chain
@@ -65,7 +66,7 @@ export const getDimensionThemes: GetDimensionThemes = (theme, options) => {
 
   return Object.entries(options.dimensions).reduce(
     (acc, [key, value]) => {
-      const [, dimension] = isMultiKey(value as any)
+      const [, dimension] = isMultiKey(value as string | Record<string, unknown>)
 
       const helper = options[key]
 

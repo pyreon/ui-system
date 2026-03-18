@@ -80,7 +80,7 @@ const styles: ResponsiveStylesCallback = ({ css: cssFn, theme: t, rootSize }) =>
     })
   };
 
-  ${t.extraStyles && extendCss(t.extraStyles as any)};
+  ${t.extraStyles && extendCss(t.extraStyles as Parameters<typeof extendCss>[0])};
 `
 
 const platformCSS = `box-sizing: border-box;`

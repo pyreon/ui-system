@@ -51,7 +51,7 @@ export const useDebouncedCallback: UseDebouncedCallback = (callback, delay) => {
 
   onUnmount(() => cancel())
 
-  return Object.assign(debounced, { cancel, flush }) as any
+  return Object.assign(debounced, { cancel, flush }) as DebouncedFn<typeof callback>
 }
 
 export default useDebouncedCallback

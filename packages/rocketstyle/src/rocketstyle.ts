@@ -227,7 +227,7 @@ const rocketComponent: RocketComponent = (options) => {
   FinalComponent.IS_ROCKETSTYLE = true
   FinalComponent.displayName = componentName
 
-  hoistNonReactStatics(FinalComponent as any, options.component)
+  hoistNonReactStatics(FinalComponent as Record<string, unknown>, options.component)
 
   // ------------------------------------------------------
   // enhance for chaining methods

@@ -144,12 +144,12 @@ export const merge = <T extends Record<string, any>>(
     if (source == null) continue
     for (const key of Object.keys(source)) {
       if (key === "__proto__" || key === "constructor" || key === "prototype") continue
-      const targetVal = (target as any)[key]
+      const targetVal = (target as Record<string, unknown>)[key]
       const sourceVal = source[key]
       if (isPlainObject(targetVal) && isPlainObject(sourceVal)) {
-        ;(target as any)[key] = merge({ ...targetVal }, sourceVal)
+        ;(target as Record<string, unknown>)[key] = merge({ ...targetVal }, sourceVal)
       } else {
-        ;(target as any)[key] = sourceVal
+        ;(target as Record<string, unknown>)[key] = sourceVal
       }
     }
   }

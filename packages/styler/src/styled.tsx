@@ -37,7 +37,9 @@ export interface StyledOptions {
 }
 
 const getDisplayName = (tag: Tag): string =>
-  typeof tag === "string" ? tag : (tag as any).displayName || (tag as any).name || "Component"
+  typeof tag === "string"
+    ? tag
+    : (tag as ComponentFn<any> & { displayName?: string }).displayName || tag.name || "Component"
 
 // Component cache: same template literal + tag + no options → same component.
 // WeakMap on `strings` (TemplateStringsArray is object-identity per source location).
@@ -102,7 +104,8 @@ const createStyledComponent = (
       )
     }
 
-    ;(StaticStyled as any).displayName = `styled(${getDisplayName(tag)})`
+    ;(StaticStyled as ComponentFn & { displayName?: string }).displayName =
+      `styled(${getDisplayName(tag)})`
 
     // Store in component cache + hot cache for future reuse
     if (!options && values.length === 0) {
@@ -143,7 +146,8 @@ const createStyledComponent = (
     )
   }
 
-  ;(DynamicStyled as any).displayName = `styled(${getDisplayName(tag)})`
+  ;(DynamicStyled as ComponentFn & { displayName?: string }).displayName =
+    `styled(${getDisplayName(tag)})`
   return DynamicStyled
 }
 
@@ -255,6 +259,9 @@ export type StyledFunction = ((tag: Tag, options?: StyledOptions) => TagTemplate
   [K in HtmlTags]: TagTemplateFn
 }
 
+// Proxy is needed to support styled.div`...` syntax; the cast bridges
+// styledFactory's call signature to StyledFunction which adds HTML tag properties.
+// Proxy target uses `as any` because TS can't resolve Proxy<StyledFunction> with mapped types
 export const styled: StyledFunction = new Proxy(styledFactory as any, {
   get(_target: unknown, prop: string) {
     if (prop === "prototype" || prop === "$$typeof") return undefined
