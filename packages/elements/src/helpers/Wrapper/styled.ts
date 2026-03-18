@@ -58,7 +58,7 @@ export default styled(component)`
   position: relative;
   ${platformCSS};
 
-  ${({ $childFix }: StyledProps) => $childFix && childFixCSS};
+  ${(({ $childFix }: StyledProps) => $childFix && childFixCSS) as any};
 
   ${makeItResponsive({
     key: "$element",

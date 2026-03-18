@@ -4,6 +4,7 @@ const Receiver = (props: any) => ({
   type: "div",
   props: { ...props, "data-testid": "receiver" },
   children: props.label ?? "",
+  key: null,
 })
 
 // --------------------------------------------------------

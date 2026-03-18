@@ -8,13 +8,33 @@ import { describe, expect, it, vi } from "vitest"
 // ---------------------------------------------------------------------------
 
 vi.mock("@pyreon/reactivity", () => {
-  const signal = <T>(initial: T): [() => T, (v: T | ((c: T) => T)) => void] => {
+  const signal = <T>(initial: T) => {
     let value = initial
-    const getter = () => value
-    const setter = (v: T | ((c: T) => T)) => {
-      value = typeof v === "function" ? (v as (c: T) => T)(value) : v
+    const s = (() => value) as (() => T) & {
+      set: (v: T) => void
+      update: (fn: (c: T) => T) => void
+      peek: () => T
+      subscribe: (listener: () => void) => () => void
+      direct: (updater: () => void) => () => void
+      label: string | undefined
+      debug: () => { name: string | undefined; value: T; subscriberCount: number }
     }
-    return [getter, setter]
+    s.set = (v: T) => {
+      value = v
+    }
+    s.update = (fn: (c: T) => T) => {
+      value = fn(value)
+    }
+    s.peek = () => value
+    s.subscribe = () => () => {
+      /* noop */
+    }
+    s.direct = () => () => {
+      /* noop */
+    }
+    s.label = undefined
+    s.debug = () => ({ name: undefined, value, subscriberCount: 0 })
+    return s
   }
 
   return { signal }

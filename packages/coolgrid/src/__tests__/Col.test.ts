@@ -18,11 +18,11 @@ vi.mock("@pyreon/core", async (importOriginal) => {
       mockCreateContext(...args)
       return original.createContext(args[0])
     },
-    useContext: (...args: any[]) => {
+    useContext: (ctx: any) => {
       if (mockUseContext.mock.results.length > 0 || mockUseContext.mock.calls.length > 0) {
-        return mockUseContext(...args)
+        return mockUseContext(ctx)
       }
-      return original.useContext(...args)
+      return original.useContext(ctx)
     },
   }
 })

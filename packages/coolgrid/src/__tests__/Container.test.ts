@@ -19,11 +19,11 @@ vi.mock("@pyreon/core", async (importOriginal) => {
     onUnmount: (...args: any[]) => {
       mockOnUnmount(...args)
     },
-    useContext: (...args: any[]) => {
+    useContext: (ctx: any) => {
       if (mockUseContext.mock.calls.length > 0) {
-        return mockUseContext(...args)
+        return mockUseContext(ctx)
       }
-      return original.useContext(...args)
+      return original.useContext(ctx)
     },
   }
 })
@@ -96,14 +96,14 @@ describe("Container", () => {
   it("uses width prop to override containerWidth", async () => {
     const Container = (await import("../Container")).default
     const result = asVNode(Container({ width: 960, children: "test" }))
-    expect(result.props.$coolgrid.width).toBe(960)
+    expect((result.props.$coolgrid as Record<string, unknown>).width).toBe(960)
   })
 
   it("accepts width as function", async () => {
     const Container = (await import("../Container")).default
     const widthFn = (_containerWidth: any) => 800
     const result = asVNode(Container({ width: widthFn as any, children: "test" }))
-    expect(result.props.$coolgrid.width).toBe(800)
+    expect((result.props.$coolgrid as Record<string, unknown>).width).toBe(800)
   })
 
   it("strips context keys from DOM props", async () => {

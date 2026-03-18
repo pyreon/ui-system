@@ -7,6 +7,9 @@ import type { InnerTheme } from "./types"
 type Css = (strings: TemplateStringsArray, ...values: any[]) => string
 type Calc = (...params: any[]) => ReturnType<Values>
 
+/** Mirrors the Value / PropertyValue types used by edge and borderRadius shorthands. */
+type Value = string | number | null | undefined
+
 const toCssDecl = (css: string, v: unknown) => (v == null ? "" : `${css}: ${v};`)
 
 const processSpecial = (
@@ -64,28 +67,28 @@ const processDescriptor = (
     case "edge":
       return (
         shorthand(d.property, {
-          full: t[d.keys.full],
-          x: t[d.keys.x],
-          y: t[d.keys.y],
-          top: t[d.keys.top],
-          left: t[d.keys.left],
-          bottom: t[d.keys.bottom],
-          right: t[d.keys.right],
+          full: t[d.keys.full] as Value,
+          x: t[d.keys.x] as Value,
+          y: t[d.keys.y] as Value,
+          top: t[d.keys.top] as Value,
+          left: t[d.keys.left] as Value,
+          bottom: t[d.keys.bottom] as Value,
+          right: t[d.keys.right] as Value,
         }) ?? ""
       )
 
     case "border_radius":
       return (
         borderRadiusFn({
-          full: t[d.keys.full],
-          top: t[d.keys.top],
-          bottom: t[d.keys.bottom],
-          left: t[d.keys.left],
-          right: t[d.keys.right],
-          topLeft: t[d.keys.topLeft],
-          topRight: t[d.keys.topRight],
-          bottomLeft: t[d.keys.bottomLeft],
-          bottomRight: t[d.keys.bottomRight],
+          full: t[d.keys.full] as Value,
+          top: t[d.keys.top] as Value,
+          bottom: t[d.keys.bottom] as Value,
+          left: t[d.keys.left] as Value,
+          right: t[d.keys.right] as Value,
+          topLeft: t[d.keys.topLeft] as Value,
+          topRight: t[d.keys.topRight] as Value,
+          bottomLeft: t[d.keys.bottomLeft] as Value,
+          bottomRight: t[d.keys.bottomRight] as Value,
         }) ?? ""
       )
 

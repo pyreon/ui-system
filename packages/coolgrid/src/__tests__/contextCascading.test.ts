@@ -99,7 +99,7 @@ describe("Context cascading: Container -> Row -> Col", () => {
 
     const result = asVNode(Col({ size: 4, children: "test" }))
     expect(result.props.$coolgrid).toBeDefined()
-    expect(result.props.$coolgrid.size).toBe(4)
+    expect((result.props.$coolgrid as Record<string, unknown>).size).toBe(4)
   })
 
   it("Col does not push context", async () => {

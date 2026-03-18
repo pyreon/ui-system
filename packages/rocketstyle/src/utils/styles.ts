@@ -14,5 +14,5 @@ type CalculateStyles = (styles: StylesCbArray | undefined) => ReturnType<StylesC
 export const calculateStyles: CalculateStyles = (styles) => {
   if (!styles) return []
 
-  return styles.map((item) => item(config.css))
+  return styles.map((item) => item(config.css as Parameters<typeof item>[0]))
 }

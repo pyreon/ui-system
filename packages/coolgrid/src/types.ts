@@ -51,11 +51,11 @@ export type ComponentProps = ConfigurationProps &
   }>
 
 export type StyledTypes = Partial<{
-  size: number
-  padding: number
-  gap: number
-  gutter: number
-  columns: number
+  size: number | undefined
+  padding: number | undefined
+  gap: number | undefined
+  gutter: number | undefined
+  columns: number | undefined
   extraStyles: Css
   contentAlignX: AlignContentAlignXKeys
   width: Value
@@ -64,6 +64,7 @@ export type StyledTypes = Partial<{
 export type ElementType<O extends string[]> = ComponentFn<
   Omit<ComponentProps, O[number]> & Record<string, unknown> & { children?: VNodeChild }
 > & {
+  displayName: string
   pkgName: string
   PYREON__COMPONENT: string
 }

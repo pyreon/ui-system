@@ -72,7 +72,7 @@ export type ExtendCss = Css | Css[] | Partial<Record<BreakpointKeys, Css>>
 export type ExtractProps<TComponentOrTProps> =
   TComponentOrTProps extends ComponentFn<infer TProps> ? TProps : TComponentOrTProps
 
-export type PyreonComponent<P extends Record<string, any> = Record<string, never>> =
+export type PyreonComponent<P extends Record<string, any> = Record<string, unknown>> =
   ComponentFn<P> & PyreonStatic
 
 export interface PyreonStatic {

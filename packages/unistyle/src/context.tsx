@@ -42,7 +42,7 @@ function Provider(props: TProvider): VNode | null {
     },
   }
 
-  return CoreProvider({ theme: enrichedTheme, children })
+  return CoreProvider({ theme: enrichedTheme, children }) as VNode | null
 }
 
 export { context }

@@ -92,7 +92,7 @@ const StyledComponent = styled(component)`
   align-self: stretch;
   flex-wrap: wrap;
 
-  ${({ $contentType }: StyledProps) => $contentType === "content" && typeContentCSS};
+  ${(({ $contentType }: StyledProps) => $contentType === "content" && typeContentCSS) as any};
 
   ${makeItResponsive({
     key: "$element",

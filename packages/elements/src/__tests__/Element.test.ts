@@ -172,9 +172,10 @@ describe("Element", () => {
       )
 
       const slots = getContentSlots(result)
-      expect(slots[0].props.contentType).toBe("before")
-      expect(slots[1].props.contentType).toBe("content")
-      expect(slots[2].props.contentType).toBe("after")
+      const [slot0, slot1, slot2] = slots as [VNode, VNode, VNode]
+      expect(slot0.props.contentType).toBe("before")
+      expect(slot1.props.contentType).toBe("content")
+      expect(slot2.props.contentType).toBe("after")
     })
 
     it("passes parentDirection to Content slots", () => {
@@ -205,8 +206,9 @@ describe("Element", () => {
       const slots = getContentSlots(result)
       // beforeContent makes isSimpleElement false, so content also gets a Content wrapper
       expect(slots).toHaveLength(2)
-      expect(slots[0].props.contentType).toBe("before")
-      expect(slots[1].props.contentType).toBe("content")
+      const [s0, s1] = slots as [VNode, VNode]
+      expect(s0.props.contentType).toBe("before")
+      expect(s1.props.contentType).toBe("content")
     })
 
     it("renders content and after Content slots when no beforeContent", () => {
@@ -221,8 +223,9 @@ describe("Element", () => {
       const slots = getContentSlots(result)
       // content slot + after slot (both are Content wrappers since afterContent makes it non-simple)
       expect(slots).toHaveLength(2)
-      expect(slots[0].props.contentType).toBe("content")
-      expect(slots[1].props.contentType).toBe("after")
+      const [c0, c1] = slots as [VNode, VNode]
+      expect(c0.props.contentType).toBe("content")
+      expect(c1.props.contentType).toBe("after")
     })
 
     it("uses span sub-tag for inline parent elements (like span)", () => {

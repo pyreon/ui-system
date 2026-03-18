@@ -32,7 +32,11 @@ type ListProps = {
 
 export type Props = MergeTypes<[IteratorProps, ListProps]>
 
-const Component: PyreonElement<Props> = ({ rootElement = false, ref, ...props }) => {
+const Component: PyreonElement<Props> = (({
+  rootElement = false,
+  ref,
+  ...props
+}: Partial<Props> & { ref?: unknown }) => {
   const renderedList = <Iterator {...pick(props, Iterator.RESERVED_PROPS)} />
 
   if (!rootElement) return renderedList
@@ -42,7 +46,7 @@ const Component: PyreonElement<Props> = ({ rootElement = false, ref, ...props })
       {renderedList}
     </Element>
   )
-}
+}) as PyreonElement<Props>
 
 const name = `${PKG_NAME}/List` as const
 

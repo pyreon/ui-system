@@ -27,8 +27,8 @@ export type MakeItResponsiveStyles<T extends Partial<Record<string, any>> = any>
 }: {
   theme: T
   css: Css
-  rootSize?: number
-  globalTheme?: Record<string, any>
+  rootSize?: number | undefined
+  globalTheme?: Record<string, any> | undefined
 }) => ReturnType<typeof css> | string | any
 
 export type MakeItResponsive = ({

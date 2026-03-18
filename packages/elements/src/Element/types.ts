@@ -140,7 +140,7 @@ export type Props = Partial<{
   /**
    * `dangerouslySetInnerHTML` prop
    */
-  dangerouslySetInnerHTML: { __html: string | TrustedHTML }
+  dangerouslySetInnerHTML: { __html: string }
 
   /**
    * An additional prop for extending styling of the **root** wrapper element
@@ -163,7 +163,5 @@ export type Props = Partial<{
   afterContentCss: ExtendCss
 }>
 
-export type PyreonElement<P extends Record<string, unknown> = Record<string, never>> = ComponentFn<
-  Props & P
-> &
-  PyreonStatic
+export type PyreonElement<P extends Record<string, unknown> = Record<string, unknown>> =
+  ComponentFn<Props & P> & PyreonStatic

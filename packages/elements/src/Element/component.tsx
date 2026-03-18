@@ -117,7 +117,7 @@ const Component: PyreonElement = ({
     equalizeRef = node
     if (typeof externalRef === "function") externalRef(node)
     else if (externalRef != null) {
-      ;(externalRef as { current: HTMLElement | null }).current = node
+      ;(externalRef as unknown as { current: HTMLElement | null }).current = node
     }
   }
 

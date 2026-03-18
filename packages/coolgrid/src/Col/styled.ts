@@ -13,7 +13,7 @@ const hasWidth: HasWidth = (size, columns) => hasValue(size) && hasValue(columns
 
 type WidthStyles = (
   props: Pick<StyledTypes, "size" | "columns" | "gap">,
-  defaults: { rootSize?: number },
+  defaults: { rootSize?: number | undefined },
 ) => CssOutput
 
 /**

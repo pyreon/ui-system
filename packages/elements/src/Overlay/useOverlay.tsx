@@ -333,11 +333,11 @@ const useOverlay = ({
   const ctx = useOverlayContext()
 
   // Signal-based state
-  const [active, setActive] = signal(isOpen)
-  const [isContentLoaded, setContentLoaded] = signal(false)
-  const [innerAlignX, setInnerAlignX] = signal(propAlignX)
-  const [innerAlignY, setInnerAlignY] = signal(propAlignY)
-  const [blockedCount, setBlockedCount] = signal(0)
+  const active = signal(isOpen)
+  const isContentLoaded = signal(false)
+  const innerAlignX = signal(propAlignX)
+  const innerAlignY = signal(propAlignY)
+  const blockedCount = signal(0)
 
   const blocked = () => blockedCount() > 0
 
@@ -353,21 +353,21 @@ const useOverlay = ({
 
   const contentRefCallback = (node: HTMLElement | null) => {
     contentEl = node
-    setContentLoaded(!!node)
+    isContentLoaded.set(!!node)
   }
 
-  const setBlocked = () => setBlockedCount((c) => c + 1)
-  const setUnblocked = () => setBlockedCount((c) => Math.max(0, c - 1))
+  const setBlocked = () => blockedCount.update((c) => c + 1)
+  const setUnblocked = () => blockedCount.update((c) => Math.max(0, c - 1))
 
   const showContent = () => {
-    setActive(true)
+    active.set(true)
     onOpen?.()
     ctx.setBlocked?.()
   }
 
   const hideContent = () => {
-    setActive(false)
-    setContentLoaded(false)
+    active.set(false)
+    isContentLoaded.set(false)
     onClose?.()
     ctx.setUnblocked?.()
   }
@@ -402,8 +402,8 @@ const useOverlay = ({
       getAncestorOffset(),
     )
 
-    if (result.resolvedAlignX) setInnerAlignX(result.resolvedAlignX)
-    if (result.resolvedAlignY) setInnerAlignY(result.resolvedAlignY)
+    if (result.resolvedAlignX) innerAlignX.set(result.resolvedAlignX)
+    if (result.resolvedAlignY) innerAlignY.set(result.resolvedAlignY)
 
     return result.pos
   }
@@ -594,7 +594,7 @@ const useOverlay = ({
 
   // Handle disabled state
   if (disabled) {
-    setActive(false)
+    active.set(false)
   }
 
   return {

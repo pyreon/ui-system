@@ -16,16 +16,16 @@ import type {
 } from "~/types"
 
 export interface Props {
-  parentDirection: Direction
-  gap: Responsive
-  contentType: "before" | "content" | "after"
+  parentDirection: Direction | undefined
+  gap: Responsive | undefined
+  contentType: "before" | "content" | "after" | undefined
   children: Content
-  tag: HTMLTags
-  direction: Direction
-  alignX: AlignX
-  alignY: AlignY
-  equalCols: ResponsiveBoolType
-  extendCss: ExtendCss
+  tag: HTMLTags | undefined
+  direction: Direction | undefined
+  alignX: AlignX | undefined
+  alignY: AlignY | undefined
+  equalCols: ResponsiveBoolType | undefined
+  extendCss: ExtendCss | undefined
 }
 
 export interface StyledProps {

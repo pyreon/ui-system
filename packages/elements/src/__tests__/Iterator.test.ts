@@ -253,13 +253,14 @@ describe("Iterator", () => {
       })
       expect(itemPropsFn).toHaveBeenCalledTimes(3)
       // First call: position 1, first=true, last=false
-      expect(itemPropsFn.mock.calls[0][1]).toMatchObject({
+      const calls = itemPropsFn.mock.calls as unknown[][]
+      expect((calls[0] as unknown[])[1]).toMatchObject({
         position: 1,
         first: true,
         last: false,
       })
       // Last call: position 3, first=false, last=true
-      expect(itemPropsFn.mock.calls[2][1]).toMatchObject({
+      expect((calls[2] as unknown[])[1]).toMatchObject({
         position: 3,
         first: false,
         last: true,
@@ -319,8 +320,9 @@ describe("Iterator", () => {
         wrapProps: wrapPropsFn,
       })
       expect(wrapPropsFn).toHaveBeenCalledTimes(2)
-      expect(wrapPropsFn.mock.calls[0][1]).toMatchObject({ position: 1 })
-      expect(wrapPropsFn.mock.calls[1][1]).toMatchObject({ position: 2 })
+      const wCalls = wrapPropsFn.mock.calls as unknown[][]
+      expect((wCalls[0] as unknown[])[1]).toMatchObject({ position: 1 })
+      expect((wCalls[1] as unknown[])[1]).toMatchObject({ position: 2 })
     })
 
     it("wraps object array items with wrapComponent and wrapProps callback", () => {
@@ -352,8 +354,9 @@ describe("Iterator", () => {
         itemProps: itemPropsFn,
       })
       expect(itemPropsFn).toHaveBeenCalledTimes(2)
-      expect(itemPropsFn.mock.calls[0][1]).toMatchObject({ first: true })
-      expect(itemPropsFn.mock.calls[1][1]).toMatchObject({ first: false })
+      const ipCalls = itemPropsFn.mock.calls as unknown[][]
+      expect((ipCalls[0] as unknown[])[1]).toMatchObject({ first: true })
+      expect((ipCalls[1] as unknown[])[1]).toMatchObject({ first: false })
     })
 
     it("skips wrapComponent for items with custom component in object array", () => {

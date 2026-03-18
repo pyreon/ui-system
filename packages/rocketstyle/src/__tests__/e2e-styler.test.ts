@@ -38,9 +38,11 @@ afterAll(() => {
 })
 
 /** Component that captures $rocketstyle for inspection */
-const ThemeCapture = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
+const ThemeCapture: any = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
   type: "div",
   props: rest,
+  children: [],
+  key: null,
   $rocketstyle,
   $rocketstate,
 })

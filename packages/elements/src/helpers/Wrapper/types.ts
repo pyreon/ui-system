@@ -17,15 +17,15 @@ export type Reference = unknown
 
 export interface Props {
   children: VNodeChild
-  tag: HTMLTags
-  block: ResponsiveBoolType
-  isInline: boolean
-  direction: Direction
-  alignX: AlignX
-  alignY: AlignY
-  equalCols: ResponsiveBoolType
-  extendCss: ExtendCss
-  dangerouslySetInnerHTML: { __html: string | TrustedHTML }
+  tag: HTMLTags | undefined
+  block: ResponsiveBoolType | undefined
+  isInline: boolean | undefined
+  direction: Direction | undefined
+  alignX: AlignX | undefined
+  alignY: AlignY | undefined
+  equalCols: ResponsiveBoolType | undefined
+  extendCss: ExtendCss | undefined
+  dangerouslySetInnerHTML: { __html: string } | undefined
 }
 
 export interface StyledProps {

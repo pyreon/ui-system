@@ -34,10 +34,11 @@ afterAll(() => {
  * Base component that filters internal props and returns a VNode-like object.
  * In Pyreon, components are plain functions — no forwardRef needed.
  */
-const BaseComponent = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
+const BaseComponent: any = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
   type: "div",
   props: rest,
   children,
+  key: null,
   $rocketstyle,
   $rocketstate,
 })
@@ -377,10 +378,17 @@ describe("DEBUG option", () => {
 // --------------------------------------------------------
 describe("passProps option", () => {
   it("passes styling props through when passProps is configured", () => {
-    const PassPropsComponent = ({ children, $rocketstyle, $rocketstate, state, ...rest }: any) => ({
+    const PassPropsComponent: any = ({
+      children,
+      $rocketstyle,
+      $rocketstate,
+      state,
+      ...rest
+    }: any) => ({
       type: "div",
       props: { ...rest, "data-state": state },
       children,
+      key: null,
     })
     PassPropsComponent.displayName = "PassPropsComponent"
 
@@ -399,10 +407,17 @@ describe("passProps option", () => {
   })
 
   it("does not pass styling props without passProps", () => {
-    const PassPropsComponent = ({ children, $rocketstyle, $rocketstate, state, ...rest }: any) => ({
+    const PassPropsComponent: any = ({
+      children,
+      $rocketstyle,
+      $rocketstate,
+      state,
+      ...rest
+    }: any) => ({
       type: "div",
       props: { ...rest, "data-state": state ?? "none" },
       children,
+      key: null,
     })
     PassPropsComponent.displayName = "NoPassPropsComponent"
 
@@ -424,12 +439,13 @@ describe("passProps option", () => {
 // --------------------------------------------------------
 describe("IS_ROCKETSTYLE component wrapping", () => {
   it("skips styled() wrapping when component already has IS_ROCKETSTYLE", () => {
-    const MarkedComponent = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
+    const MarkedComponent: any = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
       type: "div",
       props: rest,
       children,
+      key: null,
     })
-    ;(MarkedComponent as any).IS_ROCKETSTYLE = true
+    MarkedComponent.IS_ROCKETSTYLE = true
     MarkedComponent.displayName = "MarkedComponent"
 
     const Outer: any = rocketstyle()({
@@ -443,12 +459,13 @@ describe("IS_ROCKETSTYLE component wrapping", () => {
   })
 
   it("renders IS_ROCKETSTYLE component when chained with config", () => {
-    const MarkedComponent = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
+    const MarkedComponent: any = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
       type: "div",
       props: rest,
       children,
+      key: null,
     })
-    ;(MarkedComponent as any).IS_ROCKETSTYLE = true
+    MarkedComponent.IS_ROCKETSTYLE = true
     MarkedComponent.displayName = "MarkedComponent"
 
     const Outer: any = rocketstyle()({
@@ -548,9 +565,11 @@ describe("rendering without Provider context", () => {
 // --------------------------------------------------------
 describe("theme and state injection", () => {
   it("passes $rocketstyle theme to inner component", () => {
-    const Receiver = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
+    const Receiver: any = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
       type: "div",
       props: rest,
+      children: [],
+      key: null,
       $rocketstyle,
       $rocketstate,
     })
@@ -572,9 +591,11 @@ describe("theme and state injection", () => {
   })
 
   it("passes $rocketstate with active dimensions to inner component", () => {
-    const Receiver = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
+    const Receiver: any = ({ $rocketstyle, $rocketstate, ...rest }: any) => ({
       type: "div",
       props: rest,
+      children: [],
+      key: null,
       $rocketstyle,
       $rocketstate,
     })

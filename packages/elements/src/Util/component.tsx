@@ -4,7 +4,7 @@
  * helper to clone children with the merged props.
  */
 
-import type { VNodeChild } from "@pyreon/core"
+import type { VNode, VNodeChild } from "@pyreon/core"
 import { render } from "@pyreon/ui-core"
 import { PKG_NAME } from "~/constants"
 import type { PyreonComponent } from "~/types"
@@ -17,22 +17,22 @@ export interface Props {
   /**
    * Class name(s) to be added to children component.
    */
-  className?: string | string[]
+  className?: string | string[] | undefined
   /**
    * Style property to extend children component inline styles
    */
-  style?: Record<string, unknown>
+  style?: Record<string, unknown> | undefined
 }
 
-const Component: PyreonComponent<Props> = ({ children, className, style }) => {
+const Component: PyreonComponent<Props> = (({ children, className, style }: Props) => {
   const mergedClasses = Array.isArray(className) ? className.join(" ") : className
 
   const finalProps: Record<string, any> = {}
   if (style) finalProps.style = style
   if (mergedClasses) finalProps.className = mergedClasses
 
-  return render(children, finalProps)
-}
+  return render(children, finalProps) as VNode | null
+}) as PyreonComponent<Props>
 
 const name = `${PKG_NAME}/Util` as const
 

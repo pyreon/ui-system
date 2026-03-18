@@ -1,4 +1,4 @@
-type Css = (strings: TemplateStringsArray, ...values: any[]) => string
+type Css = (strings: TemplateStringsArray, ...values: any[]) => any
 
 export type CreateMediaQueries = <
   B extends Record<string, number>,
@@ -15,11 +15,11 @@ const createMediaQueries: CreateMediaQueries = ({ breakpoints, rootSize, css }) 
     const breakpointValue = (breakpoints as Record<string, number>)[key]
 
     if (breakpointValue === 0) {
-      acc[key] = (...args: any[]) => css(...args)
+      acc[key] = (...args: [TemplateStringsArray, ...any[]]) => css(...args)
     } else if (breakpointValue != null) {
       const emSize = breakpointValue / rootSize
 
-      acc[key] = (...args: any[]) => css`
+      acc[key] = (...args: [TemplateStringsArray, ...any[]]) => css`
           @media only screen and (min-width: ${emSize}em) {
             ${css(...args)};
           }

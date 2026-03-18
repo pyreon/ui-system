@@ -32,7 +32,8 @@ export type Props = Partial<{
    * If an additional styling needs to be added, it can be do so via injecting styles using this property.
    */
   css: ExtendCss
-}>
+}> &
+  Record<string, unknown>
 
 const Component: PyreonComponent<Props> & {
   isText?: true

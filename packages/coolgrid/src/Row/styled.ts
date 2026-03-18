@@ -14,7 +14,7 @@ const { styled, css, component } = config
  */
 type SpacingStyles = (
   props: Pick<StyledTypes, "gap" | "gutter">,
-  { rootSize }: { rootSize?: number },
+  { rootSize }: { rootSize?: number | undefined },
 ) => CssOutput
 
 const spacingStyles: SpacingStyles = ({ gap, gutter }, { rootSize }) => {

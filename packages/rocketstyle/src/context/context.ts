@@ -1,8 +1,7 @@
-import type { VNode } from "@pyreon/core"
+import type { VNode, VNodeChild } from "@pyreon/core"
 import { useContext } from "@pyreon/core"
 import { Provider as CoreProvider, context } from "@pyreon/ui-core"
 import { MODE_DEFAULT, THEME_MODES_INVERSED } from "~/constants"
-import type { ComponentFn } from "~/types/utils"
 
 type Theme = {
   rootSize: number
@@ -14,7 +13,7 @@ export type TProvider = {
   theme?: Theme | undefined
   mode?: "light" | "dark" | undefined
   inversed?: boolean | undefined
-  provider?: ComponentFn<any> | undefined
+  provider?: ((props: Record<string, unknown>) => VNodeChild) | undefined
 }
 
 /**
@@ -24,7 +23,7 @@ export type TProvider = {
  *
  * In Pyreon, context is provided via pushContext/popContext instead of React.Provider.
  */
-const Provider: ComponentFn<TProvider> = ({ provider = CoreProvider, inversed, ...props }) => {
+const Provider = ({ provider = CoreProvider, inversed, ...props }: TProvider): VNode | null => {
   const ctx = useContext<TProvider>(context)
 
   const { theme, mode, provider: RocketstyleProvider, children } = { ...ctx, ...props, provider }
@@ -35,14 +34,16 @@ const Provider: ComponentFn<TProvider> = ({ provider = CoreProvider, inversed, .
     newMode = inversed ? THEME_MODES_INVERSED[mode] : mode
   }
 
-  return RocketstyleProvider({
+  const result = RocketstyleProvider({
     mode: newMode,
     isDark: newMode === "dark",
     isLight: newMode === "light",
-    theme,
+    ...(theme !== undefined ? { theme } : {}),
     provider,
     children,
   })
+
+  return (result ?? null) as VNode | null
 }
 
 export { context }

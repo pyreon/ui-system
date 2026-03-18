@@ -32,7 +32,7 @@ afterAll(() => {
  * Base component that exposes internal props for testing.
  * In Pyreon, components are plain functions — no forwardRef needed.
  */
-const BaseComponent = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
+const BaseComponent: any = ({ children, $rocketstyle, $rocketstate, ...rest }: any) => ({
   type: "div",
   props: {
     ...rest,
@@ -47,7 +47,13 @@ const BaseComponent = ({ children, $rocketstyle, $rocketstate, ...rest }: any) =
 BaseComponent.displayName = "BaseComponent"
 
 /** Child component that reads consumer context */
-const ChildComponent = ({ children, $rocketstyle, $rocketstate, parentHover, ...rest }: any) => ({
+const ChildComponent: any = ({
+  children,
+  $rocketstyle,
+  $rocketstate,
+  parentHover,
+  ...rest
+}: any) => ({
   type: "div",
   props: { ...rest, "data-parent-hover": parentHover ?? "none" },
   children,

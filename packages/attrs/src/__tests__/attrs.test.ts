@@ -10,6 +10,7 @@ const BaseComponent = (props: any) => ({
   type: "div",
   props: { ...props, "data-testid": "base" },
   children: props.children ?? props.label ?? null,
+  key: null,
 })
 
 /** Helper: call the component and return its output for inspection. */
@@ -161,6 +162,7 @@ describe(".config() chaining", () => {
       type: "span",
       props: { ...props, "data-testid": "alt" },
       children: props.label,
+      key: null,
     })
 
     const Original = attrs({ name: "Test", component: BaseComponent })
@@ -176,6 +178,7 @@ describe(".config() chaining", () => {
       type: "span",
       props: { ...props, "data-testid": "alt" },
       children: props.label,
+      key: null,
     })
 
     const Component = attrs({ name: "Test", component: BaseComponent })
@@ -227,6 +230,7 @@ describe(".compose() chaining", () => {
       type: "div",
       props: { "data-testid": "hoc-wrapper" },
       children: WrappedComponent(props),
+      key: null,
     })
 
     const Component = attrs({
@@ -267,6 +271,7 @@ describe(".compose() chaining", () => {
       type: "div",
       props: { "data-testid": "hoc-wrapper" },
       children: WrappedComponent(props),
+      key: null,
     })
 
     const WithHoc = attrs({
@@ -358,6 +363,7 @@ describe("displayName resolution", () => {
       type: "div",
       props,
       children: props.children,
+      key: null,
     })
     NamedComponent.displayName = "MyDisplayName"
 
@@ -379,6 +385,7 @@ describe("displayName resolution", () => {
         type: "div",
         props,
         children: props.children,
+        key: null,
       }
     }
 

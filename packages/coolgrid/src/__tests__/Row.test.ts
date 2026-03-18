@@ -19,11 +19,11 @@ vi.mock("@pyreon/core", async (importOriginal) => {
     onUnmount: (...args: any[]) => {
       mockOnUnmount(...args)
     },
-    useContext: (...args: any[]) => {
+    useContext: (ctx: any) => {
       if (mockUseContext.mock.calls.length > 0) {
-        return mockUseContext(...args)
+        return mockUseContext(ctx)
       }
-      return original.useContext(...args)
+      return original.useContext(ctx)
     },
   }
 })
@@ -96,7 +96,7 @@ describe("Row", () => {
   it("passes contentAlignX to $coolgrid", async () => {
     const Row = (await import("../Row")).default
     const result = asVNode(Row({ contentAlignX: "center", children: "test" }))
-    expect(result.props.$coolgrid.contentAlignX).toBe("center")
+    expect((result.props.$coolgrid as Record<string, unknown>).contentAlignX).toBe("center")
   })
 
   it("strips context keys from DOM props", async () => {
