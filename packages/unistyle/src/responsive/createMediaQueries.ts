@@ -10,11 +10,7 @@ export type CreateMediaQueries = <
   css: C
 }) => Record<keyof B, (...args: any[]) => string>
 
-const createMediaQueries: CreateMediaQueries = ({
-  breakpoints,
-  rootSize,
-  css,
-}) =>
+const createMediaQueries: CreateMediaQueries = ({ breakpoints, rootSize, css }) =>
   Object.keys(breakpoints).reduce<Record<string, any>>((acc, key) => {
     const breakpointValue = (breakpoints as Record<string, number>)[key]
 

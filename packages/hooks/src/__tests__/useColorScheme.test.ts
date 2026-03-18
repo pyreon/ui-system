@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 let mountCallbacks: Array<() => unknown> = []
 let unmountCallbacks: Array<() => void> = []
 
-vi.mock('@pyreon/core', () => ({
+vi.mock("@pyreon/core", () => ({
   onMount: (fn: () => unknown) => {
     mountCallbacks.push(fn)
   },
@@ -12,9 +12,9 @@ vi.mock('@pyreon/core', () => ({
   },
 }))
 
-import { useColorScheme } from '../useColorScheme'
+import { useColorScheme } from "../useColorScheme"
 
-describe('useColorScheme', () => {
+describe("useColorScheme", () => {
   let changeListeners: Map<string, (e: MediaQueryListEvent) => void>
 
   beforeEach(() => {
@@ -22,72 +22,80 @@ describe('useColorScheme', () => {
     unmountCallbacks = []
     changeListeners = new Map()
 
-    Object.defineProperty(window, 'matchMedia', {
+    Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: vi.fn((query: string) => ({
         matches: false,
         media: query,
         addEventListener: vi.fn((event: string, cb: (e: MediaQueryListEvent) => void) => {
-          if (event === 'change') changeListeners.set(query, cb)
+          if (event === "change") changeListeners.set(query, cb)
         }),
         removeEventListener: vi.fn(),
       })),
     })
   })
 
-  it('returns light by default', () => {
+  it("returns light by default", () => {
     const scheme = useColorScheme()
-    mountCallbacks.forEach(cb => cb())
-    expect(scheme()).toBe('light')
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
+    expect(scheme()).toBe("light")
   })
 
-  it('returns dark when prefers-color-scheme is dark', () => {
-    Object.defineProperty(window, 'matchMedia', {
+  it("returns dark when prefers-color-scheme is dark", () => {
+    Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: vi.fn((query: string) => ({
         matches: true,
         media: query,
         addEventListener: vi.fn((event: string, cb: (e: MediaQueryListEvent) => void) => {
-          if (event === 'change') changeListeners.set(query, cb)
+          if (event === "change") changeListeners.set(query, cb)
         }),
         removeEventListener: vi.fn(),
       })),
     })
 
     const scheme = useColorScheme()
-    mountCallbacks.forEach(cb => cb())
-    expect(scheme()).toBe('dark')
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
+    expect(scheme()).toBe("dark")
   })
 
-  it('updates when color scheme changes from light to dark', () => {
+  it("updates when color scheme changes from light to dark", () => {
     const scheme = useColorScheme()
-    mountCallbacks.forEach(cb => cb())
-    expect(scheme()).toBe('light')
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
+    expect(scheme()).toBe("light")
 
-    const listener = changeListeners.get('(prefers-color-scheme: dark)')
+    const listener = changeListeners.get("(prefers-color-scheme: dark)")
     listener?.({ matches: true } as MediaQueryListEvent)
-    expect(scheme()).toBe('dark')
+    expect(scheme()).toBe("dark")
   })
 
-  it('updates when color scheme changes from dark to light', () => {
-    Object.defineProperty(window, 'matchMedia', {
+  it("updates when color scheme changes from dark to light", () => {
+    Object.defineProperty(window, "matchMedia", {
       writable: true,
       value: vi.fn((query: string) => ({
         matches: true,
         media: query,
         addEventListener: vi.fn((event: string, cb: (e: MediaQueryListEvent) => void) => {
-          if (event === 'change') changeListeners.set(query, cb)
+          if (event === "change") changeListeners.set(query, cb)
         }),
         removeEventListener: vi.fn(),
       })),
     })
 
     const scheme = useColorScheme()
-    mountCallbacks.forEach(cb => cb())
-    expect(scheme()).toBe('dark')
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
+    expect(scheme()).toBe("dark")
 
-    const listener = changeListeners.get('(prefers-color-scheme: dark)')
+    const listener = changeListeners.get("(prefers-color-scheme: dark)")
     listener?.({ matches: false } as MediaQueryListEvent)
-    expect(scheme()).toBe('light')
+    expect(scheme()).toBe("light")
   })
 })

@@ -3,9 +3,9 @@
  * value types (single | array | breakpoint-map) for layout props like
  * alignment and direction, plus utility types for merging prop objects.
  */
-import type { BreakpointKeys, ComponentFn, VNodeChild } from '@pyreon/core'
-import type { config, render } from '@pyreon/ui-core'
-import type { MakeItResponsiveStyles } from '@pyreon/unistyle'
+import type { BreakpointKeys, ComponentFn } from "@pyreon/core"
+import type { config, render } from "@pyreon/ui-core"
+import type { MakeItResponsiveStyles } from "@pyreon/unistyle"
 
 export type ResponsiveStylesCallback = MakeItResponsiveStyles
 
@@ -21,9 +21,7 @@ type Spread<A extends readonly [...any]> = A extends [infer L, ...infer R]
   ? SpreadTwo<L, Spread<R>>
   : unknown
 
-export type MergeTypes<A extends readonly [...any]> = ExtractNullableKeys<
-  Spread<A>
->
+export type MergeTypes<A extends readonly [...any]> = ExtractNullableKeys<Spread<A>>
 
 export type InnerRef = HTMLElement | ((el: HTMLElement | null) => void) | null
 
@@ -31,29 +29,13 @@ export type CssCallback = (css: typeof config.css) => ReturnType<typeof css>
 
 export type Css = CssCallback | ReturnType<typeof config.css> | string
 
-export type Content = Parameters<typeof render>['0']
+export type Content = Parameters<typeof render>["0"]
 
-export type ContentAlignX =
-  | 'left'
-  | 'center'
-  | 'right'
-  | 'spaceBetween'
-  | 'spaceAround'
-  | 'block'
+export type ContentAlignX = "left" | "center" | "right" | "spaceBetween" | "spaceAround" | "block"
 
-export type ContentAlignY =
-  | 'top'
-  | 'center'
-  | 'bottom'
-  | 'spaceBetween'
-  | 'spaceAround'
-  | 'block'
+export type ContentAlignY = "top" | "center" | "bottom" | "spaceBetween" | "spaceAround" | "block"
 
-export type ContentDirection =
-  | 'inline'
-  | 'rows'
-  | 'reverseInline'
-  | 'reverseRows'
+export type ContentDirection = "inline" | "rows" | "reverseInline" | "reverseRows"
 
 export type ContentBoolean = boolean
 export type ContentSimpleValue = string | number
@@ -88,11 +70,10 @@ export type Responsive =
 export type ExtendCss = Css | Css[] | Partial<Record<BreakpointKeys, Css>>
 
 export type ExtractProps<TComponentOrTProps> =
-  TComponentOrTProps extends ComponentFn<infer TProps>
-    ? TProps
-    : TComponentOrTProps
+  TComponentOrTProps extends ComponentFn<infer TProps> ? TProps : TComponentOrTProps
 
-export type PyreonComponent<P extends Record<string, any> = Record<string, never>> = ComponentFn<P> & PyreonStatic
+export type PyreonComponent<P extends Record<string, any> = Record<string, never>> =
+  ComponentFn<P> & PyreonStatic
 
 export interface PyreonStatic {
   displayName?: string | undefined

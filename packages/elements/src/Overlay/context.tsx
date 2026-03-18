@@ -3,14 +3,9 @@
  * sets the parent's blocked state to true, preventing the parent from
  * closing in response to click/hover events that belong to the child.
  */
-import {
-  createContext,
-  pushContext,
-  popContext,
-  useContext,
-  onUnmount,
-} from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
+
+import type { VNodeChild } from "@pyreon/core"
+import { createContext, onUnmount, popContext, pushContext, useContext } from "@pyreon/core"
 
 export interface OverlayContext {
   blocked: boolean | (() => boolean)

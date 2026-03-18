@@ -1,5 +1,5 @@
-import { signal } from '@pyreon/reactivity'
-import { onMount, onUnmount } from '@pyreon/core'
+import { onMount, onUnmount } from "@pyreon/core"
+import { signal } from "@pyreon/reactivity"
 
 /**
  * Observe element intersection reactively.

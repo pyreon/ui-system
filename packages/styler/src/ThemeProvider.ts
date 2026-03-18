@@ -11,8 +11,8 @@
  *     }
  *   }
  */
-import type { VNode, VNodeChild } from '@pyreon/core'
-import { createContext, onUnmount, popContext, pushContext, useContext } from '@pyreon/core'
+import type { VNode, VNodeChild } from "@pyreon/core"
+import { createContext, onUnmount, popContext, pushContext, useContext } from "@pyreon/core"
 
 // biome-ignore lint/suspicious/noEmptyInterface: augmentable via module declaration merging
 export interface DefaultTheme {}
@@ -22,11 +22,16 @@ type Theme = DefaultTheme & Record<string, unknown>
 export const ThemeContext = createContext<Theme>({} as Theme)
 
 /** Hook to read the current theme from the nearest ThemeProvider. */
-export const useTheme = <T extends Theme = Theme>(): T =>
-  useContext(ThemeContext) as T
+export const useTheme = <T extends object = Theme>(): T => useContext(ThemeContext) as T
 
 /** Provides a theme object to all nested styled components via Pyreon context. */
-export function ThemeProvider({ theme, children }: { theme: Theme; children?: VNodeChild }): VNode | null {
+export function ThemeProvider({
+  theme,
+  children,
+}: {
+  theme: Theme
+  children?: VNodeChild
+}): VNode | null {
   const frame = new Map<symbol, unknown>([[ThemeContext.id, theme]])
   pushContext(frame)
   onUnmount(() => popContext())

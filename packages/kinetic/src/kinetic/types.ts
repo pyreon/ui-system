@@ -1,14 +1,14 @@
-import type { ComponentFn, VNode } from '@pyreon/core'
+import type { ComponentFn, VNodeChild } from "@pyreon/core"
 import type {
-  CSSProperties,
   ClassTransitionProps,
+  CSSProperties,
   StyleTransitionProps,
   TransitionCallbacks,
-} from '../types'
+} from "../types"
 
 // ─── Kinetic Modes ────────────────────────────────────────
 
-export type KineticMode = 'transition' | 'collapse' | 'stagger' | 'group'
+export type KineticMode = "transition" | "collapse" | "stagger" | "group"
 
 // ─── Internal Config (accumulated through chaining) ──────
 
@@ -64,56 +64,35 @@ export type GroupConfigOpts = {
 
 // ─── Mode-specific component props ───────────────────────
 
-/** Keys that belong to kinetic and should NOT be forwarded as HTML attributes. */
-type KineticOwnKeys =
-  | 'show'
-  | 'appear'
-  | 'unmount'
-  | 'timeout'
-  | 'transition'
-  | 'interval'
-  | 'reverseLeave'
-  | keyof TransitionCallbacks
-  | 'children'
-
-export type KineticTransitionProps<Tag extends string> = Record<
-  string,
-  unknown
-> & {
+export type KineticTransitionProps<_Tag extends string> = Record<string, unknown> & {
   show: () => boolean
   appear?: boolean | undefined
   unmount?: boolean | undefined
   timeout?: number | undefined
-  children?: VNode | VNode[] | undefined
+  children?: VNodeChild | undefined
 } & Partial<TransitionCallbacks>
 
-export type KineticCollapseProps<Tag extends string> = Record<
-  string,
-  unknown
-> & {
+export type KineticCollapseProps<_Tag extends string> = Record<string, unknown> & {
   show: () => boolean
   appear?: boolean | undefined
   timeout?: number | undefined
   transition?: string | undefined
-  children?: VNode | VNode[] | undefined
+  children?: VNodeChild | undefined
 } & Partial<TransitionCallbacks>
 
-export type KineticStaggerProps<Tag extends string> = Record<
-  string,
-  unknown
-> & {
+export type KineticStaggerProps<_Tag extends string> = Record<string, unknown> & {
   show: () => boolean
   appear?: boolean | undefined
   timeout?: number | undefined
   interval?: number | undefined
   reverseLeave?: boolean | undefined
-  children: VNode[] | VNode
+  children: VNodeChild
 } & Partial<TransitionCallbacks>
 
-export type KineticGroupProps<Tag extends string> = Record<string, unknown> & {
+export type KineticGroupProps<_Tag extends string> = Record<string, unknown> & {
   appear?: boolean | undefined
   timeout?: number | undefined
-  children: VNode[] | VNode
+  children: VNodeChild
 } & Partial<TransitionCallbacks>
 
 // ─── Conditional props based on mode ─────────────────────
@@ -121,30 +100,29 @@ export type KineticGroupProps<Tag extends string> = Record<string, unknown> & {
 export type KineticComponentProps<
   Tag extends string,
   Mode extends KineticMode,
-> = Mode extends 'collapse'
+> = Mode extends "collapse"
   ? KineticCollapseProps<Tag>
-  : Mode extends 'stagger'
+  : Mode extends "stagger"
     ? KineticStaggerProps<Tag>
-    : Mode extends 'group'
+    : Mode extends "group"
       ? KineticGroupProps<Tag>
       : KineticTransitionProps<Tag>
 
 // ─── Conditional config opts based on mode ───────────────
 
-type ConfigOpts<Mode extends KineticMode> = Mode extends 'collapse'
+type ConfigOpts<Mode extends KineticMode> = Mode extends "collapse"
   ? CollapseConfigOpts
-  : Mode extends 'stagger'
+  : Mode extends "stagger"
     ? StaggerConfigOpts
-    : Mode extends 'group'
+    : Mode extends "group"
       ? GroupConfigOpts
       : TransitionConfigOpts
 
 // ─── Chain methods ───────────────────────────────────────
 
 export type KineticChain<Tag extends string, Mode extends KineticMode> = {
-  preset: (
-    preset: StyleTransitionProps & ClassTransitionProps,
-  ) => KineticComponent<Tag, Mode>
+  displayName: string
+  preset: (preset: StyleTransitionProps & ClassTransitionProps) => KineticComponent<Tag, Mode>
   enter: (styles: CSSProperties) => KineticComponent<Tag, Mode>
   enterTo: (styles: CSSProperties) => KineticComponent<Tag, Mode>
   enterTransition: (value: string) => KineticComponent<Tag, Mode>
@@ -155,17 +133,17 @@ export type KineticChain<Tag extends string, Mode extends KineticMode> = {
   leaveClass: (opts: ClassConfig) => KineticComponent<Tag, Mode>
   config: (opts: ConfigOpts<Mode>) => KineticComponent<Tag, Mode>
   on: (callbacks: Partial<TransitionCallbacks>) => KineticComponent<Tag, Mode>
-  collapse: (opts?: CollapseConfigOpts) => KineticComponent<Tag, 'collapse'>
+  collapse: (opts?: CollapseConfigOpts) => KineticComponent<Tag, "collapse">
   stagger: (opts?: {
     interval?: number | undefined
     reverseLeave?: boolean | undefined
-  }) => KineticComponent<Tag, 'stagger'>
-  group: () => KineticComponent<Tag, 'group'>
+  }) => KineticComponent<Tag, "stagger">
+  group: () => KineticComponent<Tag, "group">
 }
 
 // ─── The full kinetic component: renderable + chainable ───
 
 export type KineticComponent<
   Tag extends string,
-  Mode extends KineticMode = 'transition',
+  Mode extends KineticMode = "transition",
 > = ComponentFn<KineticComponentProps<Tag, Mode>> & KineticChain<Tag, Mode>

@@ -1,55 +1,21 @@
-import {
-  compose,
-  config,
-  hoistNonReactStatics,
-  omit,
-  pick,
-  render,
-} from '@pyreon/ui-core'
-import { LocalThemeManager } from '~/cache'
-import {
-  CONFIG_KEYS,
-  PSEUDO_KEYS,
-  PSEUDO_META_KEYS,
-  STYLING_KEYS,
-} from '~/constants'
-import createLocalProvider from '~/context/createLocalProvider'
-import { useLocalContext } from '~/context/localContext'
-import { rocketstyleAttrsHoc } from '~/hoc'
-import { useTheme } from '~/hooks'
-import type {
-  Configuration,
-  ExtendedConfiguration,
-} from '~/types/configuration'
-import type { RocketComponent } from '~/types/rocketComponent'
-import type {
-  InnerComponentProps,
-  RocketStyleComponent,
-} from '~/types/rocketstyle'
-import type { ComponentFn } from '~/types/utils'
-import {
-  calculateChainOptions,
-  calculateStylingAttrs,
-  pickStyledAttrs,
-} from '~/utils/attrs'
-import {
-  chainOptions,
-  chainOrOptions,
-  chainReservedKeyOptions,
-} from '~/utils/chaining'
-import { calculateHocsFuncs } from '~/utils/compose'
-import { getDimensionsMap } from '~/utils/dimensions'
-import {
-  createStaticsChainingEnhancers,
-  createStaticsEnhancers,
-} from '~/utils/statics'
-import { calculateStyles } from '~/utils/styles'
-import {
-  getDimensionThemes,
-  getTheme,
-  getThemeByMode,
-  getThemeFromChain,
-} from '~/utils/theme'
+import { compose, config, hoistNonReactStatics, omit, pick, render } from "@pyreon/ui-core"
+import { LocalThemeManager } from "~/cache"
+import { CONFIG_KEYS, PSEUDO_KEYS, PSEUDO_META_KEYS, STYLING_KEYS } from "~/constants"
+import createLocalProvider from "~/context/createLocalProvider"
+import { useLocalContext } from "~/context/localContext"
+import { rocketstyleAttrsHoc } from "~/hoc"
+import { useTheme } from "~/hooks"
+import type { Configuration, ExtendedConfiguration } from "~/types/configuration"
+import type { RocketComponent } from "~/types/rocketComponent"
+import type { InnerComponentProps, RocketStyleComponent } from "~/types/rocketstyle"
+import type { ComponentFn } from "~/types/utils"
+import { calculateChainOptions, calculateStylingAttrs, pickStyledAttrs } from "~/utils/attrs"
+import { chainOptions, chainOrOptions, chainReservedKeyOptions } from "~/utils/chaining"
+import { calculateHocsFuncs } from "~/utils/compose"
+import { getDimensionsMap } from "~/utils/dimensions"
+import { createStaticsChainingEnhancers, createStaticsEnhancers } from "~/utils/statics"
+import { calculateStyles } from "~/utils/styles"
+import { getDimensionThemes, getTheme, getThemeByMode, getThemeFromChain } from "~/utils/theme"
 
 /**
  * Core rocketstyle component factory. Creates a fully-featured Pyreon component
@@ -74,19 +40,12 @@ const cloneAndEnhance: CloneAndEnhance = (defaultOpts, opts) =>
   rocketComponent({
     ...defaultOpts,
     attrs: chainOptions(opts.attrs, defaultOpts.attrs),
-    filterAttrs: [
-      ...(defaultOpts.filterAttrs ?? []),
-      ...(opts.filterAttrs ?? []),
-    ],
+    filterAttrs: [...(defaultOpts.filterAttrs ?? []), ...(opts.filterAttrs ?? [])],
     priorityAttrs: chainOptions(opts.priorityAttrs, defaultOpts.priorityAttrs),
     statics: { ...defaultOpts.statics, ...opts.statics },
     compose: { ...defaultOpts.compose, ...opts.compose },
     ...chainOrOptions(CONFIG_KEYS, opts, defaultOpts),
-    ...chainReservedKeyOptions(
-      [...defaultOpts.dimensionKeys, ...STYLING_KEYS],
-      opts,
-      defaultOpts,
-    ),
+    ...chainReservedKeyOptions([...defaultOpts.dimensionKeys, ...STYLING_KEYS], opts, defaultOpts),
   } as Parameters<typeof rocketComponent>[0])
 
 // --------------------------------------------------------
@@ -102,8 +61,7 @@ const rocketComponent: RocketComponent = (options) => {
     useBooleans: options.useBooleans,
   })
 
-  const componentName =
-    options.name ?? options.component.displayName ?? options.component.name
+  const componentName = options.name ?? options.component.displayName ?? options.component.name
 
   // Create styled component with all options.styles if available.
   // boost: true doubles the class selector so rocketstyle wrapper styles
@@ -130,10 +88,7 @@ const rocketComponent: RocketComponent = (options) => {
   // --------------------------------------------------------
   // COMPOSE - high-order components
   // --------------------------------------------------------
-  const hocsFuncs = [
-    rocketstyleAttrsHoc(options),
-    ...calculateHocsFuncs(options.compose),
-  ]
+  const hocsFuncs = [rocketstyleAttrsHoc(options), ...calculateHocsFuncs(options.compose)]
 
   // --------------------------------------------------------
   // ENHANCED COMPONENT
@@ -186,11 +141,10 @@ const rocketComponent: RocketComponent = (options) => {
     // --------------------------------------------------
     // dimension map & reserved prop names
     // --------------------------------------------------
-    const { keysMap: dimensions, keywords: reservedPropNames } =
-      getDimensionsMap({
-        themes,
-        useBooleans: options.useBooleans,
-      })
+    const { keysMap: dimensions, keywords: reservedPropNames } = getDimensionsMap({
+      themes,
+      useBooleans: options.useBooleans,
+    })
 
     const RESERVED_STYLING_PROPS_KEYS = Object.keys(reservedPropNames)
 
@@ -223,7 +177,7 @@ const rocketComponent: RocketComponent = (options) => {
     // --------------------------------------------------
     // rocketstyle — computed theme based on active dimensions
     // --------------------------------------------------
-    const rocketstyle = getTheme({
+    const computedRocketstyle = getTheme({
       rocketstate,
       themes: currentModeThemes,
       baseTheme: currentModeBaseTheme,
@@ -235,27 +189,23 @@ const rocketComponent: RocketComponent = (options) => {
     // final props passed to WrappedComponent
     // --------------------------------------------------
     const finalProps: Record<string, any> = {
-      ...omit(mergeProps, [
-        ...RESERVED_STYLING_PROPS_KEYS,
-        ...PSEUDO_KEYS,
-        ...options.filterAttrs,
-      ]),
+      ...omit(mergeProps, [...RESERVED_STYLING_PROPS_KEYS, ...PSEUDO_KEYS, ...options.filterAttrs]),
       ...(options.passProps ? pick(mergeProps, options.passProps) : {}),
       // ref flows as a normal prop in Pyreon
       ref: props.ref,
-      $rocketstyle: rocketstyle,
+      $rocketstyle: computedRocketstyle,
       $rocketstate: finalRocketstate,
     }
 
     // development debugging
-    if (process.env.NODE_ENV !== 'production') {
-      finalProps['data-rocketstyle'] = componentName
+    if (process.env.NODE_ENV !== "production") {
+      finalProps["data-rocketstyle"] = componentName
 
       if (options.DEBUG) {
         const debugPayload = {
           component: componentName,
           rocketstate: finalRocketstate,
-          rocketstyle,
+          rocketstyle: computedRocketstyle,
           dimensions,
           mode,
           reservedPropNames: RESERVED_STYLING_PROPS_KEYS,
@@ -273,37 +223,35 @@ const rocketComponent: RocketComponent = (options) => {
   // ------------------------------------------------------
   // Compose HOC chain and create final component
   // ------------------------------------------------------
-  const RocketComponent: RocketStyleComponent = compose(...hocsFuncs)(
-    EnhancedComponent,
-  )
-  RocketComponent.IS_ROCKETSTYLE = true
-  RocketComponent.displayName = componentName
+  const FinalComponent: RocketStyleComponent = compose(...hocsFuncs)(EnhancedComponent)
+  FinalComponent.IS_ROCKETSTYLE = true
+  FinalComponent.displayName = componentName
 
-  hoistNonReactStatics(RocketComponent as any, options.component)
+  hoistNonReactStatics(FinalComponent as any, options.component)
 
   // ------------------------------------------------------
   // enhance for chaining methods
   // ------------------------------------------------------
   createStaticsChainingEnhancers({
-    context: RocketComponent,
+    context: FinalComponent,
     dimensionKeys: options.dimensionKeys,
     func: cloneAndEnhance,
     options,
   })
 
-  RocketComponent.IS_ROCKETSTYLE = true
-  RocketComponent.displayName = componentName
-  RocketComponent.meta = {}
+  FinalComponent.IS_ROCKETSTYLE = true
+  FinalComponent.displayName = componentName
+  FinalComponent.meta = {}
 
   // ------------------------------------------------------
   // enhance for statics
   // ------------------------------------------------------
   createStaticsEnhancers({
-    context: RocketComponent.meta,
+    context: FinalComponent.meta,
     options: options.statics,
   })
 
-  Object.assign(RocketComponent, {
+  Object.assign(FinalComponent, {
     attrs: (attrs: any, { priority, filter }: any = {}) => {
       const result: Record<string, any> = {}
 
@@ -312,12 +260,12 @@ const rocketComponent: RocketComponent = (options) => {
       }
 
       if (priority) {
-        result.priorityAttrs = attrs as ExtendedConfiguration['priorityAttrs']
+        result.priorityAttrs = attrs as ExtendedConfiguration["priorityAttrs"]
 
         return cloneAndEnhance(options, result)
       }
 
-      result.attrs = attrs as ExtendedConfiguration['attrs']
+      result.attrs = attrs as ExtendedConfiguration["attrs"]
 
       return cloneAndEnhance(options, result)
     },
@@ -353,13 +301,13 @@ const rocketComponent: RocketComponent = (options) => {
         {
           render,
           mode,
-          isDark: mode === 'light',
-          isLight: mode === 'dark',
+          isDark: mode === "light",
+          isLight: mode === "dark",
         },
       ]),
   })
 
-  return RocketComponent
+  return FinalComponent
 }
 
 export default rocketComponent

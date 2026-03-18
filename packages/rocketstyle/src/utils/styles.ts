@@ -1,5 +1,5 @@
-import { config } from '@pyreon/ui-core'
-import type { StylesCbArray } from '~/types/styles'
+import { config } from "@pyreon/ui-core"
+import type { StylesCbArray } from "~/types/styles"
 
 // --------------------------------------------------------
 // Calculate styles
@@ -9,9 +9,7 @@ import type { StylesCbArray } from '~/types/styles'
  * `css` tagged-template helper, producing the final CSS interpolations
  * to be passed into the styled-component template literal.
  */
-type CalculateStyles = (
-  styles: StylesCbArray | undefined,
-) => ReturnType<StylesCbArray[number]>[]
+type CalculateStyles = (styles: StylesCbArray | undefined) => ReturnType<StylesCbArray[number]>[]
 
 export const calculateStyles: CalculateStyles = (styles) => {
   if (!styles) return []

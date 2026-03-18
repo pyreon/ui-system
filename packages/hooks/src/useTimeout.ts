@@ -1,4 +1,4 @@
-import { onUnmount } from '@pyreon/core'
+import { onUnmount } from "@pyreon/core"
 
 export type UseTimeout = (
   callback: () => void,
@@ -11,7 +11,7 @@ export type UseTimeout = (
  * Always calls the latest callback (no stale closures).
  */
 export const useTimeout: UseTimeout = (callback, delay) => {
-  let currentCallback = callback
+  const currentCallback = callback
   let timer: ReturnType<typeof setTimeout> | null = null
 
   const clear = () => {

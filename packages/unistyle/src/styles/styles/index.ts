@@ -1,12 +1,12 @@
-import { borderRadius, edge } from '../shorthands'
-import { values } from '../../units'
-import processDescriptor from './processDescriptor'
-import propertyMap from './propertyMap'
-import type { InnerTheme, Theme } from './types'
+import { values } from "../../units"
+import { borderRadius, edge } from "../shorthands"
+import processDescriptor from "./processDescriptor"
+import propertyMap from "./propertyMap"
+import type { InnerTheme, Theme } from "./types"
 
 export type { Theme as StylesTheme }
 
-type Css = (strings: TemplateStringsArray, ...values: any[]) => string
+type Css = (strings: TemplateStringsArray, ...args: any[]) => string
 
 export type Styles = ({
   theme,
@@ -27,7 +27,7 @@ const styles: Styles = ({ theme: t, css, rootSize }) => {
     processDescriptor(d, t, css, calc, shorthand, borderRadiusFn),
   )
 
-  return fragments.filter(Boolean).join(' ')
+  return fragments.filter(Boolean).join(" ")
 }
 
 export default styles

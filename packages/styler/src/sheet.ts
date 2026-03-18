@@ -5,11 +5,11 @@
  * Media queries (@media), @supports, and @container blocks nested inside
  * component CSS are automatically extracted into separate top-level rules.
  */
-import { hash } from './hash'
-import { clearNormCache } from './resolve'
+import { hash } from "./hash"
+import { clearNormCache } from "./resolve"
 
-const PREFIX = 'pyr'
-const ATTR = 'data-pyreon-styler'
+const PREFIX = "pyr"
+const ATTR = "data-pyreon-styler"
 const DEFAULT_MAX_CACHE_SIZE = 10000
 
 export interface StyleSheetOptions {
@@ -31,22 +31,20 @@ export class StyleSheet {
   constructor(options: StyleSheetOptions = {}) {
     this.maxCacheSize = options.maxCacheSize ?? DEFAULT_MAX_CACHE_SIZE
     this.layer = options.layer
-    this.isSSR = typeof document === 'undefined'
+    this.isSSR = typeof document === "undefined"
     if (!this.isSSR) this.mount()
   }
 
   private mount() {
     // Reuse existing <style> tag from SSR hydration
-    const existing = document.querySelector(
-      `style[${ATTR}]`,
-    ) as HTMLStyleElement | null
+    const existing = document.querySelector(`style[${ATTR}]`) as HTMLStyleElement | null
 
     if (existing) {
       this.sheet = existing.sheet ?? null
       this.hydrateFromTag(existing)
     } else {
-      const el = document.createElement('style')
-      el.setAttribute(ATTR, '')
+      const el = document.createElement("style")
+      el.setAttribute(ATTR, "")
       document.head.appendChild(el)
       this.sheet = el.sheet ?? null
     }
@@ -63,12 +61,13 @@ export class StyleSheet {
 
   /** Extract className from a selector like ".pyr-abc" or ".pyr-abc.pyr-abc" → "pyr-abc" */
   private extractClassName(selectorText: string): string | null {
-    if (selectorText[0] !== '.') return null
-    const dotIdx = selectorText.indexOf('.', 1)
+    if (selectorText[0] !== ".") return null
+    const dotIdx = selectorText.indexOf(".", 1)
     return dotIdx > 0 ? selectorText.slice(1, dotIdx) : selectorText.slice(1)
   }
 
   /** Parse existing rules from SSR-rendered <style> tag into cache. */
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
   private hydrateFromTag(el: HTMLStyleElement) {
     const sheet = el.sheet
     if (!sheet) return
@@ -82,7 +81,7 @@ export class StyleSheet {
       }
 
       // Handle split @media rules that wrap our selectors
-      if (typeof CSSMediaRule !== 'undefined' && rule instanceof CSSMediaRule) {
+      if (typeof CSSMediaRule !== "undefined" && rule instanceof CSSMediaRule) {
         for (let j = 0; j < rule.cssRules.length; j++) {
           const inner = rule.cssRules[j]
           if (inner instanceof CSSStyleRule) {
@@ -112,12 +111,10 @@ export class StyleSheet {
    * Extract nested at-rules (@media, @supports, @container) from CSS text
    * and wrap their content in the given selector as separate top-level rules.
    */
-  private splitAtRules(
-    cssText: string,
-    selector: string,
-  ): { base: string; atRules: string[] } {
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
+  private splitAtRules(cssText: string, selector: string): { base: string; atRules: string[] } {
     // Fast path: no at-rules to split
-    if (cssText.indexOf('@') === -1) return { base: cssText, atRules: [] }
+    if (cssText.indexOf("@") === -1) return { base: cssText, atRules: [] }
 
     const atRules: string[] = []
     const baseParts: string[] = []
@@ -128,13 +125,13 @@ export class StyleSheet {
     for (let i = 0; i < cssText.length; i++) {
       const ch = cssText[i]
 
-      if (ch === '{') {
+      if (ch === "{") {
         depth++
-      } else if (ch === '}') {
+      } else if (ch === "}") {
         depth--
         if (depth === 0 && atStart >= 0) {
           // End of a tracked at-rule block — extract and wrap with selector
-          const openBrace = cssText.indexOf('{', atStart)
+          const openBrace = cssText.indexOf("{", atStart)
           const atPrefix = cssText.slice(atStart, openBrace).trim()
           const innerCSS = cssText.slice(openBrace + 1, i).trim()
           if (innerCSS) {
@@ -143,7 +140,7 @@ export class StyleSheet {
           atStart = -1
           lastBase = i + 1
         }
-      } else if (depth === 0 && ch === '@' && atStart < 0) {
+      } else if (depth === 0 && ch === "@" && atStart < 0) {
         // Check if this starts a splittable at-rule (not @keyframes, @font-face, etc.)
         const remaining = cssText.slice(i, i + 20)
         if (/^@(?:media|supports|container)\b/.test(remaining)) {
@@ -164,7 +161,7 @@ export class StyleSheet {
     // If no at-rules were found, return original unchanged
     if (atRules.length === 0) return { base: cssText, atRules: [] }
 
-    return { base: baseParts.join(' '), atRules }
+    return { base: baseParts.join(" "), atRules }
   }
 
   /**
@@ -185,6 +182,7 @@ export class StyleSheet {
    * When `boost` is true, the selector is doubled (`.pyr-abc.pyr-abc`)
    * to raise specificity from (0,1,0) to (0,2,0).
    */
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
   insert(cssText: string, boost = false): string {
     // Fast path: skip hash computation on repeated insertions of same CSS text
     const icKey = boost ? `${cssText}\0` : cssText
@@ -212,9 +210,7 @@ export class StyleSheet {
     rules.push(...atRules)
 
     // Apply @layer wrapping if configured
-    const finalRules = this.layer
-      ? rules.map((r) => `@layer ${this.layer}{${r}}`)
-      : rules
+    const finalRules = this.layer ? rules.map((r) => `@layer ${this.layer}{${r}}`) : rules
 
     if (this.isSSR) {
       for (const rule of finalRules) {
@@ -224,14 +220,10 @@ export class StyleSheet {
       for (const rule of finalRules) {
         try {
           this.sheet.insertRule(rule, this.sheet.cssRules.length)
-        } catch (e) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn(
-              `[styler] Failed to insert CSS rule for .${className}:`,
-              (e as Error).message,
-              '\nCSS:',
-              rule.slice(0, 200),
-            )
+        } catch (_e) {
+          if (process.env.NODE_ENV !== "production") {
+            // biome-ignore lint/suspicious/noConsole: dev-only CSS rule insertion warning
+            console.warn("[styler] Failed to insert CSS rule:", rule, _e)
           }
         }
       }
@@ -255,12 +247,9 @@ export class StyleSheet {
     } else if (this.sheet) {
       try {
         this.sheet.insertRule(rule, this.sheet.cssRules.length)
-      } catch (e) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn(
-            `[styler] Failed to insert @keyframes "${name}":`,
-            (e as Error).message,
-          )
+      } catch (_e) {
+        if (process.env.NODE_ENV !== "production") {
+          // silently ignore invalid CSS rules in production
         }
       }
     }
@@ -277,8 +266,8 @@ export class StyleSheet {
 
     for (let i = 0; i < cssText.length; i++) {
       const ch = cssText[i]
-      if (ch === '{') depth++
-      else if (ch === '}') {
+      if (ch === "{") depth++
+      else if (ch === "}") {
         depth--
         if (depth === 0) {
           const rule = cssText.slice(start, i + 1).trim()
@@ -308,14 +297,10 @@ export class StyleSheet {
       for (const rule of rules) {
         try {
           this.sheet.insertRule(rule, this.sheet.cssRules.length)
-        } catch (e) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn(
-              '[styler] Failed to insert global CSS rule:',
-              (e as Error).message,
-              '\nCSS:',
-              rule.slice(0, 200),
-            )
+        } catch (_e) {
+          if (process.env.NODE_ENV !== "production") {
+            // biome-ignore lint/suspicious/noConsole: dev-only CSS rule insertion warning
+            console.warn("[styler] Failed to insert global CSS rule:", rule, _e)
           }
         }
       }
@@ -324,13 +309,13 @@ export class StyleSheet {
 
   /** Returns collected CSS for SSR as a complete `<style>` tag string. */
   getStyleTag(): string {
-    const css = this.ssrBuffer.join('').replace(/<\/style/gi, '<\\/style')
+    const css = this.ssrBuffer.join("").replace(/<\/style/gi, "<\\/style")
     return `<style ${ATTR}="">${css}</style>`
   }
 
   /** Returns collected CSS rules as a raw string (useful for streaming SSR). */
   getStyles(): string {
-    return this.ssrBuffer.join('')
+    return this.ssrBuffer.join("")
   }
 
   /** Reset SSR buffer and cache (call between server requests). */
@@ -366,10 +351,7 @@ export class StyleSheet {
   /**
    * Compute className and full CSS rule text without injecting.
    */
-  prepare(
-    cssText: string,
-    boost = false,
-  ): { className: string; rules: string } {
+  prepare(cssText: string, boost = false): { className: string; rules: string } {
     const h = hash(cssText)
     const className = `${PREFIX}-${h}`
     const selector = boost ? `.${className}.${className}` : `.${className}`
@@ -379,11 +361,9 @@ export class StyleSheet {
     if (base) allRules.push(`${selector}{${base}}`)
     allRules.push(...atRules)
 
-    const finalRules = this.layer
-      ? allRules.map((r) => `@layer ${this.layer}{${r}}`)
-      : allRules
+    const finalRules = this.layer ? allRules.map((r) => `@layer ${this.layer}{${r}}`) : allRules
 
-    return { className, rules: finalRules.join('') }
+    return { className, rules: finalRules.join("") }
   }
 
   /** Check if a className is already in the cache. O(1) Map lookup. */
@@ -404,5 +384,4 @@ export const sheet = new StyleSheet()
  * Factory for creating isolated StyleSheet instances.
  * Use in SSR to get per-request isolation.
  */
-export const createSheet = (options?: StyleSheetOptions): StyleSheet =>
-  new StyleSheet(options)
+export const createSheet = (options?: StyleSheetOptions): StyleSheet => new StyleSheet(options)

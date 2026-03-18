@@ -1,17 +1,17 @@
-import { config, isEmpty, merge } from '@pyreon/ui-core'
-import type { ThemeModeCallback } from '~/types/theme'
-import { removeNullableValues } from './collection'
-import { isMultiKey } from './dimensions'
+import { config, isEmpty, merge } from "@pyreon/ui-core"
+import type { ThemeModeCallback } from "~/types/theme"
+import { removeNullableValues } from "./collection"
+import { isMultiKey } from "./dimensions"
 
 // --------------------------------------------------------
 // Theme Mode Callback
 // --------------------------------------------------------
-const MODE_CALLBACK_BRAND = Symbol.for('pyreon.themeModeCallback')
+const MODE_CALLBACK_BRAND = Symbol.for("pyreon.themeModeCallback")
 
 /** Creates a mode-switching function that returns the light or dark value based on the active mode. */
 export const themeModeCallback: ThemeModeCallback = (light, dark) => {
   const fn = (mode: string) => {
-    if (!mode || mode === 'light') return light
+    if (!mode || mode === "light") return light
     return dark
   }
   ;(fn as any).__brand = MODE_CALLBACK_BRAND
@@ -24,7 +24,7 @@ export const themeModeCallback: ThemeModeCallback = (light, dark) => {
 /** Detects whether a value is a `themeModeCallback` function via Symbol brand. */
 type IsModeCallback = (value: unknown) => boolean
 const isModeCallback: IsModeCallback = (value: unknown) =>
-  typeof value === 'function' && (value as any).__brand === MODE_CALLBACK_BRAND
+  typeof value === "function" && (value as any).__brand === MODE_CALLBACK_BRAND
 
 // --------------------------------------------------------
 // Get Theme From Chain
@@ -118,44 +118,36 @@ export type GetTheme = (params: {
   appTheme?: Record<string, any>
 }) => Record<string, unknown>
 
-export const getTheme: GetTheme = ({
-  rocketstate,
-  themes,
-  baseTheme,
-  transformKeys,
-  appTheme,
-}) => {
+export const getTheme: GetTheme = ({ rocketstate, themes, baseTheme, transformKeys, appTheme }) => {
   let finalTheme = { ...baseTheme }
   const deferredTransforms: Array<
     (
-      theme: Record<string, any>,
-      appTheme: Record<string, any>,
+      currentTheme: Record<string, any>,
+      currentAppTheme: Record<string, any>,
       mode: typeof themeModeCallback,
-      css: typeof config.css,
+      cssFn: typeof config.css,
     ) => Record<string, any>
   > = []
 
-  Object.entries(rocketstate).forEach(
-    ([key, value]: [string, string | string[]]) => {
-      const keyTheme: Record<string, any> = themes[key]!
-      const isTransform = transformKeys?.[key]
+  Object.entries(rocketstate).forEach(([key, value]: [string, string | string[]]) => {
+    const keyTheme: Record<string, any> = themes[key] ?? {}
+    const isTransform = transformKeys?.[key]
 
-      const mergeValue = (item: string) => {
-        const val = keyTheme[item]
-        if (isTransform && typeof val === 'function') {
-          deferredTransforms.push(val)
-        } else {
-          finalTheme = merge({}, finalTheme, val)
-        }
-      }
-
-      if (Array.isArray(value)) {
-        value.forEach(mergeValue)
+    const mergeValue = (item: string) => {
+      const val = keyTheme[item]
+      if (isTransform && typeof val === "function") {
+        deferredTransforms.push(val)
       } else {
-        mergeValue(value)
+        finalTheme = merge({}, finalTheme, val)
       }
-    },
-  )
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach(mergeValue)
+    } else {
+      mergeValue(value)
+    }
+  })
 
   // Apply transform dimension values last with the fully accumulated theme
   for (const transform of deferredTransforms) {
@@ -178,7 +170,7 @@ export const getTheme: GetTheme = ({
  */
 export type GetThemeByMode = (
   object: Record<string, any>,
-  mode: 'light' | 'dark',
+  mode: "light" | "dark",
 ) => Partial<{
   baseTheme: Record<string, unknown>
   themes: Record<string, unknown>
@@ -189,7 +181,7 @@ export const getThemeByMode: GetThemeByMode = (object, mode) =>
     (acc, key) => {
       const value = object[key]
 
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === "object" && value !== null) {
         acc[key] = getThemeByMode(value, mode)
       } else if (isModeCallback(value)) {
         acc[key] = value(mode)

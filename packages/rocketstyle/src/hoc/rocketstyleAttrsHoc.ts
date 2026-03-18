@@ -1,14 +1,14 @@
-import { render } from '@pyreon/ui-core'
-import { useTheme } from '~/hooks'
-import type { Configuration } from '~/types/configuration'
-import type { ComponentFn } from '~/types/utils'
-import { calculateChainOptions, removeUndefinedProps } from '~/utils/attrs'
+import { render } from "@pyreon/ui-core"
+import { useTheme } from "~/hooks"
+import type { Configuration } from "~/types/configuration"
+import type { ComponentFn } from "~/types/utils"
+import { calculateChainOptions, removeUndefinedProps } from "~/utils/attrs"
 
 export type RocketStyleHOC = ({
   inversed,
   attrs,
   priorityAttrs,
-}: Pick<Configuration, 'inversed' | 'attrs' | 'priorityAttrs'>) => (
+}: Pick<Configuration, "inversed" | "attrs" | "priorityAttrs">) => (
   WrappedComponent: ComponentFn<any>,
 ) => ComponentFn<any>
 
@@ -36,10 +36,7 @@ const rocketStyleHOC: RocketStyleHOC = ({ inversed, attrs, priorityAttrs }) => {
       // Remove undefined props not to override potential default props
       const filteredProps = removeUndefinedProps(props)
 
-      const prioritizedAttrs = calculatePriorityAttrs([
-        filteredProps,
-        ...callbackParams,
-      ])
+      const prioritizedAttrs = calculatePriorityAttrs([filteredProps, ...callbackParams])
 
       const finalAttrs = calculateAttrs([
         {

@@ -39,7 +39,7 @@ const parsePath = (path: string | string[]): string[] => {
 }
 
 const isUnsafeKey = (key: string): boolean =>
-  key === '__proto__' || key === 'prototype' || key === 'constructor'
+  key === "__proto__" || key === "prototype" || key === "constructor"
 
 export const get = (obj: any, path: string | string[], defaultValue?: any): any => {
   const keys = parsePath(path)
@@ -59,9 +59,9 @@ export const set = (
   const keys = parsePath(path)
   let current = obj
   for (let i = 0; i < keys.length - 1; i++) {
-    const key = keys[i]!
+    const key = keys[i] as string
     if (isUnsafeKey(key)) return obj
-    const nextKey = keys[i + 1]!
+    const nextKey = keys[i + 1] as string
     if (isUnsafeKey(nextKey)) return obj
     if (current[key] == null) {
       current[key] = /^\d+$/.test(nextKey) ? [] : {}
@@ -132,7 +132,7 @@ export const throttle = <T extends (...args: any[]) => any>(
 
 const isPlainObject = (value: unknown): value is Record<string, any> =>
   value !== null &&
-  typeof value === 'object' &&
+  typeof value === "object" &&
   !Array.isArray(value) &&
   Object.getPrototypeOf(value) === Object.prototype
 
@@ -143,7 +143,7 @@ export const merge = <T extends Record<string, any>>(
   for (const source of sources) {
     if (source == null) continue
     for (const key of Object.keys(source)) {
-      if (key === '__proto__' || key === 'constructor' || key === 'prototype') continue
+      if (key === "__proto__" || key === "constructor" || key === "prototype") continue
       const targetVal = (target as any)[key]
       const sourceVal = source[key]
       if (isPlainObject(targetVal) && isPlainObject(sourceVal)) {

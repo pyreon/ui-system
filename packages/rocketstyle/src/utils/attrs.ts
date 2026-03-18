@@ -1,13 +1,11 @@
-import { isEmpty } from '@pyreon/ui-core'
-import type { MultiKeys } from '~/types/dimensions'
+import { isEmpty } from "@pyreon/ui-core"
+import type { MultiKeys } from "~/types/dimensions"
 
 // --------------------------------------------------------
 // remove undefined props
 // --------------------------------------------------------
 /** Strips keys with `undefined` values so they don't shadow default props during merging. */
-type RemoveUndefinedProps = <T extends Record<string, any>>(
-  props: T,
-) => Partial<T>
+type RemoveUndefinedProps = <T extends Record<string, any>>(props: T) => Partial<T>
 
 export const removeUndefinedProps: RemoveUndefinedProps = (props) => {
   const result: Partial<typeof props> = {}
@@ -21,10 +19,7 @@ export const removeUndefinedProps: RemoveUndefinedProps = (props) => {
 // pick styled props
 // --------------------------------------------------------
 /** Picks only the props whose keys exist in the dimension keywords lookup and have truthy values. */
-type PickStyledAttrs = <
-  T extends Record<string, any>,
-  K extends { [I in keyof T]?: true },
->(
+type PickStyledAttrs = <T extends Record<string, any>, K extends { [I in keyof T]?: true }>(
   props: T,
   keywords: K,
   // @ts-expect-error
@@ -48,14 +43,13 @@ type CalculateChainOptions = <A>(
   options?: OptionFunc<A>[],
 ) => (args: A[]) => ReturnType<OptionFunc<A>>
 
-export const calculateChainOptions: CalculateChainOptions =
-  (options) => (args) => {
-    const result = {}
-    if (isEmpty(options)) return result
+export const calculateChainOptions: CalculateChainOptions = (options) => (args) => {
+  const result = {}
+  if (isEmpty(options)) return result
 
-    // @ts-expect-error
-    return options.reduce((acc, item) => Object.assign(acc, item(...args)), {})
-  }
+  // @ts-expect-error
+  return options.reduce((acc, item) => Object.assign(acc, item(...args)), {})
+}
 
 // --------------------------------------------------------
 // get style attributes
@@ -95,7 +89,7 @@ export const calculateStylingAttrs: CalculateStylingAttrs =
       }
       // assign when it's only a string or number otherwise it's considered
       // as invalid param
-      else if (t === 'string' || t === 'number') {
+      else if (t === "string" || t === "number") {
         result[item] = pickedProp
       } else {
         result[item] = undefined
@@ -106,6 +100,7 @@ export const calculateStylingAttrs: CalculateStylingAttrs =
     if (useBooleans) {
       const propsKeys = Object.keys(props)
 
+      // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
       Object.entries(result).forEach(([key, value]) => {
         // @ts-expect-error
         const isMultiKey = multiKeys[key]
@@ -113,17 +108,15 @@ export const calculateStylingAttrs: CalculateStylingAttrs =
         // when value in result is not assigned yet
         if (!value) {
           let newDimensionValue: string | string[] | undefined
-          const keywordSet = new Set(
-            Object.keys(dimensions[key] as Record<string, unknown>),
-          )
+          const keywordSet = new Set(Object.keys(dimensions[key] as Record<string, unknown>))
 
           if (isMultiKey) {
-            newDimensionValue = propsKeys.filter((key) => keywordSet.has(key))
+            newDimensionValue = propsKeys.filter((propKey) => keywordSet.has(propKey))
           } else {
             // iterate backwards to guarantee the last one will have
             // a priority over previous ones
             for (let i = propsKeys.length - 1; i >= 0; i--) {
-              const k = propsKeys[i]!
+              const k = propsKeys[i] as string
               if (keywordSet.has(k) && props[k]) {
                 newDimensionValue = k
                 break

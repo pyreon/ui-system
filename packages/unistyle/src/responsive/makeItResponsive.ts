@@ -1,16 +1,13 @@
-import { isEmpty } from '@pyreon/ui-core'
-import type createMediaQueries from './createMediaQueries'
-import normalizeTheme from './normalizeTheme'
-import optimizeTheme from './optimizeTheme'
-import type sortBreakpoints from './sortBreakpoints'
-import transformTheme from './transformTheme'
+import { isEmpty } from "@pyreon/ui-core"
+import type createMediaQueries from "./createMediaQueries"
+import normalizeTheme from "./normalizeTheme"
+import optimizeTheme from "./optimizeTheme"
+import type sortBreakpoints from "./sortBreakpoints"
+import transformTheme from "./transformTheme"
 
 type Css = (strings: TemplateStringsArray, ...values: any[]) => any
 
-type CustomTheme = Record<
-  string,
-  Record<string, unknown> | number | string | boolean
->
+type CustomTheme = Record<string, Record<string, unknown> | number | string | boolean>
 
 type Theme = Partial<{
   rootSize: number
@@ -22,9 +19,7 @@ type Theme = Partial<{
 }> &
   CustomTheme
 
-export type MakeItResponsiveStyles<
-  T extends Partial<Record<string, any>> = any,
-> = ({
+export type MakeItResponsiveStyles<T extends Partial<Record<string, any>> = any> = ({
   theme,
   css,
   rootSize,
@@ -48,7 +43,7 @@ export type MakeItResponsive = ({
   css: any
   styles: MakeItResponsiveStyles
   normalize?: boolean
-}) => (props: { theme?: Theme; [key: string]: any }) => any
+}) => (props: { theme?: Theme; [prop: string]: any }) => any
 
 const themeCache = new WeakMap<
   object,
@@ -56,18 +51,16 @@ const themeCache = new WeakMap<
 >()
 
 const makeItResponsive: MakeItResponsive =
-  ({ theme: customTheme, key = '', css, styles, normalize = true }) =>
+  ({ theme: customTheme, key = "", css, styles, normalize = true }) =>
   ({ theme = {}, ...props }) => {
     const internalTheme = customTheme || props[key]
 
-    if (isEmpty(internalTheme)) return ''
+    if (isEmpty(internalTheme)) return ""
 
     const { rootSize, breakpoints, __PYREON__, ...restTheme } = theme as Theme
 
-    const renderStyles = (
-      theme: Record<string, unknown>,
-    ): ReturnType<typeof styles> =>
-      styles({ theme, css, rootSize, globalTheme: restTheme })
+    const renderStyles = (styleTheme: Record<string, unknown>): ReturnType<typeof styles> =>
+      styles({ theme: styleTheme, css, rootSize, globalTheme: restTheme })
 
     if (isEmpty(breakpoints) || isEmpty(__PYREON__)) {
       return css`
@@ -75,7 +68,8 @@ const makeItResponsive: MakeItResponsive =
       `
     }
 
-    const { media, sortedBreakpoints } = __PYREON__!
+    // isEmpty guard above ensures __PYREON__ is defined here
+    const { media, sortedBreakpoints } = __PYREON__ as NonNullable<typeof __PYREON__>
 
     let optimizedTheme: Record<string, Record<string, unknown>>
 
@@ -111,7 +105,7 @@ const makeItResponsive: MakeItResponsive =
     return sortedBreakpoints.map((item: string) => {
       const breakpointTheme = optimizedTheme[item]
 
-      if (!breakpointTheme || !media) return ''
+      if (!breakpointTheme || !media) return ""
 
       const result = renderStyles(breakpointTheme)
 

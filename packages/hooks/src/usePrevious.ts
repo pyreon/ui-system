@@ -1,4 +1,4 @@
-import { signal, effect } from '@pyreon/reactivity'
+import { effect, signal } from "@pyreon/reactivity"
 
 /**
  * Track the previous value of a reactive getter.

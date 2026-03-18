@@ -1,7 +1,7 @@
-import { useContext } from '@pyreon/core'
-import { THEME_MODES_INVERSED } from '~/constants'
-import { context } from '~/context/context'
-import type { ThemeModeKeys } from '~/types/theme'
+import { useContext } from "@pyreon/core"
+import { THEME_MODES_INVERSED } from "~/constants"
+import { context } from "~/context/context"
+import type { ThemeModeKeys } from "~/types/theme"
 
 type Context = {
   theme: Record<string, unknown>
@@ -22,7 +22,7 @@ type UseThemeAttrs = ({ inversed }: { inversed?: boolean | undefined }) => Conte
 const useThemeAttrs: UseThemeAttrs = ({ inversed }) => {
   const {
     theme = {},
-    mode: ctxMode = 'light',
+    mode: ctxMode = "light",
     isDark: ctxDark,
   } = useContext<Context>(context) || {}
 

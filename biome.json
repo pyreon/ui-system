@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
   "extends": ["@vitus-labs/tools-lint/biome"],
   "vcs": {
     "enabled": true,
@@ -13,6 +13,17 @@
     "lineWidth": 100
   },
   "javascript": {
+    "globals": [
+      "describe",
+      "it",
+      "test",
+      "expect",
+      "vi",
+      "beforeEach",
+      "afterEach",
+      "beforeAll",
+      "afterAll"
+    ],
     "formatter": {
       "quoteStyle": "double"
     }

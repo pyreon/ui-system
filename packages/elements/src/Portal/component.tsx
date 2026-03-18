@@ -3,10 +3,11 @@
  * @pyreon/core's runtime-dom. This component re-exports it for API
  * compatibility with the elements package structure.
  */
-import { Portal as CorePortal } from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import type { PyreonComponent } from '~/types'
+
+import type { VNodeChild } from "@pyreon/core"
+import { Portal as CorePortal } from "@pyreon/core"
+import { PKG_NAME } from "~/constants"
+import type { PyreonComponent } from "~/types"
 
 export interface Props {
   /**
@@ -23,20 +24,12 @@ export interface Props {
   tag?: string
 }
 
-const Component: PyreonComponent<Props> = ({
-  DOMLocation,
-  tag = 'div',
-  children,
-}) => {
-  const target = DOMLocation ?? (typeof document !== 'undefined' ? document.body : undefined)
+const Component: PyreonComponent<Props> = ({ DOMLocation, tag: _tag = "div", children }) => {
+  const target = DOMLocation ?? (typeof document !== "undefined" ? document.body : undefined)
 
   if (!target) return null
 
-  return (
-    <CorePortal target={target}>
-      {children}
-    </CorePortal>
-  )
+  return <CorePortal target={target}>{children}</CorePortal>
 }
 
 const name = `${PKG_NAME}/Portal` as const

@@ -1,15 +1,12 @@
-import { compose, hoistNonReactStatics, omit, pick } from '@pyreon/ui-core'
-import { attrsHoc } from '~/hoc'
-import type { AttrsComponent as AttrsComponentType } from '~/types/AttrsComponent'
-import type {
-  Configuration,
-  ExtendedConfiguration,
-} from '~/types/configuration'
-import type { InitAttrsComponent } from '~/types/InitAttrsComponent'
-import { calculateChainOptions } from '~/utils/attrs'
-import { chainOptions } from '~/utils/chaining'
-import { calculateHocsFuncs } from '~/utils/compose'
-import { createStaticsEnhancers } from '~/utils/statics'
+import { compose, hoistNonReactStatics, omit, pick } from "@pyreon/ui-core"
+import { attrsHoc } from "~/hoc"
+import type { AttrsComponent as AttrsComponentType } from "~/types/AttrsComponent"
+import type { Configuration, ExtendedConfiguration } from "~/types/configuration"
+import type { InitAttrsComponent } from "~/types/InitAttrsComponent"
+import { calculateChainOptions } from "~/utils/attrs"
+import { chainOptions } from "~/utils/chaining"
+import { calculateHocsFuncs } from "~/utils/compose"
+import { createStaticsEnhancers } from "~/utils/statics"
 
 /**
  * Clones the current configuration and merges new options, then creates a
@@ -28,10 +25,7 @@ const cloneAndEnhance: CloneAndEnhance = (defaultOpts, opts) =>
     ...(opts.name ? { name: opts.name } : undefined),
     ...(opts.component ? { component: opts.component } : undefined),
     attrs: chainOptions(opts.attrs, defaultOpts.attrs),
-    filterAttrs: [
-      ...(defaultOpts.filterAttrs ?? []),
-      ...(opts.filterAttrs ?? []),
-    ],
+    filterAttrs: [...(defaultOpts.filterAttrs ?? []), ...(opts.filterAttrs ?? [])],
     priorityAttrs: chainOptions(opts.priorityAttrs, defaultOpts.priorityAttrs),
     statics: { ...defaultOpts.statics, ...opts.statics },
     compose: { ...defaultOpts.compose, ...opts.compose },
@@ -52,8 +46,7 @@ const cloneAndEnhance: CloneAndEnhance = (defaultOpts, opts) =>
  * Components are plain functions that run once per mount.
  */
 const attrsComponent: InitAttrsComponent = (options) => {
-  const componentName =
-    options.name ?? options.component.displayName ?? options.component.name
+  const componentName = options.name ?? options.component.displayName ?? options.component.name
 
   const RenderComponent = options.component
 
@@ -64,25 +57,20 @@ const attrsComponent: InitAttrsComponent = (options) => {
   // The inner component receives already-computed props from the HOC chain.
   // It handles prop filtering and final rendering.
   const EnhancedComponent = (props: Record<string, any>) => {
-    const needsFiltering =
-      options.filterAttrs && options.filterAttrs.length > 0
+    const needsFiltering = options.filterAttrs && options.filterAttrs.length > 0
 
-    const filteredProps = needsFiltering
-      ? omit(props, options.filterAttrs)
-      : props
+    const filteredProps = needsFiltering ? omit(props, options.filterAttrs) : props
 
     const finalProps =
-      process.env.NODE_ENV !== 'production'
-        ? { ...filteredProps, 'data-attrs': componentName }
+      process.env.NODE_ENV !== "production"
+        ? { ...filteredProps, "data-attrs": componentName }
         : filteredProps
 
     return RenderComponent(finalProps)
   }
 
   // Apply the full HOC chain: compose(attrsHoc, ...userHocs)(EnhancedComponent)
-  const AttrsComponent: AttrsComponentType = compose(...hocsFuncs)(
-    EnhancedComponent,
-  )
+  const AttrsComponent: AttrsComponentType = compose(...hocsFuncs)(EnhancedComponent)
 
   AttrsComponent.IS_ATTRS = true
   AttrsComponent.displayName = componentName
@@ -109,12 +97,12 @@ const attrsComponent: InitAttrsComponent = (options) => {
       }
 
       if (priority) {
-        result.priorityAttrs = attrs as ExtendedConfiguration['priorityAttrs']
+        result.priorityAttrs = attrs as ExtendedConfiguration["priorityAttrs"]
 
         return cloneAndEnhance(options, result)
       }
 
-      result.attrs = attrs as ExtendedConfiguration['attrs']
+      result.attrs = attrs as ExtendedConfiguration["attrs"]
 
       return cloneAndEnhance(options, result)
     },
@@ -129,8 +117,7 @@ const attrsComponent: InitAttrsComponent = (options) => {
 
     statics: (opts: any) => cloneAndEnhance(options, { statics: opts }),
 
-    getDefaultAttrs: (props: any) =>
-      calculateChainOptions(options.attrs)([props]),
+    getDefaultAttrs: (props: any) => calculateChainOptions(options.attrs)([props]),
   })
 
   return AttrsComponent

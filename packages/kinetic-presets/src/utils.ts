@@ -1,7 +1,9 @@
-import type { CSSProperties, Preset } from './types'
+import type { CSSProperties, Preset } from "./types"
 
-const mergeStyle = (a: CSSProperties | undefined, b: CSSProperties | undefined): CSSProperties | undefined =>
-  b ? { ...a, ...b } : a
+const mergeStyle = (
+  a: CSSProperties | undefined,
+  b: CSSProperties | undefined,
+): CSSProperties | undefined => (b ? { ...a, ...b } : a)
 
 const concatClass = (a: string | undefined, b: string | undefined): string | undefined =>
   b ? (a ? `${a} ${b}` : b) : a
@@ -35,20 +37,20 @@ export const compose = (...items: Preset[]): Preset => {
 
 export const withDuration = (preset: Preset, enterMs: number, leaveMs?: number): Preset => ({
   ...preset,
-  enterTransition: replaceDuration(preset.enterTransition ?? '', `${enterMs}ms`),
-  leaveTransition: replaceDuration(preset.leaveTransition ?? '', `${leaveMs ?? enterMs}ms`),
+  enterTransition: replaceDuration(preset.enterTransition ?? "", `${enterMs}ms`),
+  leaveTransition: replaceDuration(preset.leaveTransition ?? "", `${leaveMs ?? enterMs}ms`),
 })
 
 export const withEasing = (preset: Preset, enterEasing: string, leaveEasing?: string): Preset => ({
   ...preset,
-  enterTransition: replaceEasing(preset.enterTransition ?? '', enterEasing),
-  leaveTransition: replaceEasing(preset.leaveTransition ?? '', leaveEasing ?? enterEasing),
+  enterTransition: replaceEasing(preset.enterTransition ?? "", enterEasing),
+  leaveTransition: replaceEasing(preset.leaveTransition ?? "", leaveEasing ?? enterEasing),
 })
 
 export const withDelay = (preset: Preset, enterDelayMs: number, leaveDelayMs?: number): Preset => ({
   ...preset,
-  enterTransition: addDelay(preset.enterTransition ?? '', `${enterDelayMs}ms`),
-  leaveTransition: addDelay(preset.leaveTransition ?? '', `${leaveDelayMs ?? enterDelayMs}ms`),
+  enterTransition: addDelay(preset.enterTransition ?? "", `${enterDelayMs}ms`),
+  leaveTransition: addDelay(preset.leaveTransition ?? "", `${leaveDelayMs ?? enterDelayMs}ms`),
 })
 
 export const reverse = (preset: Preset): Preset => ({
@@ -70,7 +72,10 @@ const replaceDuration = (transition: string, newDuration: string): string =>
   transition.replace(/\d{1,10}(?:ms|s)/, newDuration)
 
 const replaceEasing = (transition: string, newEasing: string): string =>
-  transition.replace(/(?:ease-in-out|ease-in|ease-out|ease|linear|cubic-bezier\([^)]{1,100}\))\s*$/, newEasing)
+  transition.replace(
+    /(?:ease-in-out|ease-in|ease-out|ease|linear|cubic-bezier\([^)]{1,100}\))\s*$/,
+    newEasing,
+  )
 
 const addDelay = (transition: string, delay: string): string =>
   transition.replace(/(\d{1,10}(?:ms|s))(\s)/, `$1 ${delay}$2`)

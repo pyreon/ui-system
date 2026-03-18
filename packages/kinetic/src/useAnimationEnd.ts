@@ -1,5 +1,5 @@
-import type { Ref } from '@pyreon/core'
-import { watch } from '@pyreon/reactivity'
+import type { Ref } from "@pyreon/core"
+import { watch } from "@pyreon/reactivity"
 
 const DEFAULT_TIMEOUT = 5000
 
@@ -10,12 +10,7 @@ export type UseAnimationEnd = (options: {
   timeout?: number | undefined
 }) => void
 
-const useAnimationEnd: UseAnimationEnd = ({
-  ref,
-  onEnd,
-  active,
-  timeout = DEFAULT_TIMEOUT,
-}) => {
+const useAnimationEnd: UseAnimationEnd = ({ ref, onEnd, active, timeout = DEFAULT_TIMEOUT }) => {
   let called = false
 
   watch(
@@ -34,8 +29,8 @@ const useAnimationEnd: UseAnimationEnd = ({
       const done = () => {
         if (called) return
         called = true
-        el.removeEventListener('transitionend', handleEnd)
-        el.removeEventListener('animationend', handleEnd)
+        el.removeEventListener("transitionend", handleEnd)
+        el.removeEventListener("animationend", handleEnd)
         clearTimeout(timer)
         onEnd()
       }
@@ -46,14 +41,14 @@ const useAnimationEnd: UseAnimationEnd = ({
         done()
       }
 
-      el.addEventListener('transitionend', handleEnd)
-      el.addEventListener('animationend', handleEnd)
+      el.addEventListener("transitionend", handleEnd)
+      el.addEventListener("animationend", handleEnd)
 
       const timer = setTimeout(done, timeout)
 
       return () => {
-        el.removeEventListener('transitionend', handleEnd)
-        el.removeEventListener('animationend', handleEnd)
+        el.removeEventListener("transitionend", handleEnd)
+        el.removeEventListener("animationend", handleEnd)
         clearTimeout(timer)
       }
     },

@@ -35,8 +35,8 @@
     "version": "node ../../scripts/sync-peer-deps.mjs"
   },
   "peerDependencies": {
-    "@pyreon/core": ">=0.0.1",
-    "@pyreon/ui-core": ">=0.0.1"
+    "@pyreon/core": ">=0.2.1",
+    "@pyreon/ui-core": ">=0.2.0"
   },
   "devDependencies": {
     "@pyreon/ui-core": "workspace:*",

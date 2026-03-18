@@ -9,16 +9,13 @@ type Obj = Record<string, unknown>
  * and appends to the existing array. The array is cloned so each chained
  * component gets its own copy — maintaining immutability across the chain.
  */
-type ChainOptions = (
-  opts: Obj | Func | undefined,
-  defaultOpts: Func[],
-) => Func[]
+type ChainOptions = (opts: Obj | Func | undefined, defaultOpts: Func[]) => Func[]
 
 export const chainOptions: ChainOptions = (opts, defaultOpts = []) => {
   const result = [...defaultOpts]
 
-  if (typeof opts === 'function') result.push(opts)
-  else if (typeof opts === 'object') result.push(() => opts)
+  if (typeof opts === "function") result.push(opts)
+  else if (typeof opts === "object") result.push(() => opts)
 
   return result
 }

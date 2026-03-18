@@ -1,4 +1,4 @@
-import type { ElementType, TFn } from './utils'
+import type { ElementType, TFn } from "./utils"
 
 export type OptionFunc = (...arg: unknown[]) => Record<string, unknown>
 
@@ -30,12 +30,11 @@ export type Configuration<C = ElementType | unknown> = InitConfiguration<C> & {
  * `.attrs()` / `.config()` call contributes (one function, not an array).
  * Used by `cloneAndEnhance` to merge into the accumulated Configuration.
  */
-export type ExtendedConfiguration<C = ElementType | unknown> =
-  InitConfiguration<C> & {
-    DEBUG?: boolean | undefined
-    attrs: OptionFunc
-    priorityAttrs: OptionFunc
-    filterAttrs: string[]
-    compose: Record<string, TFn | null | undefined | false>
-    statics: Record<string, any>
-  } & Record<string, any>
+export type ExtendedConfiguration<C = ElementType | unknown> = InitConfiguration<C> & {
+  DEBUG?: boolean | undefined
+  attrs: OptionFunc
+  priorityAttrs: OptionFunc
+  filterAttrs: string[]
+  compose: Record<string, TFn | null | undefined | false>
+  statics: Record<string, any>
+} & Record<string, any>

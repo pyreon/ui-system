@@ -35,10 +35,10 @@
     "version": "node ../../scripts/sync-peer-deps.mjs"
   },
   "peerDependencies": {
-    "@pyreon/core": ">=0.0.1",
-    "@pyreon/reactivity": ">=0.0.1",
-    "@pyreon/ui-core": ">=0.0.1",
-    "@pyreon/unistyle": ">=0.0.1"
+    "@pyreon/core": ">=0.3.0",
+    "@pyreon/reactivity": ">=0.3.0",
+    "@pyreon/ui-core": ">=0.2.0",
+    "@pyreon/unistyle": ">=0.2.0"
   },
   "devDependencies": {
     "@pyreon/ui-core": "workspace:*",

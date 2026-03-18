@@ -1,22 +1,19 @@
 // @ts-nocheck
-import { isEmpty } from '@pyreon/ui-core'
-import { ALL_RESERVED_KEYS } from '~/constants'
-import defaultDimensions from '~/constants/defaultDimensions'
-import rocketComponent from '~/rocketstyle'
-import type { DefaultDimensions, Dimensions } from '~/types/dimensions'
-import type { RocketComponent } from '~/types/rocketComponent'
-import type { ElementType } from '~/types/utils'
+import { isEmpty } from "@pyreon/ui-core"
+import { ALL_RESERVED_KEYS } from "~/constants"
+import defaultDimensions from "~/constants/defaultDimensions"
+import rocketComponent from "~/rocketstyle"
+import type { DefaultDimensions, Dimensions } from "~/types/dimensions"
+import type { RocketComponent } from "~/types/rocketComponent"
+import type { ElementType } from "~/types/utils"
 import {
   getDimensionsValues,
   getKeys,
   getMultipleDimensions,
   getTransformDimensions,
-} from '~/utils/dimensions'
+} from "~/utils/dimensions"
 
-export type Rocketstyle = <
-  D extends Dimensions = DefaultDimensions,
-  UB extends boolean = true,
->({
+export type Rocketstyle = <D extends Dimensions = DefaultDimensions, UB extends boolean = true>({
   dimensions,
   useBooleans,
 }?: {
@@ -28,7 +25,7 @@ export type Rocketstyle = <
 }: {
   name: string
   component: C
-}) => ReturnType<RocketComponent<C, {}, {}, D, UB>>
+}) => ReturnType<RocketComponent<C, Record<string, unknown>, Record<string, unknown>, D, UB>>
 
 /**
  * Factory initializer for rocketstyle components. Validates dimension
@@ -42,23 +39,19 @@ type InitErrors = Partial<{
   invalidDimensions: string
 }>
 
-const validateInit = (
-  name: string,
-  component: unknown,
-  dimensions: Dimensions,
-) => {
+const validateInit = (name: string, component: unknown, dimensions: Dimensions) => {
   const errors: InitErrors = {}
 
   if (!component) {
-    errors.component = 'Parameter `component` is missing in params!'
+    errors.component = "Parameter `component` is missing in params!"
   }
 
   if (!name) {
-    errors.name = 'Parameter `name` is missing in params!'
+    errors.name = "Parameter `name` is missing in params!"
   }
 
   if (isEmpty(dimensions)) {
-    errors.dimensions = 'Parameter `dimensions` is missing in params!'
+    errors.dimensions = "Parameter `dimensions` is missing in params!"
   } else {
     const definedDimensions = getKeys(dimensions)
     const invalidDimension = ALL_RESERVED_KEYS.some((item) =>
@@ -79,7 +72,7 @@ const validateInit = (
 const rocketstyle: Rocketstyle =
   ({ dimensions = defaultDimensions, useBooleans = true } = {}) =>
   ({ name, component }) => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== "production") {
       validateInit(name, component, dimensions)
     }
 

@@ -1,11 +1,10 @@
-import { useContext, pushContext, popContext, onUnmount } from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import { ContainerContext, RowContext } from '~/context'
-import type { ElementType } from '~/types'
-import useGridContext from '~/useContext'
-import { omitCtxKeys } from '~/utils'
-import Styled from './styled'
+import { onUnmount, popContext, pushContext, useContext } from "@pyreon/core"
+import { PKG_NAME } from "~/constants"
+import { ContainerContext, RowContext } from "~/context"
+import type { ElementType } from "~/types"
+import useGridContext from "~/useContext"
+import { omitCtxKeys } from "~/utils"
+import Styled from "./styled"
 
 /**
  * Row component that reads inherited config from ContainerContext, merges
@@ -15,11 +14,15 @@ import Styled from './styled'
  */
 
 const DEV_PROPS: Record<string, string> =
-  process.env.NODE_ENV !== 'production' ? { 'data-coolgrid': 'row' } : {}
+  process.env.NODE_ENV !== "production" ? { "data-coolgrid": "row" } : {}
 
-const Component: ElementType<
-  ['containerWidth', 'width', 'rowComponent', 'rowCss']
-> = ({ children, component, css, contentAlignX: rowAlignX, ...props }) => {
+const Component: ElementType<["containerWidth", "width", "rowComponent", "rowCss"]> = ({
+  children,
+  component,
+  css,
+  contentAlignX: rowAlignX,
+  ...props
+}) => {
   const parentCtx = useContext(ContainerContext)
 
   const {
@@ -63,12 +66,7 @@ const Component: ElementType<
   onUnmount(() => popContext())
 
   return (
-    <Styled
-      {...omitCtxKeys(props)}
-      as={component || rowComponent}
-      {...finalProps}
-      {...DEV_PROPS}
-    >
+    <Styled {...omitCtxKeys(props)} as={component || rowComponent} {...finalProps} {...DEV_PROPS}>
       {children}
     </Styled>
   )

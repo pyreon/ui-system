@@ -1,5 +1,5 @@
-import type { HTMLTags } from '@pyreon/ui-core'
-import type { ComponentFn } from '@pyreon/core'
+import type { ComponentFn } from "@pyreon/core"
+import type { HTMLTags } from "@pyreon/ui-core"
 import type {
   AlignX,
   AlignY,
@@ -10,7 +10,7 @@ import type {
   PyreonStatic,
   Responsive,
   ResponsiveBoolType,
-} from '~/types'
+} from "~/types"
 
 export type Props = Partial<{
   /**
@@ -163,5 +163,7 @@ export type Props = Partial<{
   afterContentCss: ExtendCss
 }>
 
-export type PyreonElement<P extends Record<string, unknown> = Record<string, never>> =
-  ComponentFn<Props & P> & PyreonStatic
+export type PyreonElement<P extends Record<string, unknown> = Record<string, never>> = ComponentFn<
+  Props & P
+> &
+  PyreonStatic

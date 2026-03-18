@@ -1,4 +1,4 @@
-import { CSSResult, type Interpolation } from './resolve'
+import { CSSResult, type Interpolation } from "./resolve"
 
 /**
  * Tagged template function for CSS. Captures the template strings and
@@ -9,8 +9,5 @@ import { CSSResult, type Interpolation } from './resolve'
  * call (`css(...args)`) since tagged templates are syntactic sugar for
  * function calls with (TemplateStringsArray, ...values).
  */
-export const css = (
-  strings: TemplateStringsArray,
-  ...values: Interpolation[]
-): CSSResult => new CSSResult(strings, values)
-
+export const css = (strings: TemplateStringsArray, ...values: Interpolation[]): CSSResult =>
+  new CSSResult(strings, values)

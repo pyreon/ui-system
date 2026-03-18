@@ -1,6 +1,6 @@
-import type { config } from '@pyreon/ui-core'
-import type { PseudoState } from './pseudo'
-import type { TObj } from './utils'
+import type { config } from "@pyreon/ui-core"
+import type { PseudoState } from "./pseudo"
+import type { TObj } from "./utils"
 
 // biome-ignore lint/suspicious/noEmptyInterface: this is an interface to be extended in consuming projects
 export interface StylesDefault {}
@@ -42,7 +42,5 @@ export type RocketCss<CSS extends TObj = TObj> = (
   >
 ) => any
 
-export type StylesCb<CSS extends TObj = TObj> = (
-  css: RocketCss<CSS>,
-) => ReturnType<Css>
+export type StylesCb<CSS extends TObj = TObj> = (css: RocketCss<CSS>) => ReturnType<Css>
 export type StylesCbArray = StylesCb[]

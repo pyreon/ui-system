@@ -7,7 +7,8 @@
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
     "isolatedModules": true,
-    "customConditions": ["bun"]
+    "customConditions": ["bun", "source"],
+    "types": ["vitest/globals", "@types/bun"]
   },
   "exclude": ["node_modules", "**/dist/**", "**/lib/**"]
 }

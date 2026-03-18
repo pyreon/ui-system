@@ -1,4 +1,4 @@
-import type { VNode } from '@pyreon/core'
+import type { VNode } from "@pyreon/core"
 
 // ─── Base Types ───────────────────────────────────────────────
 
@@ -11,8 +11,7 @@ export type DisplayName = string
  * A Pyreon component function that accepts additional static properties.
  * In Pyreon, components are plain functions: (props: P) => VNode | null.
  */
-export type ComponentFn<P = any> = ((props: P) => VNode | null) &
-  Partial<Record<string, any>>
+export type ComponentFn<P = any> = ((props: P) => VNode | null) & Partial<Record<string, any>>
 
 /**
  * An element type — either a Pyreon component function or an intrinsic tag string.
@@ -29,7 +28,7 @@ export type ArrayOfKeys<T> = keyof T[]
  * A HOC that wraps a component and merges additional props `P`
  * with the wrapped component's own props.
  */
-export type SimpleHoc<P extends Record<string, unknown> = {}> = <
+export type SimpleHoc<P extends Record<string, unknown> = Record<string, unknown>> = <
   T extends ComponentFn<any>,
 >(
   WrappedComponent: T,
@@ -40,9 +39,7 @@ type IsFalseOrNullable<T> = T extends null | undefined | false ? never : true
 export type NullableKeys<T> = { [K in keyof T]: IsFalseOrNullable<T[K]> }
 
 /** Unwraps a callback to its return type, or returns the object as-is. */
-export type ReturnCbParam<P extends TFn | TObj> = P extends TFn
-  ? ReturnType<P>
-  : P
+export type ReturnCbParam<P extends TFn | TObj> = P extends TFn ? ReturnType<P> : P
 
 // ─── MergeTypes ───────────────────────────────────────────────
 //
@@ -62,11 +59,7 @@ export type ReturnCbParam<P extends TFn | TObj> = P extends TFn
  * `{ [x: string]: any; [x: number]: any; [x: symbol]: any }`, losing
  * its identity as `any` and breaking downstream type checks.
  */
-type Id<T> = 0 extends 1 & T
-  ? T
-  : T extends infer U
-    ? { [K in keyof U]: U[K] }
-    : never
+type Id<T> = 0 extends 1 & T ? T : T extends infer U ? { [K in keyof U]: U[K] } : never
 
 /**
  * Strips keys whose values are `never`, `null`, or `undefined`.
@@ -100,11 +93,7 @@ type Spread<A extends readonly [...any]> = A extends [infer L, ...infer R]
   : unknown
 
 /** Recursively checks whether any element in the tuple is `any`. */
-type _HasAny<A> = A extends [infer L, ...infer R]
-  ? 0 extends 1 & L
-    ? true
-    : _HasAny<R>
-  : false
+type _HasAny<A> = A extends [infer L, ...infer R] ? (0 extends 1 & L ? true : _HasAny<R>) : false
 
 export type MergeTypes<A extends readonly [...any]> =
   _HasAny<A> extends true ? any : ExtractNullableKeys<Spread<A>>
@@ -113,6 +102,4 @@ export type MergeTypes<A extends readonly [...any]> =
 
 /** Extracts the props type from a Pyreon component function. */
 export type ExtractProps<TComponentOrTProps> =
-  TComponentOrTProps extends ComponentFn<infer TProps>
-    ? TProps
-    : TComponentOrTProps
+  TComponentOrTProps extends ComponentFn<infer TProps> ? TProps : TComponentOrTProps

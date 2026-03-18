@@ -5,15 +5,10 @@
  * equalCols flex distribution. The "content" slot gets `flex: 1` to
  * fill remaining space between before and after.
  */
-import { config } from '@pyreon/ui-core'
-import {
-  alignContent,
-  extendCss,
-  makeItResponsive,
-  value,
-} from '@pyreon/unistyle'
-import type { ResponsiveStylesCallback } from '~/types'
-import type { StyledProps, ThemeProps } from './types'
+import { config } from "@pyreon/ui-core"
+import { alignContent, extendCss, makeItResponsive, value } from "@pyreon/unistyle"
+import type { ResponsiveStylesCallback } from "~/types"
+import type { StyledProps, ThemeProps } from "./types"
 
 const { styled, css, component } = config
 
@@ -30,35 +25,35 @@ const typeContentCSS = `
 // --------------------------------------------------------
 const gapDimensions = {
   inline: {
-    before: 'margin-right',
-    after: 'margin-left',
+    before: "margin-right",
+    after: "margin-left",
   },
   reverseInline: {
-    before: 'margin-right',
-    after: 'margin-left',
+    before: "margin-right",
+    after: "margin-left",
   },
   rows: {
-    before: 'margin-bottom',
-    after: 'margin-top',
+    before: "margin-bottom",
+    after: "margin-top",
   },
   reverseRows: {
-    before: 'margin-bottom',
-    after: 'margin-top',
+    before: "margin-bottom",
+    after: "margin-top",
   },
 } as const
 
 const calculateGap = ({
   direction,
   type,
-  value,
+  value: gapValue,
 }: {
   direction: keyof typeof gapDimensions
-  type: ThemeProps['contentType']
+  type: ThemeProps["contentType"]
   value: string | number | null | undefined
 }) => {
-  if (!direction || !type || type === 'content') return undefined
+  if (!direction || !type || type === "content") return undefined
 
-  const finalStyles = `${gapDimensions[direction][type]}: ${value};`
+  const finalStyles = `${gapDimensions[direction][type]}: ${gapValue};`
 
   return finalStyles
 }
@@ -66,7 +61,7 @@ const calculateGap = ({
 // --------------------------------------------------------
 // calculations of styles to be rendered
 // --------------------------------------------------------
-const styles: ResponsiveStylesCallback = ({ css, theme: t, rootSize }) => css`
+const styles: ResponsiveStylesCallback = ({ css: cssFn, theme: t, rootSize }) => cssFn`
   ${alignContent({
     direction: t.direction,
     alignX: t.alignX,
@@ -97,11 +92,10 @@ const StyledComponent = styled(component)`
   align-self: stretch;
   flex-wrap: wrap;
 
-  ${({ $contentType }: StyledProps) =>
-    $contentType === 'content' && typeContentCSS};
+  ${({ $contentType }: StyledProps) => $contentType === "content" && typeContentCSS};
 
   ${makeItResponsive({
-    key: '$element',
+    key: "$element",
     styles,
     css,
     normalize: true,

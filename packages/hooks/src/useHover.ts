@@ -1,5 +1,4 @@
-import { signal } from '@pyreon/reactivity'
-import { onUnmount } from '@pyreon/core'
+import { signal } from "@pyreon/reactivity"
 
 export interface UseHoverResult {
   /** Reactive boolean — true when element is hovered */

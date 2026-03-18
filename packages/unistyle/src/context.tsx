@@ -1,11 +1,6 @@
-import type { VNode } from '@pyreon/core'
-import {
-  Provider as CoreProvider,
-  config,
-  context,
-  isEmpty,
-} from '@pyreon/ui-core'
-import { createMediaQueries, sortBreakpoints } from './responsive'
+import type { VNode } from "@pyreon/core"
+import { Provider as CoreProvider, config, context, isEmpty } from "@pyreon/ui-core"
+import { createMediaQueries, sortBreakpoints } from "./responsive"
 
 type Theme = {
   rootSize: number
@@ -28,9 +23,7 @@ function Provider(props: TProvider): VNode | null {
   const { breakpoints, rootSize } = theme
 
   const sortedBreakpoints =
-    breakpoints && !isEmpty(breakpoints)
-      ? sortBreakpoints(breakpoints)
-      : undefined
+    breakpoints && !isEmpty(breakpoints) ? sortBreakpoints(breakpoints) : undefined
 
   const media =
     breakpoints && !isEmpty(breakpoints)

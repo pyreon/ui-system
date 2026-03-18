@@ -1,22 +1,16 @@
 type AssignToBreakpointKey = (
   breakpoints: string[],
 ) => (
-  value: (
-    breakpoint: string,
-    i: number,
-    breakpoints: string[],
-    result: Record<string, unknown>,
-  ) => void,
+  valueFn: (breakpoint: string, i: number, bps: string[], result: Record<string, unknown>) => void,
 ) => Record<string, unknown>
 
-const assignToBreakpointKey: AssignToBreakpointKey =
-  (breakpoints) => (value) => {
-    const result: Record<string, unknown> = {}
-    breakpoints.forEach((item, i) => {
-      result[item] = value(item, i, breakpoints, result)
-    })
-    return result
-  }
+const assignToBreakpointKey: AssignToBreakpointKey = (breakpoints) => (valueFn) => {
+  const result: Record<string, unknown> = {}
+  breakpoints.forEach((item, i) => {
+    result[item] = valueFn(item, i, breakpoints, result)
+  })
+  return result
+}
 
 const handleArrayCb = (arr: (string | number)[]) => (_: unknown, i: number) => {
   const currentValue = arr[i]
@@ -28,7 +22,8 @@ const handleObjectCb =
   (obj: Record<string, unknown>) =>
   (bp: string, i: number, bps: string[], res: Record<string, unknown>) => {
     const currentValue = obj[bp]
-    const previousValue = res[bps[i - 1]!]
+    const prevBp = bps[i - 1]
+    const previousValue = prevBp != null ? res[prevBp] : undefined
     if (currentValue != null) return currentValue
     return previousValue
   }
@@ -36,9 +31,7 @@ const handleObjectCb =
 const handleValueCb = (value: unknown) => () => value
 
 const shouldNormalize = (props: Record<string, any>) =>
-  Object.values(props).some(
-    (item) => typeof item === 'object' || Array.isArray(item),
-  )
+  Object.values(props).some((item) => typeof item === "object" || Array.isArray(item))
 
 export type NormalizeTheme = ({
   theme,
@@ -59,7 +52,7 @@ const normalizeTheme: NormalizeTheme = ({ theme, breakpoints }) => {
 
     if (Array.isArray(value)) {
       result[key] = getBpValues(handleArrayCb(value as (string | number)[]))
-    } else if (typeof value === 'object') {
+    } else if (typeof value === "object") {
       result[key] = getBpValues(handleObjectCb(value as Record<string, any>))
     } else {
       result[key] = getBpValues(handleValueCb(value))

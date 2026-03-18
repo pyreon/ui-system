@@ -1,5 +1,5 @@
-import type { Ref, VNode } from '@pyreon/core'
-import type { CSSProperties } from './types'
+import type { Ref, VNode } from "@pyreon/core"
+import type { CSSProperties } from "./types"
 
 const splitCache = new Map<string, string[]>()
 const splitClasses = (classes: string): string[] => {
@@ -41,7 +41,7 @@ export const mergeClassNames = (
   additional: string | undefined,
 ): string | undefined => {
   const parts = [existing, additional].filter(Boolean)
-  return parts.length > 0 ? parts.join(' ') : undefined
+  return parts.length > 0 ? parts.join(" ") : undefined
 }
 
 /** Merges two CSSProperties objects, with `b` taking precedence. */
@@ -61,13 +61,11 @@ type RefCallback<T> = (node: T | null) => void
 type RefLike<T> = RefCallback<T> | Ref<T>
 
 /** Merges multiple refs (callback or object) into a single callback ref. */
-export const mergeRefs = <T>(
-  ...refs: (RefLike<T> | undefined)[]
-): ((node: T | null) => void) => {
+export const mergeRefs = <T>(...refs: (RefLike<T> | undefined)[]): ((node: T | null) => void) => {
   return (node: T | null) => {
     for (const ref of refs) {
       if (!ref) continue
-      if (typeof ref === 'function') {
+      if (typeof ref === "function") {
         ref(node)
       } else {
         ;(ref as { current: unknown }).current = node
@@ -77,10 +75,7 @@ export const mergeRefs = <T>(
 }
 
 /** Clones a VNode with merged props. */
-export const cloneVNode = (
-  vnode: VNode,
-  extraProps: Record<string, unknown>,
-): VNode => ({
+export const cloneVNode = (vnode: VNode, extraProps: Record<string, unknown>): VNode => ({
   ...vnode,
   props: { ...vnode.props, ...extraProps },
 })

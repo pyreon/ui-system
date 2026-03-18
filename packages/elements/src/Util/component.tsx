@@ -3,10 +3,11 @@
  * children without adding any DOM nodes of its own. Uses the core `render`
  * helper to clone children with the merged props.
  */
-import { render } from '@pyreon/ui-core'
-import type { VNodeChild } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import type { PyreonComponent } from '~/types'
+
+import type { VNodeChild } from "@pyreon/core"
+import { render } from "@pyreon/ui-core"
+import { PKG_NAME } from "~/constants"
+import type { PyreonComponent } from "~/types"
 
 export interface Props {
   /**
@@ -24,9 +25,7 @@ export interface Props {
 }
 
 const Component: PyreonComponent<Props> = ({ children, className, style }) => {
-  const mergedClasses = Array.isArray(className)
-    ? className.join(' ')
-    : className
+  const mergedClasses = Array.isArray(className) ? className.join(" ") : className
 
   const finalProps: Record<string, any> = {}
   if (style) finalProps.style = style

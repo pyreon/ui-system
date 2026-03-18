@@ -1,11 +1,10 @@
-import { pushContext, popContext, onUnmount } from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import ContainerContext from '~/context/ContainerContext'
-import type { ElementType } from '~/types'
-import useGridContext from '~/useContext'
-import { omitCtxKeys } from '~/utils'
-import Styled from './styled'
+import { onUnmount, popContext, pushContext } from "@pyreon/core"
+import { PKG_NAME } from "~/constants"
+import ContainerContext from "~/context/ContainerContext"
+import type { ElementType } from "~/types"
+import useGridContext from "~/useContext"
+import { omitCtxKeys } from "~/utils"
+import Styled from "./styled"
 
 /**
  * Container component that establishes the outermost grid boundary.
@@ -15,9 +14,9 @@ import Styled from './styled'
  */
 
 const DEV_PROPS: Record<string, string> =
-  process.env.NODE_ENV !== 'production' ? { 'data-coolgrid': 'container' } : {}
+  process.env.NODE_ENV !== "production" ? { "data-coolgrid": "container" } : {}
 
-const Component: ElementType<['containerWidth']> = ({
+const Component: ElementType<["containerWidth"]> = ({
   children,
   component,
   css,
@@ -54,7 +53,7 @@ const Component: ElementType<['containerWidth']> = ({
   const finalWidth = (() => {
     if (!width) return containerWidth
     // @ts-expect-error
-    return typeof width === 'function' ? width(containerWidth) : width
+    return typeof width === "function" ? width(containerWidth) : width
   })()
 
   const finalProps = {
@@ -70,12 +69,7 @@ const Component: ElementType<['containerWidth']> = ({
   onUnmount(() => popContext())
 
   return (
-    <Styled
-      {...omitCtxKeys(props)}
-      as={component}
-      {...finalProps}
-      {...DEV_PROPS}
-    >
+    <Styled {...omitCtxKeys(props)} as={component} {...finalProps} {...DEV_PROPS}>
       {children}
     </Styled>
   )

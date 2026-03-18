@@ -1,4 +1,4 @@
-import { isEmpty } from '@pyreon/ui-core'
+import { isEmpty } from "@pyreon/ui-core"
 
 /**
  * Strips keys with `undefined` values from a props object.
@@ -32,10 +32,9 @@ type CalculateChainOptions = <A>(
   options?: OptionFunc<A>[],
 ) => (args: A[]) => ReturnType<OptionFunc<A>>
 
-export const calculateChainOptions: CalculateChainOptions =
-  (options) => (args) => {
-    const result = {}
-    if (!options || isEmpty(options)) return result
+export const calculateChainOptions: CalculateChainOptions = (options) => (args) => {
+  const result = {}
+  if (!options || isEmpty(options)) return result
 
-    return options.reduce((acc, item) => Object.assign(acc, item(...args)), {})
-  }
+  return options.reduce((acc, item) => Object.assign(acc, item(...args)), {})
+}

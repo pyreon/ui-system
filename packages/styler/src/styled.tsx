@@ -15,13 +15,13 @@
  * through without transformation, so `&:hover`, `&::before`, etc. work
  * as-is in browsers supporting CSS Nesting (all modern browsers).
  */
-import type { ComponentFn, VNode } from '@pyreon/core'
-import { h } from '@pyreon/core'
-import { buildProps } from './forward'
-import { type Interpolation, normalizeCSS, resolve } from './resolve'
-import { isDynamic } from './shared'
-import { sheet } from './sheet'
-import { useTheme } from './ThemeProvider'
+import type { ComponentFn, VNode } from "@pyreon/core"
+import { h } from "@pyreon/core"
+import { buildProps } from "./forward"
+import { type Interpolation, normalizeCSS, resolve } from "./resolve"
+import { isDynamic } from "./shared"
+import { sheet } from "./sheet"
+import { useTheme } from "./ThemeProvider"
 
 type Tag = string | ComponentFn<any>
 
@@ -37,16 +37,11 @@ export interface StyledOptions {
 }
 
 const getDisplayName = (tag: Tag): string =>
-  typeof tag === 'string'
-    ? tag
-    : (tag as any).displayName || (tag as any).name || 'Component'
+  typeof tag === "string" ? tag : (tag as any).displayName || (tag as any).name || "Component"
 
 // Component cache: same template literal + tag + no options → same component.
 // WeakMap on `strings` (TemplateStringsArray is object-identity per source location).
-const staticComponentCache = new WeakMap<
-  TemplateStringsArray,
-  Map<Tag, ComponentFn>
->()
+const staticComponentCache = new WeakMap<TemplateStringsArray, Map<Tag, ComponentFn>>()
 
 // Single-entry hot cache — just 3 reference comparisons, no Map/WeakMap overhead.
 let _hotStrings: TemplateStringsArray | null = null
@@ -58,10 +53,11 @@ const createStyledComponent = (
   strings: TemplateStringsArray,
   values: Interpolation[],
   options?: StyledOptions,
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
 ): ComponentFn => {
   // Ultra-fast hot cache: 3 reference comparisons → return immediately
   if (values.length === 0 && !options) {
-    if (strings === _hotStrings && tag === _hotTag) return _hotComponent!
+    if (strings === _hotStrings && tag === _hotTag) return _hotComponent as ComponentFn
 
     // WeakMap fallback for alternating patterns
     const tagMap = staticComponentCache.get(strings)
@@ -84,23 +80,26 @@ const createStyledComponent = (
   // STATIC FAST PATH: no function interpolations → compute class once at creation time
   if (!hasDynamicValues) {
     // Inline resolve for the common no-values case
-    const raw = values.length === 0 ? strings[0]! : resolve(strings, values, {})
+    const raw = values.length === 0 ? (strings[0] as string) : resolve(strings, values, {})
     const cssText = normalizeCSS(raw)
     const hasCss = cssText.length > 0
 
-    const staticClassName = hasCss ? sheet.insert(cssText, boost) : ''
+    const staticClassName = hasCss ? sheet.insert(cssText, boost) : ""
 
     const StaticStyled: ComponentFn = (rawProps: Record<string, any>): VNode | null => {
       const finalTag = rawProps.as || tag
-      const isDOM = typeof finalTag === 'string'
-      const finalProps = buildProps(
-        rawProps,
-        staticClassName,
-        isDOM,
-        customFilter,
-      )
+      const isDOM = typeof finalTag === "string"
+      const finalProps = buildProps(rawProps, staticClassName, isDOM, customFilter)
 
-      return h(finalTag as string, finalProps, ...(Array.isArray(rawProps.children) ? rawProps.children : rawProps.children != null ? [rawProps.children] : []))
+      return h(
+        finalTag as string,
+        finalProps,
+        ...(Array.isArray(rawProps.children)
+          ? rawProps.children
+          : rawProps.children != null
+            ? [rawProps.children]
+            : []),
+      )
     }
 
     ;(StaticStyled as any).displayName = `styled(${getDisplayName(tag)})`
@@ -127,18 +126,21 @@ const createStyledComponent = (
     const allProps = { ...rawProps, theme }
     const cssText = normalizeCSS(resolve(strings, values, allProps))
 
-    const className = cssText.length > 0 ? sheet.insert(cssText, boost) : ''
+    const className = cssText.length > 0 ? sheet.insert(cssText, boost) : ""
 
     const finalTag = rawProps.as || tag
-    const isDOM = typeof finalTag === 'string'
-    const finalProps = buildProps(
-      rawProps,
-      className,
-      isDOM,
-      customFilter,
-    )
+    const isDOM = typeof finalTag === "string"
+    const finalProps = buildProps(rawProps, className, isDOM, customFilter)
 
-    return h(finalTag as string, finalProps, ...(Array.isArray(rawProps.children) ? rawProps.children : rawProps.children != null ? [rawProps.children] : []))
+    return h(
+      finalTag as string,
+      finalProps,
+      ...(Array.isArray(rawProps.children)
+        ? rawProps.children
+        : rawProps.children != null
+          ? [rawProps.children]
+          : []),
+    )
   }
 
   ;(DynamicStyled as any).displayName = `styled(${getDisplayName(tag)})`
@@ -147,10 +149,8 @@ const createStyledComponent = (
 
 /** Factory function: styled(tag) returns a tagged template function. */
 const styledFactory = (tag: Tag, options?: StyledOptions) => {
-  const templateFn = (
-    strings: TemplateStringsArray,
-    ...values: Interpolation[]
-  ) => createStyledComponent(tag, strings, values, options)
+  const templateFn = (strings: TemplateStringsArray, ...values: Interpolation[]) =>
+    createStyledComponent(tag, strings, values, options)
 
   return templateFn
 }
@@ -162,15 +162,102 @@ const styledFactory = (tag: Tag, options?: StyledOptions) => {
  * - `styled.div` → shorthand via Proxy (no options)
  */
 // Cache template functions per tag to avoid closure allocation on every Proxy get
-const proxyCache = new Map<string, Function>()
+const proxyCache = new Map<string, (...args: any[]) => any>()
 
-export const styled: typeof styledFactory &
-  Record<
-    string,
-    (strings: TemplateStringsArray, ...values: Interpolation[]) => ComponentFn
-  > = new Proxy(styledFactory as any, {
+type TagTemplateFn = (strings: TemplateStringsArray, ...values: Interpolation[]) => ComponentFn
+
+type HtmlTags =
+  | "a"
+  | "abbr"
+  | "address"
+  | "article"
+  | "aside"
+  | "audio"
+  | "b"
+  | "blockquote"
+  | "body"
+  | "br"
+  | "button"
+  | "canvas"
+  | "caption"
+  | "code"
+  | "col"
+  | "colgroup"
+  | "dd"
+  | "details"
+  | "div"
+  | "dl"
+  | "dt"
+  | "em"
+  | "fieldset"
+  | "figcaption"
+  | "figure"
+  | "footer"
+  | "form"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "head"
+  | "header"
+  | "hr"
+  | "html"
+  | "i"
+  | "iframe"
+  | "img"
+  | "input"
+  | "label"
+  | "legend"
+  | "li"
+  | "link"
+  | "main"
+  | "mark"
+  | "menu"
+  | "meta"
+  | "nav"
+  | "ol"
+  | "optgroup"
+  | "option"
+  | "output"
+  | "p"
+  | "picture"
+  | "pre"
+  | "progress"
+  | "q"
+  | "section"
+  | "select"
+  | "small"
+  | "source"
+  | "span"
+  | "strong"
+  | "style"
+  | "sub"
+  | "summary"
+  | "sup"
+  | "svg"
+  | "table"
+  | "tbody"
+  | "td"
+  | "template"
+  | "textarea"
+  | "tfoot"
+  | "th"
+  | "thead"
+  | "time"
+  | "tr"
+  | "u"
+  | "ul"
+  | "video"
+
+export type StyledFunction = ((tag: Tag, options?: StyledOptions) => TagTemplateFn) & {
+  [K in HtmlTags]: TagTemplateFn
+}
+
+export const styled: StyledFunction = new Proxy(styledFactory as any, {
   get(_target: unknown, prop: string) {
-    if (prop === 'prototype' || prop === '$$typeof') return undefined
+    if (prop === "prototype" || prop === "$$typeof") return undefined
     // styled.div`...`, styled.span`...`, etc.
     let fn = proxyCache.get(prop)
     if (!fn) {

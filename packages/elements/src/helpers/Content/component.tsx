@@ -6,10 +6,10 @@
  *
  * Children are rendered via core `render()`.
  */
-import { render } from '@pyreon/ui-core'
-import { IS_DEVELOPMENT } from '~/utils'
-import Styled from './styled'
-import type { Props } from './types'
+import { render } from "@pyreon/ui-core"
+import { IS_DEVELOPMENT } from "~/utils"
+import Styled from "./styled"
+import type { Props } from "./types"
 
 const Component = ({
   contentType,
@@ -26,7 +26,7 @@ const Component = ({
 }: Partial<Props>) => {
   const debugProps = IS_DEVELOPMENT
     ? {
-        'data-pyr-element': contentType,
+        "data-pyr-element": contentType,
       }
     : {}
 
@@ -42,13 +42,7 @@ const Component = ({
   }
 
   return (
-    <Styled
-      as={tag}
-      $contentType={contentType}
-      $element={stylingProps}
-      {...debugProps}
-      {...props}
-    >
+    <Styled as={tag} $contentType={contentType} $element={stylingProps} {...debugProps} {...props}>
       {render(children)}
     </Styled>
   )

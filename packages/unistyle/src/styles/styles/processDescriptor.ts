@@ -1,46 +1,45 @@
-import type { BorderRadius } from '../shorthands/borderRadius'
-import type { Edge } from '../shorthands/edge'
-import type { Values } from '../../units/values'
-import type { PropertyDescriptor } from './propertyMap'
-import type { InnerTheme } from './types'
+import type { Values } from "../../units/values"
+import type { BorderRadius } from "../shorthands/borderRadius"
+import type { Edge } from "../shorthands/edge"
+import type { PropertyDescriptor } from "./propertyMap"
+import type { InnerTheme } from "./types"
 
 type Css = (strings: TemplateStringsArray, ...values: any[]) => string
 type Calc = (...params: any[]) => ReturnType<Values>
 
-const toCssDecl = (css: string, v: unknown) =>
-  v == null ? '' : `${css}: ${v};`
+const toCssDecl = (css: string, v: unknown) => (v == null ? "" : `${css}: ${v};`)
 
 const processSpecial = (
-  d: Extract<PropertyDescriptor, { kind: 'special' }>,
+  d: Extract<PropertyDescriptor, { kind: "special" }>,
   t: InnerTheme,
 ): string => {
   switch (d.id) {
-    case 'fullScreen':
-      if (!t.fullScreen) return ''
-      return 'position: fixed; top: 0; left: 0; right: 0; bottom: 0;'
+    case "fullScreen":
+      if (!t.fullScreen) return ""
+      return "position: fixed; top: 0; left: 0; right: 0; bottom: 0;"
 
-    case 'backgroundImage':
-      if (!t.backgroundImage) return ''
+    case "backgroundImage":
+      if (!t.backgroundImage) return ""
       return `background-image: url(${t.backgroundImage});`
 
-    case 'animation': {
-      const parts = [t.keyframe, t.animation].filter(Boolean).join(' ')
-      return parts ? `animation: ${parts};` : ''
+    case "animation": {
+      const parts = [t.keyframe, t.animation].filter(Boolean).join(" ")
+      return parts ? `animation: ${parts};` : ""
     }
 
-    case 'hideEmpty':
-      if (!t.hideEmpty) return ''
-      return '&:empty { display: none; }'
+    case "hideEmpty":
+      if (!t.hideEmpty) return ""
+      return "&:empty { display: none; }"
 
-    case 'clearFix':
-      if (!t.clearFix) return ''
+    case "clearFix":
+      if (!t.clearFix) return ""
       return '&::after { clear: both; content: ""; display: table; }'
 
-    case 'extendCss':
-      return (t.extendCss as string) ?? ''
+    case "extendCss":
+      return (t.extendCss as string) ?? ""
 
     default:
-      return ''
+      return ""
   }
 }
 
@@ -53,16 +52,16 @@ const processDescriptor = (
   borderRadiusFn: ReturnType<BorderRadius>,
 ): string => {
   switch (d.kind) {
-    case 'simple':
+    case "simple":
       return toCssDecl(d.css, t[d.key])
 
-    case 'convert':
+    case "convert":
       return toCssDecl(d.css, calc(t[d.key]))
 
-    case 'convert_fallback':
+    case "convert_fallback":
       return toCssDecl(d.css, calc(...d.keys.map((k) => t[k])))
 
-    case 'edge':
+    case "edge":
       return (
         shorthand(d.property, {
           full: t[d.keys.full],
@@ -72,10 +71,10 @@ const processDescriptor = (
           left: t[d.keys.left],
           bottom: t[d.keys.bottom],
           right: t[d.keys.right],
-        }) ?? ''
+        }) ?? ""
       )
 
-    case 'border_radius':
+    case "border_radius":
       return (
         borderRadiusFn({
           full: t[d.keys.full],
@@ -87,10 +86,10 @@ const processDescriptor = (
           topRight: t[d.keys.topRight],
           bottomLeft: t[d.keys.bottomLeft],
           bottomRight: t[d.keys.bottomRight],
-        }) ?? ''
+        }) ?? ""
       )
 
-    case 'special':
+    case "special":
       return processSpecial(d, t)
   }
 }

@@ -1,4 +1,4 @@
-import { signal } from '@pyreon/reactivity'
+import { signal } from "@pyreon/reactivity"
 
 export interface UseToggleResult {
   value: () => boolean
@@ -15,7 +15,7 @@ export function useToggle(initial = false): UseToggleResult {
 
   return {
     value,
-    toggle: () => value.update(v => !v),
+    toggle: () => value.update((v) => !v),
     setTrue: () => value.set(true),
     setFalse: () => value.set(false),
   }

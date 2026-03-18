@@ -1,5 +1,6 @@
-import { css, keyframes, styled } from '@pyreon/styler'
-import type { HTMLTags } from './html'
+import type { StyledFunction } from "@pyreon/styler"
+import { css, keyframes, styled } from "@pyreon/styler"
+import type { HTMLTags } from "./html"
 
 /**
  * Describes the shape of the CSS-in-JS engine.
@@ -18,7 +19,7 @@ interface PlatformConfig {
   createMediaQueries?: (props: {
     breakpoints: Record<string, number>
     rootSize: number
-    css: CSSEngineConnector['css']
+    css: CSSEngineConnector["css"]
   }) => Record<string, (...args: any[]) => any>
 }
 
@@ -33,11 +34,11 @@ type InitConfig = Partial<CSSEngineConnector & PlatformConfig>
  */
 class Configuration {
   css = css
-  styled = styled
+  styled: StyledFunction = styled
   keyframes = keyframes
-  component: string | HTMLTags = 'div'
-  textComponent: string | HTMLTags = 'span'
-  createMediaQueries: PlatformConfig['createMediaQueries'] = undefined
+  component: string | HTMLTags = "div"
+  textComponent: string | HTMLTags = "span"
+  createMediaQueries: PlatformConfig["createMediaQueries"] = undefined
 
   init = (props: InitConfig) => {
     if (props.css) this.css = props.css
@@ -45,8 +46,7 @@ class Configuration {
     if (props.keyframes) this.keyframes = props.keyframes
     if (props.component) this.component = props.component
     if (props.textComponent) this.textComponent = props.textComponent
-    if (props.createMediaQueries)
-      this.createMediaQueries = props.createMediaQueries
+    if (props.createMediaQueries) this.createMediaQueries = props.createMediaQueries
   }
 }
 

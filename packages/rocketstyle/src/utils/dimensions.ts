@@ -1,5 +1,5 @@
-import { get, isEmpty, set } from '@pyreon/ui-core'
-import type { Dimensions, DimensionValue, MultiKeys } from '~/types/dimensions'
+import { get, isEmpty, set } from "@pyreon/ui-core"
+import type { Dimensions, DimensionValue, MultiKeys } from "~/types/dimensions"
 
 // --------------------------------------------------------
 // Is value a valid key
@@ -15,8 +15,7 @@ export const isValidKey: IsValidKey = (value) =>
 /** Determines if a dimension value is a multi-key config object, returning [isMulti, propName]. */
 type IsMultiKey = (value: string | Record<string, unknown>) => [boolean, string]
 export const isMultiKey: IsMultiKey = (value) => {
-  if (typeof value === 'object' && value !== null)
-    return [true, get(value, 'propName') as string]
+  if (typeof value === "object" && value !== null) return [true, get(value, "propName") as string]
   return [false, value]
 }
 
@@ -69,9 +68,7 @@ export const getDimensionsMap: GetDimensionsMap = ({ themes, useBooleans }) => {
 type GetKeys = <T extends Record<string, unknown>>(obj: T) => Array<keyof T>
 export const getKeys: GetKeys = (obj) => Object.keys(obj)
 
-type GetValues = <T extends Record<string, unknown>, K extends keyof T>(
-  obj: T,
-) => T[K][]
+type GetValues = <T extends Record<string, unknown>, K extends keyof T>(obj: T) => T[K][]
 export const getValues: GetValues = (obj) => Object.values(obj) as any
 
 // --------------------------------------------------------
@@ -79,13 +76,11 @@ export const getValues: GetValues = (obj) => Object.values(obj) as any
 // --------------------------------------------------------
 /** Extracts the prop name from each dimension value, unwrapping multi-key config objects. */
 type ValueType<T> = T extends string ? T : T[][0]
-type GetDimensionsValues = <T extends Dimensions, K extends keyof T>(
-  obj: T,
-) => ValueType<T[K]>[]
+type GetDimensionsValues = <T extends Dimensions, K extends keyof T>(obj: T) => ValueType<T[K]>[]
 
 export const getDimensionsValues: GetDimensionsValues = (obj) =>
   getValues(obj).map((item: DimensionValue) => {
-    if (typeof item === 'object') {
+    if (typeof item === "object") {
       return item.propName as any
     }
 
@@ -101,7 +96,7 @@ type GetMultipleDimensions = <T extends Dimensions>(obj: T) => MultiKeys<T>
 export const getMultipleDimensions: GetMultipleDimensions = (obj) =>
   getValues(obj).reduce(
     (accumulator, value: DimensionValue) => {
-      if (typeof value === 'object') {
+      if (typeof value === "object") {
         if (value.multi === true) accumulator[value.propName] = true
       }
 
@@ -120,7 +115,7 @@ type GetTransformDimensions = <T extends Dimensions>(obj: T) => TransformKeys
 export const getTransformDimensions: GetTransformDimensions = (obj) =>
   getValues(obj).reduce(
     (accumulator, value: DimensionValue) => {
-      if (typeof value === 'object') {
+      if (typeof value === "object") {
         if (value.transform === true) accumulator[value.propName] = true
       }
 

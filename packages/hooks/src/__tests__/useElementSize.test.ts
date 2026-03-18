@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 let mountCallbacks: Array<() => unknown> = []
 let unmountCallbacks: Array<() => void> = []
 
-vi.mock('@pyreon/core', () => ({
+vi.mock("@pyreon/core", () => ({
   onMount: (fn: () => unknown) => {
     mountCallbacks.push(fn)
   },
@@ -12,9 +12,9 @@ vi.mock('@pyreon/core', () => ({
   },
 }))
 
-import { useElementSize } from '../useElementSize'
+import { useElementSize } from "../useElementSize"
 
-describe('useElementSize', () => {
+describe("useElementSize", () => {
   let resizeCallback: ((entries: ResizeObserverEntry[]) => void) | undefined
   let observeSpy: ReturnType<typeof vi.fn>
   let disconnectSpy: ReturnType<typeof vi.fn>
@@ -36,91 +36,150 @@ describe('useElementSize', () => {
     }) as unknown as typeof ResizeObserver
   })
 
-  it('returns initial size of 0x0', () => {
+  it("returns initial size of 0x0", () => {
     const size = useElementSize(() => null)
     expect(size().width).toBe(0)
     expect(size().height).toBe(0)
   })
 
-  it('measures initial element size on mount', () => {
-    const el = document.createElement('div')
-    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
+  it("measures initial element size on mount", () => {
+    const el = document.createElement("div")
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
       width: 200,
       height: 100,
-      x: 0, y: 0, top: 0, left: 0, bottom: 100, right: 200,
-      toJSON: () => {},
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      bottom: 100,
+      right: 200,
+      toJSON: () => {
+        /* no-op */
+      },
     })
 
     const size = useElementSize(() => el)
-    mountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
 
     expect(size().width).toBe(200)
     expect(size().height).toBe(100)
   })
 
-  it('observes the element with ResizeObserver', () => {
-    const el = document.createElement('div')
-    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
-      width: 0, height: 0, x: 0, y: 0, top: 0, left: 0, bottom: 0, right: 0,
-      toJSON: () => {},
+  it("observes the element with ResizeObserver", () => {
+    const el = document.createElement("div")
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      toJSON: () => {
+        /* no-op */
+      },
     })
 
     useElementSize(() => el)
-    mountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
 
     expect(observeSpy).toHaveBeenCalledWith(el)
   })
 
-  it('updates size when ResizeObserver fires', () => {
-    const el = document.createElement('div')
-    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
-      width: 100, height: 50, x: 0, y: 0, top: 0, left: 0, bottom: 50, right: 100,
-      toJSON: () => {},
+  it("updates size when ResizeObserver fires", () => {
+    const el = document.createElement("div")
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      width: 100,
+      height: 50,
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      bottom: 50,
+      right: 100,
+      toJSON: () => {
+        /* no-op */
+      },
     })
 
     const size = useElementSize(() => el)
-    mountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
     expect(size().width).toBe(100)
 
     // Simulate resize
-    resizeCallback?.([{
-      contentRect: { width: 300, height: 150 },
-    } as unknown as ResizeObserverEntry])
+    resizeCallback?.([
+      {
+        contentRect: { width: 300, height: 150 },
+      } as unknown as ResizeObserverEntry,
+    ])
 
     expect(size().width).toBe(300)
     expect(size().height).toBe(150)
   })
 
-  it('does nothing on mount when element is null', () => {
+  it("does nothing on mount when element is null", () => {
     useElementSize(() => null)
-    mountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
 
     expect(observeSpy).not.toHaveBeenCalled()
   })
 
-  it('disconnects ResizeObserver on unmount', () => {
-    const el = document.createElement('div')
-    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
-      width: 0, height: 0, x: 0, y: 0, top: 0, left: 0, bottom: 0, right: 0,
-      toJSON: () => {},
+  it("disconnects ResizeObserver on unmount", () => {
+    const el = document.createElement("div")
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      toJSON: () => {
+        /* no-op */
+      },
     })
 
     useElementSize(() => el)
-    mountCallbacks.forEach(cb => cb())
-    unmountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
+    unmountCallbacks.forEach((cb) => {
+      cb()
+    })
 
     expect(disconnectSpy).toHaveBeenCalled()
   })
 
-  it('handles ResizeObserver callback with no entry', () => {
-    const el = document.createElement('div')
-    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
-      width: 50, height: 25, x: 0, y: 0, top: 0, left: 0, bottom: 25, right: 50,
-      toJSON: () => {},
+  it("handles ResizeObserver callback with no entry", () => {
+    const el = document.createElement("div")
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      width: 50,
+      height: 25,
+      x: 0,
+      y: 0,
+      top: 0,
+      left: 0,
+      bottom: 25,
+      right: 50,
+      toJSON: () => {
+        /* no-op */
+      },
     })
 
     const size = useElementSize(() => el)
-    mountCallbacks.forEach(cb => cb())
+    mountCallbacks.forEach((cb) => {
+      cb()
+    })
 
     // Empty entries array
     resizeCallback?.([])

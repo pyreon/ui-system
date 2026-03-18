@@ -1,4 +1,4 @@
-import { onUnmount } from '@pyreon/core'
+import { onUnmount } from "@pyreon/core"
 
 export type UseInterval = (callback: () => void, delay: number | null) => void
 
@@ -8,7 +8,7 @@ export type UseInterval = (callback: () => void, delay: number | null) => void
  * Always calls the latest callback (no stale closures).
  */
 export const useInterval: UseInterval = (callback, delay) => {
-  let currentCallback = callback
+  const currentCallback = callback
   let intervalId: ReturnType<typeof setInterval> | null = null
 
   const start = () => {

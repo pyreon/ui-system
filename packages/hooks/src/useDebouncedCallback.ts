@@ -1,4 +1,4 @@
-import { onUnmount } from '@pyreon/core'
+import { onUnmount } from "@pyreon/core"
 
 type DebouncedFn<T extends (...args: any[]) => any> = {
   (...args: Parameters<T>): void
@@ -18,7 +18,7 @@ export type UseDebouncedCallback = <T extends (...args: any[]) => any>(
  * Cleans up on unmount.
  */
 export const useDebouncedCallback: UseDebouncedCallback = (callback, delay) => {
-  let currentCallback = callback
+  const currentCallback = callback
   let timer: ReturnType<typeof setTimeout> | null = null
   let lastArgs: any[] | null = null
 

@@ -4,9 +4,9 @@ export type IsRocketComponent = <T>(component: T) => boolean
 const isRocketComponent: IsRocketComponent = (component) => {
   if (
     component &&
-    (typeof component === 'object' || typeof component === 'function') &&
+    (typeof component === "object" || typeof component === "function") &&
     component !== null &&
-    Object.hasOwn(component as object, 'IS_ROCKETSTYLE')
+    Object.hasOwn(component as object, "IS_ROCKETSTYLE")
   ) {
     return true
   }

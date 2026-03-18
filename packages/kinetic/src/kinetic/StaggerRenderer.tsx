@@ -1,9 +1,9 @@
-import { h } from '@pyreon/core'
-import type { VNode } from '@pyreon/core'
-import type { CSSProperties, TransitionCallbacks } from '../types'
-import { cloneVNode } from '../utils'
-import TransitionItem from './TransitionItem'
-import type { KineticConfig } from './types'
+import type { VNode } from "@pyreon/core"
+import { h } from "@pyreon/core"
+import type { CSSProperties, TransitionCallbacks } from "../types"
+import { cloneVNode } from "../utils"
+import TransitionItem from "./TransitionItem"
+import type { KineticConfig } from "./types"
 
 type StaggerRendererProps = {
   config: KineticConfig
@@ -18,7 +18,7 @@ type StaggerRendererProps = {
 }
 
 const isVNode = (child: unknown): child is VNode =>
-  child != null && typeof child === 'object' && 'type' in (child as object)
+  child != null && typeof child === "object" && "type" in (child as object)
 
 /**
  * Renders children with staggered enter/exit animation.
@@ -41,14 +41,11 @@ const StaggerRenderer = ({
   const effectiveInterval = interval ?? config.interval ?? 50
   const effectiveReverseLeave = reverseLeave ?? config.reverseLeave ?? false
 
-  const childArray = (Array.isArray(children) ? children : [children]).filter(
-    isVNode,
-  )
+  const childArray = (Array.isArray(children) ? children : [children]).filter(isVNode)
   const count = childArray.length
 
   const staggeredChildren = childArray.map((child, index) => {
-    const staggerIndex =
-      !show() && effectiveReverseLeave ? count - 1 - index : index
+    const staggerIndex = !show() && effectiveReverseLeave ? count - 1 - index : index
     const delay = staggerIndex * effectiveInterval
 
     return (
@@ -70,16 +67,14 @@ const StaggerRenderer = ({
         leaveFrom={config.leaveFrom}
         leaveTo={config.leaveTo}
         onAfterLeave={
-          index === (effectiveReverseLeave ? 0 : count - 1)
-            ? callbacks.onAfterLeave
-            : undefined
+          index === (effectiveReverseLeave ? 0 : count - 1) ? callbacks.onAfterLeave : undefined
         }
       >
         {cloneVNode(child, {
           style: {
-            ...(child.props as Record<string, unknown>)?.style as CSSProperties | undefined,
-            '--stagger-index': staggerIndex,
-            '--stagger-interval': `${effectiveInterval}ms`,
+            ...((child.props as Record<string, unknown>)?.style as CSSProperties | undefined),
+            "--stagger-index": staggerIndex,
+            "--stagger-interval": `${effectiveInterval}ms`,
             transitionDelay: `${delay}ms`,
           } as CSSProperties,
         })}

@@ -1,8 +1,8 @@
-import { get, pick } from '@pyreon/ui-core'
-import { context } from '@pyreon/unistyle'
-import { useContext } from '@pyreon/core'
-import { CONTEXT_KEYS } from '~/constants'
-import type { Context, Obj, ValueType } from '~/types'
+import { useContext } from "@pyreon/core"
+import { get, pick } from "@pyreon/ui-core"
+import { context } from "@pyreon/unistyle"
+import { CONTEXT_KEYS } from "~/constants"
+import type { Context, Obj, ValueType } from "~/types"
 
 /**
  * Picks only the recognized grid configuration keys from a props object,
@@ -12,8 +12,7 @@ export type PickThemeProps = <T extends Record<string, unknown>>(
   props: T,
   keywords: Array<keyof T>,
 ) => ReturnType<typeof pick>
-const pickThemeProps: PickThemeProps = (props, keywords) =>
-  pick(props, keywords)
+const pickThemeProps: PickThemeProps = (props, keywords) => pick(props, keywords)
 
 /**
  * Resolves grid columns and container width using a three-layer fallback:
@@ -30,12 +29,12 @@ type GetGridContext = (
 }
 
 export const getGridContext: GetGridContext = (props = {}, theme = {}) => ({
-  columns: (get(props, 'columns') ||
-    get(theme, 'grid.columns') ||
-    get(theme, 'coolgrid.columns')) as ValueType,
-  containerWidth: (get(props, 'width') ||
-    get(theme, 'grid.container') ||
-    get(theme, 'coolgrid.container')) as Record<string, number>,
+  columns: (get(props, "columns") ||
+    get(theme, "grid.columns") ||
+    get(theme, "coolgrid.columns")) as ValueType,
+  containerWidth: (get(props, "width") ||
+    get(theme, "grid.container") ||
+    get(theme, "coolgrid.container")) as Record<string, number>,
 })
 
 /**

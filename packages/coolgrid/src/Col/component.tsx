@@ -1,11 +1,10 @@
-import { useContext } from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import { RowContext } from '~/context'
-import type { ElementType } from '~/types'
-import useGridContext from '~/useContext'
-import { omitCtxKeys } from '~/utils'
-import Styled from './styled'
+import { useContext } from "@pyreon/core"
+import { PKG_NAME } from "~/constants"
+import { RowContext } from "~/context"
+import type { ElementType } from "~/types"
+import useGridContext from "~/useContext"
+import { omitCtxKeys } from "~/utils"
+import Styled from "./styled"
 
 /**
  * Col (column) component that reads grid settings from RowContext
@@ -14,20 +13,20 @@ import Styled from './styled'
  */
 
 const DEV_PROPS: Record<string, string> =
-  process.env.NODE_ENV !== 'production' ? { 'data-coolgrid': 'col' } : {}
+  process.env.NODE_ENV !== "production" ? { "data-coolgrid": "col" } : {}
 
 const Component: ElementType<
   [
-    'containerWidth',
-    'width',
-    'rowComponent',
-    'rowCss',
-    'colCss',
-    'colComponent',
-    'columns',
-    'gap',
-    'gutter',
-    'contentAlignX',
+    "containerWidth",
+    "width",
+    "rowComponent",
+    "rowCss",
+    "colCss",
+    "colComponent",
+    "columns",
+    "gap",
+    "gutter",
+    "contentAlignX",
   ]
 > = ({ children, component, css, ...props }) => {
   const parentCtx = useContext(RowContext)
@@ -47,12 +46,7 @@ const Component: ElementType<
   }
 
   return (
-    <Styled
-      {...omitCtxKeys(props)}
-      as={component ?? colComponent}
-      {...finalProps}
-      {...DEV_PROPS}
-    >
+    <Styled {...omitCtxKeys(props)} as={component ?? colComponent} {...finalProps} {...DEV_PROPS}>
       {children}
     </Styled>
   )

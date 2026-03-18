@@ -1,5 +1,4 @@
-import { onMount } from '@pyreon/core'
-import { effect } from '@pyreon/reactivity'
+import { onMount } from "@pyreon/core"
 
 /**
  * In Pyreon there is no SSR warning distinction between effect and
@@ -15,6 +14,6 @@ import { effect } from '@pyreon/reactivity'
 export type UseIsomorphicLayoutEffect = typeof onMount
 
 const useIsomorphicLayoutEffect: UseIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? onMount : onMount
+  typeof window !== "undefined" ? onMount : onMount
 
 export default useIsomorphicLayoutEffect

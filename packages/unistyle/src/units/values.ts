@@ -1,24 +1,37 @@
-import value from './value'
+import value from "./value"
 
 type CssUnits =
-  | 'px' | 'rem' | '%' | 'em' | 'ex' | 'cm' | 'mm' | 'in'
-  | 'pt' | 'pc' | 'ch' | 'vh' | 'vw' | 'vmin' | 'vmax'
+  | "px"
+  | "rem"
+  | "%"
+  | "em"
+  | "ex"
+  | "cm"
+  | "mm"
+  | "in"
+  | "pt"
+  | "pc"
+  | "ch"
+  | "vh"
+  | "vw"
+  | "vmin"
+  | "vmax"
 
-type GetValueOf = (...values: unknown[]) => number | string
-const getValueOf: GetValueOf = (...values: any[]) =>
-  values.find((value) => typeof value !== 'undefined' && value !== null)
+type GetValueOf = (...args: unknown[]) => number | string
+const getValueOf: GetValueOf = (...args: any[]) =>
+  args.find((v) => typeof v !== "undefined" && v !== null)
 
 export type Values = (
-  values: unknown[],
+  items: unknown[],
   rootSize?: number,
   outputUnit?: CssUnits,
 ) => string | number | null
 
-const values: Values = (values, rootSize, outputUnit) => {
-  const param = getValueOf(...values)
+const values: Values = (items, rootSize, outputUnit) => {
+  const param = getValueOf(...items)
 
   if (Array.isArray(param)) {
-    return param.map((item) => value(item, rootSize, outputUnit)).join(' ')
+    return param.map((item) => value(item, rootSize, outputUnit)).join(" ")
   }
 
   return value(param, rootSize, outputUnit)

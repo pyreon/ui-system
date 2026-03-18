@@ -1,5 +1,5 @@
-import type { PropertyValue } from '../../types'
-import value from '../../units/value'
+import type { PropertyValue } from "../../types"
+import value from "../../units/value"
 
 const isValidValue = (v: unknown) => !!v || v === 0
 
@@ -35,24 +35,19 @@ const resolveSides = ({ top, left, right, bottom, x, y, full }: SideValues) => {
   return sides
 }
 
-const formatSpacing = (
-  property: string,
-  sides: (PropertyValue | null | undefined)[],
-) => {
+const formatSpacing = (property: string, sides: (PropertyValue | null | undefined)[]) => {
   const [t, r, b, l] = sides
 
-  if (sides.every((val, _, arr) => isValidValue(val) && val === arr[0]))
-    return `${property}: ${t};`
+  if (sides.every((val, _, arr) => isValidValue(val) && val === arr[0])) return `${property}: ${t};`
 
   if (t === b && r === l) return `${property}: ${value(t)} ${value(r)};`
 
-  if (t && r === l && b)
-    return `${property}: ${value(t)} ${value(r)} ${value(b)};`
+  if (t && r === l && b) return `${property}: ${value(t)} ${value(r)} ${value(b)};`
 
   if (sides.every((val) => !!val))
     return `${property}: ${value(t)} ${value(r)} ${value(b)} ${value(l)};`
 
-  let output = ''
+  let output = ""
   if (t) output += `${property}-top: ${value(t)};`
   if (b) output += `${property}-bottom: ${value(b)};`
   if (l) output += `${property}-left: ${value(l)};`
@@ -61,9 +56,7 @@ const formatSpacing = (
   return output
 }
 
-export type SpacingShorthand = (
-  property: 'padding' | 'margin',
-) => (props: SideValues) => string
+export type SpacingShorthand = (property: "padding" | "margin") => (props: SideValues) => string
 
 export const spacingShorthand: SpacingShorthand = (property) => (props) =>
   formatSpacing(property, resolveSides(props))

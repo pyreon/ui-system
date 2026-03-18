@@ -1,5 +1,5 @@
-import { isEmpty } from '@pyreon/ui-core'
-import { STATIC_KEYS } from '~/constants'
+import { isEmpty } from "@pyreon/ui-core"
+import { STATIC_KEYS } from "~/constants"
 
 // --------------------------------------------------------
 // helpers for create statics chaining methods on component
@@ -8,10 +8,7 @@ import { STATIC_KEYS } from '~/constants'
  * Attaches chaining static methods (e.g. `.states()`, `.sizes()`, `.theme()`)
  * to a component. Each method calls `cloneAndEnhance` with the corresponding key.
  */
-type CreateStaticsChainingEnhancers = <
-  O extends Record<string, any>,
-  DK extends string[],
->(props: {
+type CreateStaticsChainingEnhancers = <O extends Record<string, any>, DK extends string[]>(props: {
   context: Record<string, any>
   dimensionKeys: DK
   func: (defaultOpts: O, opts: any) => void
@@ -40,10 +37,7 @@ type CreateStaticsEnhancers = (params: {
   options: Record<string, any>
 }) => void
 
-export const createStaticsEnhancers: CreateStaticsEnhancers = ({
-  context,
-  options,
-}) => {
+export const createStaticsEnhancers: CreateStaticsEnhancers = ({ context, options }) => {
   if (!isEmpty(options)) {
     Object.assign(context, options)
   }

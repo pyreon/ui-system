@@ -1,7 +1,7 @@
-import type { VNode } from '@pyreon/core'
-import type { AttrsCb } from './attrs'
-import type { ConfigAttrs } from './config'
-import type { DefaultProps } from './configuration'
+import type { VNode } from "@pyreon/core"
+import type { AttrsCb } from "./attrs"
+import type { ConfigAttrs } from "./config"
+import type { DefaultProps } from "./configuration"
 import type {
   DimensionCallbackParam,
   DimensionProps,
@@ -11,47 +11,37 @@ import type {
   ExtractDimensions,
   MultiKeys,
   TDKP,
-} from './dimensions'
-import type { ComposeParam } from './hoc'
-import type { Styles, StylesCb } from './styles'
-import type { Theme, ThemeCb, ThemeModeKeys } from './theme'
-import type { ElementType, ExtractProps, MergeTypes, TObj } from './utils'
+} from "./dimensions"
+import type { ComposeParam } from "./hoc"
+import type { Styles, StylesCb } from "./styles"
+import type { Theme, ThemeCb, ThemeModeKeys } from "./theme"
+import type { ElementType, ExtractProps, MergeTypes, TObj } from "./utils"
 
 export type InnerComponentProps = {
-  'data-rocketstyle'?: string | undefined
+  "data-rocketstyle"?: string | undefined
 } & Record<string, any>
 
 export type RocketStyleComponent<
-  OA extends TObj = {},
-  EA extends TObj = {},
-  T extends TObj = {},
-  CSS extends TObj = {},
-  S extends TObj = {},
-  HOC extends TObj = {},
+  OA extends TObj = TObj,
+  EA extends TObj = TObj,
+  T extends TObj = TObj,
+  CSS extends TObj = TObj,
+  S extends TObj = TObj,
+  HOC extends TObj = TObj,
   D extends Dimensions = Dimensions,
   UB extends boolean = boolean,
   DKP extends TDKP = TDKP,
 > = IRocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DKP> & {
   [I in keyof D]: <
     K extends DimensionValue = D[I],
-    P extends DimensionCallbackParam<
+    P extends DimensionCallbackParam<Theme<T>, Styles<CSS>> = DimensionCallbackParam<
       Theme<T>,
       Styles<CSS>
-    > = DimensionCallbackParam<Theme<T>, Styles<CSS>>,
+    >,
   >(
     param: P,
   ) => P extends DimensionCallbackParam<Theme<T>, Styles<CSS>>
-    ? RocketStyleComponent<
-        OA,
-        EA,
-        T,
-        CSS,
-        S,
-        HOC,
-        D,
-        UB,
-        DimensionProps<K, D, P, DKP>
-      >
+    ? RocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DimensionProps<K, D, P, DKP>>
     : RocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DKP>
 }
 
@@ -68,17 +58,17 @@ export type RocketStyleComponent<
  */
 export interface IRocketStyleComponent<
   // original component props
-  OA extends TObj = {},
+  OA extends TObj = TObj,
   // extended component props
-  EA extends TObj = {},
+  EA extends TObj = TObj,
   // theme
-  T extends TObj = {},
+  T extends TObj = TObj,
   // custom style properties
-  CSS extends TObj = {},
+  CSS extends TObj = TObj,
   // statics
-  S extends TObj = {},
+  S extends TObj = TObj,
   // hocs
-  HOC extends TObj = {},
+  HOC extends TObj = TObj,
   // dimensions
   D extends Dimensions = Dimensions,
   // use booleans
@@ -111,23 +101,19 @@ export interface IRocketStyleComponent<
       : Partial<DFP> | AttrsCb<DFP, Theme<T>>,
     config?: Partial<{
       priority: boolean
-      filter: P extends TObj
-        ? Partial<keyof MergeTypes<[EA, P]>>[]
-        : Partial<keyof EA>[]
+      filter: P extends TObj ? Partial<keyof MergeTypes<[EA, P]>>[] : Partial<keyof EA>[]
     }>,
   ) => P extends TObj
     ? RocketStyleComponent<OA, MergeTypes<[EA, P]>, T, CSS, S, HOC, D, UB, DKP>
     : RocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DKP>
 
   // THEME chaining method
-  theme: <P extends TObj = {}>(
+  theme: <P extends TObj = TObj>(
     param: Partial<P> | Partial<Styles<CSS>> | ThemeCb<P, Theme<T>>,
   ) => RocketStyleComponent<OA, EA, T, MergeTypes<[CSS, P]>, S, HOC, D, UB, DKP>
 
   // STYLES chaining method
-  styles: (
-    param: StylesCb<CSS>,
-  ) => RocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DKP>
+  styles: (param: StylesCb<CSS>) => RocketStyleComponent<OA, EA, T, CSS, S, HOC, D, UB, DKP>
 
   // COMPOSE chaining method
   compose: <P extends ComposeParam>(

@@ -1,7 +1,7 @@
-import { createContext, onUnmount, popContext, pushContext } from '@pyreon/core'
-import type { VNodeChild } from '@pyreon/core'
-import isEmpty from './isEmpty'
-import type { Breakpoints } from './types'
+import type { VNodeChild } from "@pyreon/core"
+import { createContext, onUnmount, popContext, pushContext } from "@pyreon/core"
+import isEmpty from "./isEmpty"
+import type { Breakpoints } from "./types"
 
 /**
  * Internal context shared across all @pyreon packages.

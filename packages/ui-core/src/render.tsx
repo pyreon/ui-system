@@ -1,9 +1,7 @@
-import type { ComponentFn, Props, VNodeChild } from '@pyreon/core'
-import { h } from '@pyreon/core'
+import type { ComponentFn, Props, VNodeChild } from "@pyreon/core"
+import { h } from "@pyreon/core"
 
-type RenderProps<T extends Record<string, unknown> | undefined> = (
-  props: Partial<T>,
-) => VNodeChild
+type RenderProps<T extends Record<string, unknown> | undefined> = (props: Partial<T>) => VNodeChild
 
 /**
  * Flexible element renderer that handles multiple content types:
@@ -23,7 +21,7 @@ const render: Render = (content, attachProps) => {
   if (!content) return null
 
   const t = typeof content
-  if (t === 'string' || t === 'number' || t === 'boolean' || t === 'bigint') {
+  if (t === "string" || t === "number" || t === "boolean" || t === "bigint") {
     return content as VNodeChild
   }
 
@@ -31,15 +29,12 @@ const render: Render = (content, attachProps) => {
     return content as VNodeChild
   }
 
-  if (typeof content === 'function') {
-    return h(
-      content as string | ComponentFn,
-      (attachProps ?? {}) as Props,
-    )
+  if (typeof content === "function") {
+    return h(content as string | ComponentFn, (attachProps ?? {}) as Props)
   }
 
   // VNode object — return directly
-  if (typeof content === 'object' && content !== null) {
+  if (typeof content === "object" && content !== null) {
     return content as VNodeChild
   }
 

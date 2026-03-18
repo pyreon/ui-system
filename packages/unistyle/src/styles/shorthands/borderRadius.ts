@@ -1,4 +1,4 @@
-import { value } from '../../units'
+import { value } from "../../units"
 
 type PropertyValue = string | number | null | undefined
 type PV = PropertyValue
@@ -6,22 +6,46 @@ type PV = PropertyValue
 const isValidValue = (v: unknown) => !!v || v === 0
 
 type CornerValues = {
-  full: PV; top: PV; bottom: PV; left: PV; right: PV
-  topLeft: PV; topRight: PV; bottomLeft: PV; bottomRight: PV
+  full: PV
+  top: PV
+  bottom: PV
+  left: PV
+  right: PV
+  topLeft: PV
+  topRight: PV
+  bottomLeft: PV
+  bottomRight: PV
 }
 
 const hasAnyValue = (v: CornerValues) =>
-  isValidValue(v.full) || isValidValue(v.top) || isValidValue(v.bottom) ||
-  isValidValue(v.left) || isValidValue(v.right) ||
-  isValidValue(v.topLeft) || isValidValue(v.topRight) ||
-  isValidValue(v.bottomLeft) || isValidValue(v.bottomRight)
+  isValidValue(v.full) ||
+  isValidValue(v.top) ||
+  isValidValue(v.bottom) ||
+  isValidValue(v.left) ||
+  isValidValue(v.right) ||
+  isValidValue(v.topLeft) ||
+  isValidValue(v.topRight) ||
+  isValidValue(v.bottomLeft) ||
+  isValidValue(v.bottomRight)
 
 const resolveCorners = (v: CornerValues) => {
   const corners: PV[] = [v.full, v.full, v.full, v.full]
-  if (isValidValue(v.top)) { corners[0] = v.top; corners[1] = v.top }
-  if (isValidValue(v.bottom)) { corners[2] = v.bottom; corners[3] = v.bottom }
-  if (isValidValue(v.left)) { corners[0] = v.left; corners[3] = v.left }
-  if (isValidValue(v.right)) { corners[1] = v.right; corners[2] = v.right }
+  if (isValidValue(v.top)) {
+    corners[0] = v.top
+    corners[1] = v.top
+  }
+  if (isValidValue(v.bottom)) {
+    corners[2] = v.bottom
+    corners[3] = v.bottom
+  }
+  if (isValidValue(v.left)) {
+    corners[0] = v.left
+    corners[3] = v.left
+  }
+  if (isValidValue(v.right)) {
+    corners[1] = v.right
+    corners[2] = v.right
+  }
   if (isValidValue(v.topLeft)) corners[0] = v.topLeft
   if (isValidValue(v.topRight)) corners[1] = v.topRight
   if (isValidValue(v.bottomRight)) corners[2] = v.bottomRight
@@ -38,12 +62,14 @@ const formatShorthand = (corners: PV[], calc: (p: PV) => any) => {
 }
 
 const CORNER_CSS = [
-  'border-top-left-radius', 'border-top-right-radius',
-  'border-bottom-right-radius', 'border-bottom-left-radius',
+  "border-top-left-radius",
+  "border-top-right-radius",
+  "border-bottom-right-radius",
+  "border-bottom-left-radius",
 ] as const
 
 const formatIndividual = (corners: PV[], calc: (p: PV) => any) => {
-  let output = ''
+  let output = ""
   for (let i = 0; i < corners.length; i++) {
     if (isValidValue(corners[i])) output += `${CORNER_CSS[i]}: ${calc(corners[i])};`
   }

@@ -22,8 +22,8 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@pyreon/core": ">=0.0.1",
-    "@pyreon/styler": ">=0.0.1"
+    "@pyreon/core": ">=0.3.0",
+    "@pyreon/styler": ">=0.2.0"
   },
   "devDependencies": {
     "@vitus-labs/tools-rolldown": "1.9.1-alpha.19",

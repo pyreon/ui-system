@@ -21,10 +21,10 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@pyreon/core": "*",
-    "@pyreon/reactivity": "*",
-    "@pyreon/ui-core": "*",
-    "@pyreon/styler": "*"
+    "@pyreon/core": ">=0.2.1",
+    "@pyreon/reactivity": ">=0.2.1",
+    "@pyreon/ui-core": ">=0.2.0",
+    "@pyreon/styler": ">=0.2.0"
   },
   "devDependencies": {
     "@pyreon/core": "workspace:*",

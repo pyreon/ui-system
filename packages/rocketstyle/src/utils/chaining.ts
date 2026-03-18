@@ -8,16 +8,13 @@ type Obj = Record<string, unknown>
  * Appends a new option (function or plain object) to an existing chain
  * of option callbacks. Objects are wrapped in a thunk for uniform handling.
  */
-type ChainOptions = (
-  opts: Obj | Func | undefined,
-  defaultOpts: Func[],
-) => Func[]
+type ChainOptions = (opts: Obj | Func | undefined, defaultOpts: Func[]) => Func[]
 
 export const chainOptions: ChainOptions = (opts, defaultOpts = []) => {
   const result = [...defaultOpts]
 
-  if (typeof opts === 'function') result.push(opts)
-  else if (typeof opts === 'object') result.push(() => opts)
+  if (typeof opts === "function") result.push(opts)
+  else if (typeof opts === "object") result.push(() => opts)
 
   return result
 }
@@ -36,10 +33,7 @@ type ChainOrOptions = (
 ) => Record<string, unknown>
 
 export const chainOrOptions: ChainOrOptions = (keys, opts, defaultOpts) =>
-  keys.reduce(
-    (acc, item) => ({ ...acc, [item]: opts[item] || defaultOpts[item] }),
-    {},
-  )
+  keys.reduce((acc, item) => ({ ...acc, [item]: opts[item] || defaultOpts[item] }), {})
 
 // --------------------------------------------------------
 // Chain Reserved Options
@@ -54,15 +48,11 @@ type ChainReservedKeyOptions = (
   defaultOpts: Record<string, Func[]>,
 ) => Record<string, ReturnType<typeof chainOptions>>
 
-export const chainReservedKeyOptions: ChainReservedKeyOptions = (
-  keys,
-  opts,
-  defaultOpts,
-) =>
+export const chainReservedKeyOptions: ChainReservedKeyOptions = (keys, opts, defaultOpts) =>
   keys.reduce(
     (acc, item) => ({
       ...acc,
-      [item]: chainOptions(opts[item], defaultOpts[item]!),
+      [item]: chainOptions(opts[item], defaultOpts[item] ?? []),
     }),
     {},
   )

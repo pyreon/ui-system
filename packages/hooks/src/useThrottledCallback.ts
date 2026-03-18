@@ -1,5 +1,5 @@
-import { onUnmount } from '@pyreon/core'
-import { throttle } from '@pyreon/ui-core'
+import { onUnmount } from "@pyreon/core"
+import { throttle } from "@pyreon/ui-core"
 
 type ThrottledFn<T extends (...args: any[]) => any> = {
   (...args: Parameters<T>): void
@@ -18,7 +18,7 @@ export type UseThrottledCallback = <T extends (...args: any[]) => any>(
  * Cleans up on unmount.
  */
 export const useThrottledCallback: UseThrottledCallback = (callback, delay) => {
-  let currentCallback = callback
+  const currentCallback = callback
 
   const throttled = throttle((...args: any[]) => currentCallback(...args), delay)
 

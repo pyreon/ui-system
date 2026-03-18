@@ -5,18 +5,19 @@
  * A context Provider wraps the content to support nested overlays (e.g.,
  * a dropdown inside another dropdown) via blocked-state propagation.
  */
-import { render } from '@pyreon/ui-core'
-import { Fragment, Portal, onMount } from '@pyreon/core'
-import { PKG_NAME } from '~/constants'
-import type { Content, PyreonComponent } from '~/types'
-import useOverlay, { type UseOverlayProps } from './useOverlay'
-import type { VNodeChild } from '@pyreon/core'
 
-const IS_BROWSER = typeof window !== 'undefined'
+import type { VNodeChild } from "@pyreon/core"
+import { onMount, Portal } from "@pyreon/core"
+import { render } from "@pyreon/ui-core"
+import { PKG_NAME } from "~/constants"
+import type { Content, PyreonComponent } from "~/types"
+import useOverlay, { type UseOverlayProps } from "./useOverlay"
 
-type Align = 'bottom' | 'top' | 'left' | 'right'
-type AlignX = 'left' | 'center' | 'right'
-type AlignY = 'bottom' | 'top' | 'center'
+const IS_BROWSER = typeof window !== "undefined"
+
+type Align = "bottom" | "top" | "left" | "right"
+type AlignX = "left" | "center" | "right"
+type AlignY = "bottom" | "top" | "center"
 
 type TriggerRenderer = (
   props: Partial<{
@@ -49,8 +50,8 @@ const Component: PyreonComponent<Props> = ({
   children,
   trigger,
   DOMLocation,
-  triggerRefName = 'ref',
-  contentRefName = 'ref',
+  triggerRefName = "ref",
+  contentRefName = "ref",
   ...props
 }) => {
   const {
@@ -70,18 +71,16 @@ const Component: PyreonComponent<Props> = ({
   const { openOn, closeOn, type } = props
 
   const passHandlers =
-    openOn === 'manual' ||
-    closeOn === 'manual' ||
-    closeOn === 'clickOutsideContent'
+    openOn === "manual" || closeOn === "manual" || closeOn === "clickOutsideContent"
 
   const ariaHasPopup = (() => {
     switch (type) {
-      case 'modal':
-        return 'dialog' as const
-      case 'tooltip':
-        return 'true' as const
+      case "modal":
+        return "dialog" as const
+      case "tooltip":
+        return "true" as const
       default:
-        return 'menu' as const
+        return "menu" as const
     }
   })()
 
@@ -96,8 +95,8 @@ const Component: PyreonComponent<Props> = ({
       {render(trigger, {
         [triggerRefName]: triggerRef,
         active: active(),
-        'aria-expanded': active(),
-        'aria-haspopup': ariaHasPopup,
+        "aria-expanded": active(),
+        "aria-haspopup": ariaHasPopup,
         ...(passHandlers ? { showContent, hideContent } : {}),
       })}
 
@@ -107,8 +106,8 @@ const Component: PyreonComponent<Props> = ({
             <Provider {...ctx}>
               {render(children, {
                 [contentRefName]: contentRef,
-                role: type === 'modal' ? 'dialog' : undefined,
-                'aria-modal': type === 'modal' ? true : undefined,
+                role: type === "modal" ? "dialog" : undefined,
+                "aria-modal": type === "modal" ? true : undefined,
                 active: active(),
                 align,
                 alignX: alignX(),

@@ -1,9 +1,9 @@
-import { watch } from '@pyreon/reactivity'
-import { onUnmount } from '@pyreon/core'
+import { onUnmount } from "@pyreon/core"
+import { watch } from "@pyreon/reactivity"
 
 export type UseUpdateEffect = <T>(
   source: () => T,
-  callback: (newVal: T, oldVal: T | undefined) => void | (() => void),
+  callback: (newVal: T, oldVal: T | undefined) => undefined | (() => void),
 ) => void
 
 /**
