@@ -1,34 +1,23 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      type:
-        description: "Version bump type"
-        required: true
-        type: choice
-        options:
-          - prerelease
-          - patch
-          - minor
-          - major
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  # ── Stable release (main only) ──────────────────────────────────
-  stable:
-    if: >-
-      github.event_name == 'workflow_dispatch'
-      && github.ref == 'refs/heads/main'
-      && inputs.type != 'prerelease'
-    name: Publish Stable
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
+    timeout-minutes: 15
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc # v2.15.1
@@ -38,12 +27,11 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: 22
-          registry-url: "https://registry.npmjs.org"
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
 
       - uses: oven-sh/setup-bun@ecf28ddc73e819eb6fa29df6b34ef8921c743461 # v2.1.3
 
@@ -56,80 +44,12 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Lint & Format
-        run: bun run lint
-
-      - name: Build all packages
-        run: bun run pkgs:build
-
-      - name: Type Check
-        run: bun run typecheck
-
-      - name: Test
-        run: bun run test
-
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Publish
-        run: bunx lerna publish ${{ inputs.type }} --yes
+      - name: Create Release PR or Publish
+        uses: changesets/action@c8bada60c408975afd1a20b3db81d6eee6789308 # v1.4.9
+        with:
+          version: bun run version-packages
+          publish: bun run release
+          title: "chore: version packages"
+          commit: "chore: version packages"
         env:
-          NPM_CONFIG_PROVENANCE: true
-
-  # ── Prerelease (any branch, manual) ─────────────────────────────
-  prerelease:
-    if: >-
-      github.event_name == 'workflow_dispatch'
-      && inputs.type == 'prerelease'
-    name: Publish Prerelease
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
-    steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc # v2.15.1
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
-        with:
-          node-version: 22
-          registry-url: "https://registry.npmjs.org"
-
-      - uses: oven-sh/setup-bun@ecf28ddc73e819eb6fa29df6b34ef8921c743461 # v2.1.3
-
-      - name: Cache bun dependencies
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
-        with:
-          path: ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: bun-${{ runner.os }}-
-
-      - run: bun install --frozen-lockfile
-
-      - name: Build all packages
-        run: bun run pkgs:build
-
-      - name: Type Check
-        run: bun run typecheck
-
-      - name: Test
-        run: bun run test
-
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Publish prerelease
-        run: bunx lerna publish prerelease --dist-tag next --force-publish --yes
-        env:
-          NPM_CONFIG_PROVENANCE: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
