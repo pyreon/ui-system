@@ -31,8 +31,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "version": "node ../../scripts/sync-peer-deps.mjs"
+    "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
     "@pyreon/core": ">=0.3.0",

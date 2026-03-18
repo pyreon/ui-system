@@ -6,14 +6,16 @@
   "packageManager": "bun@1.3.10",
   "workspaces": ["packages/*", "examples/*"],
   "scripts": {
-    "release": "lerna publish --force-publish",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "bun run build && bun run scripts/publish.ts",
     "lint": "biome check packages/*/src/",
     "format": "biome format --write packages/*/src/",
-    "pkgs:build": "lerna run build --stream",
+    "pkgs:build": "bun run --filter='*' build",
     "pkgs:clean": "rm -rf node_modules packages/*/node_modules && bun install",
     "build": "bun run --filter='*' build",
     "test": "vitest run",
-    "typecheck": "lerna run typecheck --stream",
+    "typecheck": "bun run --filter='*' typecheck",
     "atlas": "vl_atlas"
   },
   "devDependencies": {
@@ -31,7 +33,8 @@
     "@vitus-labs/tools-typescript": "^1.15.0",
     "@vitus-labs/tools-vitest": "^1.15.0",
     "jsdom": "^29.0.0",
-    "lerna": "^9.0.7",
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   }

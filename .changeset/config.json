@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.3/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "pyreon/ui-system" }],
+  "commit": false,
+  "fixed": [
+    [
+      "@pyreon/ui-core",
+      "@pyreon/unistyle",
+      "@pyreon/styler",
+      "@pyreon/hooks",
+      "@pyreon/attrs",
+      "@pyreon/elements",
+      "@pyreon/coolgrid",
+      "@pyreon/kinetic",
+      "@pyreon/kinetic-presets",
+      "@pyreon/rocketstyle"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
