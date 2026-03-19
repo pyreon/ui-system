@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/unistyle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Responsive theming and breakpoint utilities for Pyreon",
   "license": "MIT",
   "type": "module",

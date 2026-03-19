@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/ui-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Core utilities, config, and context for Pyreon UI System",
   "license": "MIT",
   "type": "module",
@@ -12,9 +12,19 @@
   },
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
-  "files": ["lib", "!lib/**/*.map", "!lib/analysis", "README.md", "LICENSE"],
-  "engines": { "node": ">= 18" },
-  "publishConfig": { "access": "public" },
+  "files": [
+    "lib",
+    "!lib/**/*.map",
+    "!lib/analysis",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "bun run vl_rolldown_build",
     "lint": "biome check src/",
