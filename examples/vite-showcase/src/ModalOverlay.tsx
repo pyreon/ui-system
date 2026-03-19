@@ -66,11 +66,9 @@ export function ModalOverlay(props: { onClose: () => void }) {
               </p>
             </div>
             <FlexRow style={{ justifyContent: "flex-end" }}>
-              {/* @ts-expect-error -- attrs built types lose component prop types */}
               <GhostButton onClick={props.onClose}>
                 <span>Cancel</span>
               </GhostButton>
-              {/* @ts-expect-error -- attrs built types lose component prop types */}
               <PrimaryButton
                 onClick={() => {
                   addNotification("Modal confirmed!", "success")

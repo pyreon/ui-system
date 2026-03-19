@@ -321,7 +321,6 @@ function AttrsSection() {
           ))}
         </FlexRow>
         <Spacer />
-        {/* @ts-expect-error attrs built types don't include children from base component */}
         <ColorBox variant={variant() as "primary" | "success" | "danger"}>
           <div
             style={() => ({
@@ -339,7 +338,6 @@ function AttrsSection() {
       <Card>
         <H3>4. Priority attrs</H3>
         <P>direction="rows" is locked — cannot be overridden by consumer</P>
-        {/* @ts-expect-error direction is locked via priority attrs, testing override behavior */}
         <LockedDir direction={"inline" as any}>
           <Pill style={{ background: "#f39c12" }}>1</Pill>
           <Pill style={{ background: "#1abc9c" }}>2</Pill>
@@ -352,11 +350,9 @@ function AttrsSection() {
         <H3>5. Prop filtering</H3>
         <P>"mood" prop computes label, then is stripped before forwarding</P>
         <FlexRow>
-          {/* @ts-expect-error attrs built types don't include children from base component */}
           <FilteredBox mood="happy">
             <PText>Happy</PText>
           </FilteredBox>
-          {/* @ts-expect-error attrs built types don't include children from base component */}
           <FilteredBox mood="sad">
             <PText>Sad</PText>
           </FilteredBox>
@@ -644,7 +640,7 @@ function RocketstyleSection() {
       <Card>
         <H3>5. Interactive state switch</H3>
         <P>Signal-driven state changes</P>
-        {/* @ts-expect-error reactive state accessor for dynamic dimension switching */}
+        {/* @ts-expect-error -- dynamic state prop accepts signal getter at runtime */}
         <RsButton state={() => activeState()} large>
           <span>{() => activeState().toUpperCase()}</span>
         </RsButton>
@@ -726,7 +722,6 @@ function ElementsSection() {
             border: "1px solid #e9ecef",
           }}
         >
-          {/* @ts-expect-error Element built types use Record<string, never> default — source types are correct */}
           <Element
             tag="div"
             beforeContent={<IconBox>{"\u2190"}</IconBox>}
@@ -747,9 +742,7 @@ function ElementsSection() {
             border: "1px solid #e9ecef",
           }}
         >
-          {/* @ts-expect-error Element built types use Record<string, never> default — source types are correct */}
           <Element direction="rows" gap={8}>
-            {/* @ts-expect-error Element built types use Record<string, never> default */}
             <Element
               tag="div"
               beforeContent={<IconBox>1</IconBox>}
@@ -759,7 +752,6 @@ function ElementsSection() {
             >
               <span>Row direction with nested Elements</span>
             </Element>
-            {/* @ts-expect-error Element built types use Record<string, never> default */}
             <Element
               tag="div"
               beforeContent={<IconBox>2</IconBox>}
@@ -769,7 +761,6 @@ function ElementsSection() {
             >
               <span>Each row has an icon beforeContent slot</span>
             </Element>
-            {/* @ts-expect-error Element built types use Record<string, never> default */}
             <Element
               tag="div"
               beforeContent={<IconBox>3</IconBox>}
