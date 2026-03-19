@@ -45,6 +45,31 @@
         "vite": "^7.3.1",
       },
     },
+    "examples/vite-showcase": {
+      "name": "@pyreon/example-vite-showcase",
+      "version": "0.0.0",
+      "dependencies": {
+        "@pyreon/attrs": "workspace:*",
+        "@pyreon/coolgrid": "workspace:*",
+        "@pyreon/core": "*",
+        "@pyreon/elements": "workspace:*",
+        "@pyreon/hooks": "workspace:*",
+        "@pyreon/kinetic": "workspace:*",
+        "@pyreon/kinetic-presets": "workspace:*",
+        "@pyreon/reactivity": "*",
+        "@pyreon/rocketstyle": "workspace:*",
+        "@pyreon/runtime-dom": "*",
+        "@pyreon/styler": "workspace:*",
+        "@pyreon/ui-core": "workspace:*",
+        "@pyreon/unistyle": "workspace:*",
+      },
+      "devDependencies": {
+        "@pyreon/compiler": "*",
+        "@pyreon/vite-plugin": "*",
+        "typescript": "~5.9.3",
+        "vite": "^7.3.1",
+      },
+    },
     "examples/vite-styler": {
       "name": "@pyreon/example-vite-styler",
       "version": "0.0.0",
@@ -403,6 +428,8 @@
     "@pyreon/elements": ["@pyreon/elements@workspace:packages/elements"],
 
     "@pyreon/example-vite-kinetic": ["@pyreon/example-vite-kinetic@workspace:examples/vite-kinetic"],
+
+    "@pyreon/example-vite-showcase": ["@pyreon/example-vite-showcase@workspace:examples/vite-showcase"],
 
     "@pyreon/example-vite-styler": ["@pyreon/example-vite-styler@workspace:examples/vite-styler"],
 
