@@ -427,89 +427,100 @@ function AttrsSection() {
 
 const RsBadge = rocketstyle()({ name: "RsBadge", component: Element })
   .attrs({ tag: "span", direction: "inline", alignX: "center", alignY: "center" })
-  .theme({ bgColor: "#0070f3", color: "#fff", hover: { bgColor: "#0060df" } })
+  .theme({ backgroundColor: "#0070f3", color: "#fff", hover: { backgroundColor: "#0060df" } })
   .styles(
     (css) => css`
     padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700;
-    ${({ $rocketstyle: t }) => css`color: ${t.color}; background: ${t.bgColor};`};
+    ${({ $rocketstyle: t }) => css`color: ${t.color}; background: ${t.backgroundColor};`};
   `,
   )
 
 const StatusBadge = rocketstyle()({ name: "StatusBadge", component: Element })
   .attrs({ tag: "span", direction: "inline", alignX: "center", alignY: "center" })
-  .theme({ bgColor: "#999", color: "#fff" })
+  .theme({ backgroundColor: "#999", color: "#fff" })
   .states({
-    success: { bgColor: "#2ecc71" },
-    warning: { bgColor: "#f39c12" },
-    error: { bgColor: "#e74c3c" },
-    info: { bgColor: "#3498db" },
+    success: { backgroundColor: "#2ecc71" },
+    warning: { backgroundColor: "#f39c12" },
+    error: { backgroundColor: "#e74c3c" },
+    info: { backgroundColor: "#3498db" },
   })
   .styles(
     (css) => css`
     padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 700;
-    ${({ $rocketstyle: t }) => css`color: ${t.color}; background: ${t.bgColor};`};
+    ${({ $rocketstyle: t }) => css`color: ${t.color}; background: ${t.backgroundColor};`};
   `,
   )
 
 const RsChip = rocketstyle()({ name: "RsChip", component: Element })
   .attrs({ tag: "span", direction: "inline", alignX: "center", alignY: "center" })
-  .theme({ bgColor: "#e0e0e0", color: "#333", px: 12, py: 6, fs: 13, radius: 20 })
+  .theme({
+    backgroundColor: "#e0e0e0",
+    color: "#333",
+    paddingX: 12,
+    paddingY: 6,
+    fontSize: 13,
+    borderRadius: 20,
+  })
   .sizes({
-    small: { px: 8, py: 4, fs: 11 },
-    medium: { px: 12, py: 6, fs: 13 },
-    large: { px: 18, py: 10, fs: 16 },
+    small: { paddingX: 8, paddingY: 4, fontSize: 11 },
+    medium: { paddingX: 12, paddingY: 6, fontSize: 13 },
+    large: { paddingX: 18, paddingY: 10, fontSize: 16 },
   })
   .styles(
     (css) => css`
     font-weight: 600;
     ${({ $rocketstyle: t }) => css`
-      background: ${t.bgColor}; color: ${t.color};
-      padding: ${t.py}px ${t.px}px; font-size: ${t.fs}px; border-radius: ${t.radius}px;
+      background: ${t.backgroundColor}; color: ${t.color};
+      padding: ${t.paddingY}px ${t.paddingX}px; font-size: ${t.fontSize}px; border-radius: ${t.borderRadius}px;
     `};
   `,
   )
 
 const RsButton = rocketstyle()({ name: "RsButton", component: Element })
   .attrs({ tag: "button" })
-  .theme({ bgColor: "#0070f3", color: "#fff", hover: { bgColor: "#0060df" } })
+  .theme({ backgroundColor: "#0070f3", color: "#fff", hover: { backgroundColor: "#0060df" } })
   .states({
-    primary: { bgColor: "#0070f3", color: "#fff", hover: { bgColor: "#0060df" } },
-    secondary: { bgColor: "#6c757d", color: "#fff", hover: { bgColor: "#5c636a" } },
-    outline: { bgColor: "transparent", color: "#0070f3", hover: { bgColor: "#e8f4fd" } },
-    danger: { bgColor: "#dc3545", color: "#fff", hover: { bgColor: "#bb2d3b" } },
-    success: { bgColor: "#198754", color: "#fff", hover: { bgColor: "#157347" } },
+    primary: { backgroundColor: "#0070f3", color: "#fff", hover: { backgroundColor: "#0060df" } },
+    secondary: { backgroundColor: "#6c757d", color: "#fff", hover: { backgroundColor: "#5c636a" } },
+    outline: {
+      backgroundColor: "transparent",
+      color: "#0070f3",
+      hover: { backgroundColor: "#e8f4fd" },
+    },
+    danger: { backgroundColor: "#dc3545", color: "#fff", hover: { backgroundColor: "#bb2d3b" } },
+    success: { backgroundColor: "#198754", color: "#fff", hover: { backgroundColor: "#157347" } },
   })
   .sizes({
-    small: { px: 10, py: 6, fs: 12 },
-    medium: { px: 16, py: 10, fs: 14 },
-    large: { px: 24, py: 14, fs: 18 },
+    small: { paddingX: 10, paddingY: 6, fontSize: 12 },
+    medium: { paddingX: 16, paddingY: 10, fontSize: 14 },
+    large: { paddingX: 24, paddingY: 14, fontSize: 18 },
   })
   .styles(
     (css) => css`
     border: none; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background 0.2s;
     ${({ $rocketstyle: t }: any) => css`
-      color: ${t.color}; background: ${t.bgColor};
-      padding: ${t.py ?? 10}px ${t.px ?? 20}px;
-      font-size: ${t.fs ?? 14}px;
-      &:hover { background: ${t.hover?.bgColor}; }
+      color: ${t.color}; background: ${t.backgroundColor};
+      padding: ${t.paddingY ?? 10}px ${t.paddingX ?? 20}px;
+      font-size: ${t.fontSize ?? 14}px;
+      &:hover { background: ${t.hover?.backgroundColor}; }
     `};
   `,
   )
 
 const RsTag = rocketstyle()({ name: "RsTag", component: Element })
   .attrs({ tag: "span", direction: "inline", alignX: "center", alignY: "center" })
-  .theme({ bgColor: "#eee", color: "#555" })
+  .theme({ backgroundColor: "#eee", color: "#555" })
   .states({
-    new: { bgColor: "#e8f5e9", color: "#2e7d32" },
-    hot: { bgColor: "#fbe9e7", color: "#d84315" },
-    beta: { bgColor: "#e3f2fd", color: "#1565c0" },
-    deprecated: { bgColor: "#fafafa", color: "#999" },
+    new: { backgroundColor: "#e8f5e9", color: "#2e7d32" },
+    hot: { backgroundColor: "#fbe9e7", color: "#d84315" },
+    beta: { backgroundColor: "#e3f2fd", color: "#1565c0" },
+    deprecated: { backgroundColor: "#fafafa", color: "#999" },
   })
   .styles(
     (css) => css`
     padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.5px;
-    ${({ $rocketstyle: t }) => css`background: ${t.bgColor}; color: ${t.color};`};
+    ${({ $rocketstyle: t }) => css`background: ${t.backgroundColor}; color: ${t.color};`};
   `,
   )
 

@@ -735,8 +735,8 @@ function StaggerDemo() {
       </button>
       <div style={{ marginTop: "16px" }}>
         <StaggerMenu show={() => show()}>
-          {menuItems.map((item, i) => (
-            <div key={i} style={listItem}>
+          {menuItems.map((item) => (
+            <div key={item} style={listItem}>
               <span>{item}</span>
             </div>
           ))}
@@ -760,13 +760,11 @@ function StaggerReverseDemo() {
       </button>
       <div style={{ marginTop: "16px" }}>
         <StaggerNotifications show={() => show()}>
-          {["New message received", "File uploaded successfully", "Settings saved"].map(
-            (msg, i) => (
-              <div key={i} style={{ ...listItem, background: "#f0f7ff", borderColor: "#b8daff" }}>
-                {msg}
-              </div>
-            ),
-          )}
+          {["New message received", "File uploaded successfully", "Settings saved"].map((msg) => (
+            <div key={msg} style={{ ...listItem, background: "#f0f7ff", borderColor: "#b8daff" }}>
+              {msg}
+            </div>
+          ))}
         </StaggerNotifications>
       </div>
     </div>
