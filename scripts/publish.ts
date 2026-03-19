@@ -3,7 +3,7 @@
  * Resolves workspace:^ → ^X.Y.Z before publish, restores after.
  * Skips already-published versions.
  *
- * Usage: bun run scripts/publish.ts [--dry-run]
+ * Usage: bun run scripts/publish.ts [--dry-run] [--no-provenance] [--otp=CODE]
  */
 
 import { readdir, readFile, writeFile } from "node:fs/promises"
@@ -11,6 +11,8 @@ import { join } from "node:path"
 
 const PACKAGES_DIR = join(import.meta.dirname, "..", "packages")
 const dryRun = process.argv.includes("--dry-run")
+const noProvenance = process.argv.includes("--no-provenance")
+const otpArg = process.argv.find((a) => a.startsWith("--otp="))
 const dirs = await readdir(PACKAGES_DIR, { withFileTypes: true })
 
 const versionMap = new Map<string, string>()
@@ -69,9 +71,10 @@ for (const dir of dirs.filter((d) => d.isDirectory())) {
       "publish",
       "--access",
       "public",
-      "--provenance",
       "--ignore-scripts",
     ]
+    if (!noProvenance) args.push("--provenance")
+    if (otpArg) args.push(otpArg)
     if (dryRun) args.push("--dry-run")
     const result = Bun.spawnSync(args, {
       cwd: join(PACKAGES_DIR, dir.name),
