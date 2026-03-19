@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/coolgrid",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Responsive grid system for Pyreon",
   "license": "MIT",
   "type": "module",
@@ -38,9 +38,9 @@
   "peerDependencies": {
     "@pyreon/core": ">=0.4.0 <1.0.0",
     "@pyreon/reactivity": ">=0.4.0 <1.0.0",
-    "@pyreon/ui-core": "^0.0.2",
-    "@pyreon/unistyle": "^0.0.2",
-    "@pyreon/styler": "^0.0.2"
+    "@pyreon/ui-core": "^0.0.3",
+    "@pyreon/unistyle": "^0.0.3",
+    "@pyreon/styler": "^0.0.3"
   },
   "devDependencies": {
     "@vitus-labs/tools-rolldown": "^1.15.0",
