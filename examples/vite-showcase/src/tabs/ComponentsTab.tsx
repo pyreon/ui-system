@@ -94,15 +94,12 @@ export function ComponentsTab() {
             Chainable <Code>.attrs()</Code> for default props
           </SectionDesc>
           <FlexRow>
-            {/* @ts-expect-error -- attrs built types lose component prop types */}
             <PrimaryButton onClick={() => addNotification("Primary clicked!", "info")}>
               <span>Primary (attrs)</span>
             </PrimaryButton>
-            {/* @ts-expect-error -- attrs built types lose component prop types */}
             <DangerButton onClick={() => addNotification("Danger clicked!", "danger")}>
               <span>Danger (attrs)</span>
             </DangerButton>
-            {/* @ts-expect-error -- attrs built types lose component prop types */}
             <GhostButton onClick={() => addNotification("Ghost clicked!", "success")}>
               <span>Ghost (attrs)</span>
             </GhostButton>
@@ -196,7 +193,6 @@ function UserRow(props: {
   statusState: string
 }) {
   return (
-    // @ts-expect-error -- Element built types use Record<string, never>
     <Element
       tag="div"
       direction="inline"

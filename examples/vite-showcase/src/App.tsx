@@ -216,7 +216,7 @@ export function App() {
 
       {/* ── Hero (kinetic compose + intersection) ───────── */}
       <div
-        // @ts-expect-error -- Pyreon supports callback refs at runtime
+        // @ts-expect-error -- Pyreon supports callback refs at runtime but built types expect { current }
         ref={(el: HTMLElement) => {
           heroRef = el
         }}
@@ -238,13 +238,11 @@ export function App() {
                 elements, and design-system primitives.
               </SectionDesc>
               <FlexRow style={{ justifyContent: "center" }}>
-                {/* @ts-expect-error -- attrs built types lose component prop types */}
                 <PrimaryButton
                   onClick={() => addNotification("Welcome to the showcase!", "success")}
                 >
                   <span>Try notification</span>
                 </PrimaryButton>
-                {/* @ts-expect-error -- attrs built types lose component prop types */}
                 <GhostButton
                   onClick={() => {
                     modalOpen.setTrue()

@@ -105,7 +105,7 @@ function ElementSizeDemo() {
     <Card style={{ marginBottom: "16px" }}>
       <SectionTitle style={{ fontSize: "16px" }}>useElementSize</SectionTitle>
       <div
-        // @ts-expect-error -- Pyreon supports callback refs at runtime
+        // @ts-expect-error -- Pyreon supports callback refs at runtime but built types expect { current }
         ref={(el: HTMLElement) => {
           boxRef = el
         }}
@@ -144,7 +144,6 @@ function ClickOutsideDemo() {
     <Card style={{ marginBottom: "16px" }}>
       <SectionTitle style={{ fontSize: "16px" }}>useClickOutside</SectionTitle>
       <div style={{ marginTop: "12px", position: "relative" }}>
-        {/* @ts-expect-error -- attrs built types lose component prop types */}
         <PrimaryButton onClick={() => open.toggle()}>
           <span>{() => (open.value() ? "Close dropdown" : "Open dropdown")}</span>
         </PrimaryButton>
@@ -152,7 +151,7 @@ function ClickOutsideDemo() {
           open.value() && (
             <SlideDown appear show={() => true}>
               <div
-                // @ts-expect-error -- Pyreon supports callback refs at runtime
+                // @ts-expect-error -- Pyreon supports callback refs at runtime but built types expect { current }
                 ref={(el: HTMLElement) => {
                   dropdownRef = el
                 }}
@@ -217,7 +216,6 @@ function ToggleCounterDemo() {
         }}
       >
         <FlexRow>
-          {/* @ts-expect-error -- attrs built types lose component prop types */}
           <GhostButton onClick={() => count.set(count() - 1)}>
             <span>-</span>
           </GhostButton>
@@ -231,7 +229,6 @@ function ToggleCounterDemo() {
           >
             {count}
           </span>
-          {/* @ts-expect-error -- attrs built types lose component prop types */}
           <GhostButton onClick={() => count.set(count() + 1)}>
             <span>+</span>
           </GhostButton>

@@ -9,13 +9,13 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "bun run build && bun run scripts/publish.ts",
-    "lint": "biome check packages/*/src/",
-    "format": "biome format --write packages/*/src/",
+    "lint": "biome check packages/*/src/ examples/*/src/",
+    "format": "biome format --write packages/*/src/ examples/*/src/",
     "pkgs:build": "bun run --filter='./packages/*' build",
     "pkgs:clean": "rm -rf node_modules packages/*/node_modules && bun install",
     "build": "bun run --filter='./packages/*' build",
     "test": "vitest run",
-    "typecheck": "bun run --filter='./packages/*' typecheck",
+    "typecheck": "bun run --filter='./packages/*' typecheck && bun run --filter='./examples/*' typecheck",
     "atlas": "vl_atlas"
   },
   "devDependencies": {
