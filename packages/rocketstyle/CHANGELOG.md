@@ -1,5 +1,15 @@
 # @pyreon/rocketstyle
 
+## 0.0.3
+
+### Patch Changes
+
+- Update pyreon framework peer dependencies to >=0.4.0 <1.0.0, fix Element Wrapper children type for multi-child JSX patterns, add publish script improvements (--no-provenance, --otp support).
+
+- Updated dependencies []:
+  - @pyreon/ui-core@0.0.3
+  - @pyreon/styler@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @pyreon/example-vite-styler
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @pyreon/ui-core@0.0.3
+  - @pyreon/unistyle@0.0.3
+  - @pyreon/styler@0.0.3
+  - @pyreon/hooks@0.0.3
+  - @pyreon/attrs@0.0.3
+  - @pyreon/elements@0.0.3
+  - @pyreon/coolgrid@0.0.3
+  - @pyreon/rocketstyle@0.0.3
+
 ## 0.0.1
 
 ### Patch Changes
