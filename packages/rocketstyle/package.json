@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/rocketstyle",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -13,7 +13,10 @@
   "main": "./lib/index.js",
   "files": [
     "lib",
-    "!lib/**/*.map"
+    "!lib/**/*.map",
+    "!lib/analysis",
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">= 18"

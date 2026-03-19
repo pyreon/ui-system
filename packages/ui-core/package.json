@@ -12,7 +12,7 @@
   },
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
-  "files": ["lib", "!lib/**/*.map"],
+  "files": ["lib", "!lib/**/*.map", "!lib/analysis", "README.md", "LICENSE"],
   "engines": { "node": ">= 18" },
   "publishConfig": { "access": "public" },
   "scripts": {
