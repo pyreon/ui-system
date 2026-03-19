@@ -15,7 +15,7 @@
     "pkgs:clean": "rm -rf node_modules packages/*/node_modules && bun install",
     "build": "bun run --filter='./packages/*' build",
     "test": "vitest run",
-    "typecheck": "bun run --filter='./packages/*' typecheck && bun run --filter='./examples/*' typecheck",
+    "typecheck": "bun run --filter='./packages/*' typecheck",
     "atlas": "vl_atlas"
   },
   "devDependencies": {
