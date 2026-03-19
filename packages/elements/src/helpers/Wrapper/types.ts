@@ -16,7 +16,7 @@ import type {
 export type Reference = unknown
 
 export interface Props {
-  children: VNodeChild
+  children: VNodeChild | VNodeChild[]
   tag: HTMLTags | undefined
   block: ResponsiveBoolType | undefined
   isInline: boolean | undefined
