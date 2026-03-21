@@ -34,7 +34,7 @@
   },
   "peerDependencies": {
     "@pyreon/core": ">=0.4.0 <1.0.0",
-    "@pyreon/styler": "workspace:^"
+    "@pyreon/styler": ">=0.1.0 <1.0.0"
   },
   "devDependencies": {
     "@vitus-labs/tools-rolldown": "^1.15.3",

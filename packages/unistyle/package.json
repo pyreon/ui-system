@@ -39,7 +39,7 @@
   "peerDependencies": {
     "@pyreon/core": ">=0.4.0 <1.0.0",
     "@pyreon/reactivity": ">=0.4.0 <1.0.0",
-    "@pyreon/ui-core": "workspace:^"
+    "@pyreon/ui-core": ">=0.1.0 <1.0.0"
   },
   "devDependencies": {
     "@vitus-labs/tools-rolldown": "^1.15.3",
