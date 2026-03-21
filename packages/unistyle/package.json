@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/unistyle",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/unistyle" },
   "description": "Responsive theming and breakpoint utilities for Pyreon",
   "license": "MIT",
   "type": "module",
