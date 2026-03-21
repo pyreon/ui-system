@@ -1,5 +1,7 @@
 # @pyreon/styler
 
+## 0.1.1
+
 ## 0.0.3
 
 ### Patch Changes

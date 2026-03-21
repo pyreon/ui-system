@@ -1,7 +1,11 @@
 {
   "name": "@pyreon/attrs",
-  "version": "0.1.0",
-  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/attrs" },
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pyreon/ui-system",
+    "directory": "packages/attrs"
+  },
   "description": "Attrs HOC chaining for Pyreon components",
   "license": "MIT",
   "type": "module",
@@ -38,7 +42,7 @@
   },
   "peerDependencies": {
     "@pyreon/core": ">=0.4.0 <1.0.0",
-    "@pyreon/ui-core": ">=0.1.0 <1.0.0"
+    "@pyreon/ui-core": ">=0.1.1"
   },
   "devDependencies": {
     "@vitus-labs/tools-rolldown": "^1.15.3",

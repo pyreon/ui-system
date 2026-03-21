@@ -1,5 +1,21 @@
 # @pyreon/example-vite-showcase
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`d1d941b`](https://github.com/pyreon/ui-system/commit/d1d941b2e676c4bec7e0d5c67dba47c222cfe756)]:
+  - @pyreon/ui-core@0.1.1
+  - @pyreon/hooks@0.1.1
+  - @pyreon/rocketstyle@0.1.1
+  - @pyreon/attrs@0.1.1
+  - @pyreon/elements@0.1.1
+  - @pyreon/unistyle@0.1.1
+  - @pyreon/styler@0.1.1
+  - @pyreon/coolgrid@0.1.1
+  - @pyreon/kinetic@0.1.1
+  - @pyreon/kinetic-presets@0.1.1
+
 ## 0.0.2
 
 ### Patch Changes
