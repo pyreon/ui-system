@@ -40,7 +40,7 @@
     "@pyreon/ui-core": "workspace:^"
   },
   "devDependencies": {
-    "@vitus-labs/tools-rolldown": "^1.15.0",
-    "@vitus-labs/tools-typescript": "^1.15.0"
+    "@vitus-labs/tools-rolldown": "^1.15.3",
+    "@vitus-labs/tools-typescript": "^1.15.3"
   }
 }
