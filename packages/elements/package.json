@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/elements",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/elements" },
   "description": "Foundational UI components for Pyreon",
   "license": "MIT",
   "type": "module",

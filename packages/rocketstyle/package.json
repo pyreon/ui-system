@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/rocketstyle",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/rocketstyle" },
   "description": "Multi-dimensional style composition for Pyreon components",
   "license": "MIT",
   "type": "module",

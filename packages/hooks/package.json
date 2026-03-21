@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/hooks",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/hooks" },
   "description": "Signal-based reactive utilities for Pyreon",
   "license": "MIT",
   "type": "module",

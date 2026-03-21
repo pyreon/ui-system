@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/styler",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/styler" },
   "description": "Lightweight CSS-in-JS engine for Pyreon",
   "license": "MIT",
   "type": "module",

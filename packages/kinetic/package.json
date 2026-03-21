@@ -1,6 +1,7 @@
 {
   "name": "@pyreon/kinetic",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/pyreon/ui-system", "directory": "packages/kinetic" },
   "description": "CSS-transition-based animation components for Pyreon",
   "license": "MIT",
   "type": "module",
