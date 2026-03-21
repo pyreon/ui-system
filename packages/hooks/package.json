@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/hooks",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Signal-based reactive utilities for Pyreon",
   "license": "MIT",
   "type": "module",
