@@ -22,13 +22,13 @@ export type InnerComponentProps = {
 export interface AttrsComponent<
   C extends ElementType = ElementType,
   // original component props
-  OA extends TObj = TObj,
+  OA extends TObj = {},
   // extended component props
-  EA extends TObj = TObj,
+  EA extends TObj = {},
   // statics
-  S extends TObj = TObj,
+  S extends TObj = {},
   // hocs
-  HOC extends TObj = TObj,
+  HOC extends TObj = {},
   // calculated final props
   DFP extends Record<string, any> = MergeTypes<[OA, EA]>,
 > {
