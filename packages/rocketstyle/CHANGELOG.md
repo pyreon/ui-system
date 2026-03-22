@@ -1,5 +1,15 @@
 # @pyreon/rocketstyle
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix generic type defaults in attrs and rocketstyle — use empty objects instead of Record<string, unknown> to preserve component prop types through SpreadTwo merges
+
+- Updated dependencies []:
+  - @pyreon/ui-core@0.1.2
+  - @pyreon/styler@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

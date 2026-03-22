@@ -1,5 +1,13 @@
 # @pyreon/hooks
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @pyreon/ui-core@0.1.2
+  - @pyreon/styler@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

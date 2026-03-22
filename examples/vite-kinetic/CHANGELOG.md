@@ -1,5 +1,16 @@
 # @pyreon/example-vite-kinetic
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @pyreon/ui-core@0.1.2
+  - @pyreon/styler@0.1.2
+  - @pyreon/hooks@0.1.2
+  - @pyreon/kinetic@0.1.2
+  - @pyreon/kinetic-presets@0.1.2
+
 ## 0.0.3
 
 ### Patch Changes
