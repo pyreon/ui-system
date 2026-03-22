@@ -25,7 +25,7 @@ export type Rocketstyle = <D extends Dimensions = DefaultDimensions, UB extends 
 }: {
   name: string
   component: C
-}) => ReturnType<RocketComponent<C, Record<string, unknown>, Record<string, unknown>, D, UB>>
+}) => ReturnType<RocketComponent<C, {}, {}, D, UB>>
 
 /**
  * Factory initializer for rocketstyle components. Validates dimension

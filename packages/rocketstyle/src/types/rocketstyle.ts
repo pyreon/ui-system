@@ -22,12 +22,12 @@ export type InnerComponentProps = {
 } & Record<string, any>
 
 export type RocketStyleComponent<
-  OA extends TObj = TObj,
-  EA extends TObj = TObj,
-  T extends TObj = TObj,
-  CSS extends TObj = TObj,
-  S extends TObj = TObj,
-  HOC extends TObj = TObj,
+  OA extends TObj = {},
+  EA extends TObj = {},
+  T extends TObj = {},
+  CSS extends TObj = {},
+  S extends TObj = {},
+  HOC extends TObj = {},
   D extends Dimensions = Dimensions,
   UB extends boolean = boolean,
   DKP extends TDKP = TDKP,
@@ -58,17 +58,17 @@ export type RocketStyleComponent<
  */
 export interface IRocketStyleComponent<
   // original component props
-  OA extends TObj = TObj,
+  OA extends TObj = {},
   // extended component props
-  EA extends TObj = TObj,
+  EA extends TObj = {},
   // theme
-  T extends TObj = TObj,
+  T extends TObj = {},
   // custom style properties
-  CSS extends TObj = TObj,
+  CSS extends TObj = {},
   // statics
-  S extends TObj = TObj,
+  S extends TObj = {},
   // hocs
-  HOC extends TObj = TObj,
+  HOC extends TObj = {},
   // dimensions
   D extends Dimensions = Dimensions,
   // use booleans
