@@ -8,7 +8,8 @@ export type {
   ResolvedStyles,
 } from "@pyreon/connector-document"
 export { extractDocumentTree, resolveStyles } from "@pyreon/connector-document"
-
+// Preview
+export { default as DocumentPreview } from "./DocumentPreview"
 // Primitives
 export { default as DocButton } from "./primitives/DocButton"
 export { default as DocCode } from "./primitives/DocCode"
@@ -28,6 +29,9 @@ export { default as DocSection } from "./primitives/DocSection"
 export { default as DocSpacer } from "./primitives/DocSpacer"
 export { default as DocTable } from "./primitives/DocTable"
 export { default as DocText } from "./primitives/DocText"
-export type { DocumentTheme } from "./theme"
 // Theme
+export type { DocumentTheme } from "./theme"
 export { documentTheme } from "./theme"
+// Export helper
+export type { DocumentExport, DocumentExportOptions } from "./useDocumentExport"
+export { createDocumentExport } from "./useDocumentExport"
