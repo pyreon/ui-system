@@ -1,0 +1,62 @@
+{
+  "name": "@pyreon/document-primitives",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pyreon/ui-system",
+    "directory": "packages/document-primitives"
+  },
+  "description": "Rocketstyle document components — render in browser, export to 18 formats",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "source": "./src/index.ts",
+    "import": "./lib/index.js",
+    "types": "./lib/index.d.ts"
+  },
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
+  "files": [
+    "lib",
+    "!lib/**/*.map",
+    "!lib/analysis",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">= 18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublish": "bun run build",
+    "build": "bun run vl_rolldown_build",
+    "build:watch": "bun run vl_rolldown_build-watch",
+    "lint": "biome check src/",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@pyreon/core": ">=0.7.0",
+    "@pyreon/elements": ">=0.2.0",
+    "@pyreon/rocketstyle": ">=0.2.0",
+    "@pyreon/styler": ">=0.2.0",
+    "@pyreon/ui-core": ">=0.2.0"
+  },
+  "dependencies": {
+    "@pyreon/connector-document": "workspace:*"
+  },
+  "devDependencies": {
+    "@pyreon/core": "^0.7.0",
+    "@pyreon/elements": "workspace:*",
+    "@pyreon/rocketstyle": "workspace:*",
+    "@pyreon/styler": "workspace:*",
+    "@pyreon/ui-core": "workspace:*",
+    "@vitus-labs/tools-rolldown": "^1.15.4",
+    "@vitus-labs/tools-typescript": "^1.15.4"
+  }
+}
