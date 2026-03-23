@@ -12,7 +12,7 @@
  *   }
  */
 import type { VNode, VNodeChild } from "@pyreon/core"
-import { createContext, onUnmount, popContext, pushContext, useContext } from "@pyreon/core"
+import { createContext, provide, useContext } from "@pyreon/core"
 
 // biome-ignore lint/suspicious/noEmptyInterface: augmentable via module declaration merging
 export interface DefaultTheme {}
@@ -32,8 +32,6 @@ export function ThemeProvider({
   theme: Theme
   children?: VNodeChild
 }): VNode | null {
-  const frame = new Map<symbol, unknown>([[ThemeContext.id, theme]])
-  pushContext(frame)
-  onUnmount(() => popContext())
+  provide(ThemeContext, theme)
   return (children ?? null) as VNode | null
 }

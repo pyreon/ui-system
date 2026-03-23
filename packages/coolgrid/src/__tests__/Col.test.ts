@@ -1,22 +1,15 @@
 import type { VNode } from "@pyreon/core"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-const mockPushContext = vi.fn()
-const mockPopContext = vi.fn()
-const mockOnUnmount = vi.fn()
-const mockCreateContext = vi.fn()
+const mockProvide = vi.fn()
 const mockUseContext = vi.fn()
 
 vi.mock("@pyreon/core", async (importOriginal) => {
   const original = await importOriginal<typeof import("@pyreon/core")>()
   return {
     ...original,
-    pushContext: mockPushContext,
-    popContext: mockPopContext,
-    onUnmount: mockOnUnmount,
-    createContext: (...args: any[]) => {
-      mockCreateContext(...args)
-      return original.createContext(args[0])
+    provide: (...args: any[]) => {
+      mockProvide(...args)
     },
     useContext: (ctx: any) => {
       if (mockUseContext.mock.results.length > 0 || mockUseContext.mock.calls.length > 0) {
@@ -72,11 +65,10 @@ describe("Col", () => {
     expect(result.props).toHaveProperty("$coolgrid")
   })
 
-  it("does not push context (Col only reads, never provides)", async () => {
+  it("does not provide context (Col only reads, never provides)", async () => {
     const Col = (await import("../Col")).default
     Col({ children: "test" })
-    expect(mockPushContext).not.toHaveBeenCalled()
-    expect(mockOnUnmount).not.toHaveBeenCalled()
+    expect(mockProvide).not.toHaveBeenCalled()
   })
 
   it("strips context keys from DOM props", async () => {

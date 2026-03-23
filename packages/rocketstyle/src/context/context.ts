@@ -21,7 +21,7 @@ export type TProvider = {
  * Reads the parent context, merges incoming props, and resolves
  * the active mode (with optional inversion for nested dark/light switching).
  *
- * In Pyreon, context is provided via pushContext/popContext instead of React.Provider.
+ * In Pyreon, context is provided via provide() instead of React.Provider.
  */
 const Provider = ({ provider = CoreProvider, inversed, ...props }: TProvider): VNode | null => {
   const ctx = useContext<TProvider>(context)

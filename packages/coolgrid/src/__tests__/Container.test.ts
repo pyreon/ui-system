@@ -1,23 +1,15 @@
 import type { VNode } from "@pyreon/core"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-const mockPushContext = vi.fn()
-const mockPopContext = vi.fn()
-const mockOnUnmount = vi.fn()
+const mockProvide = vi.fn()
 const mockUseContext = vi.fn()
 
 vi.mock("@pyreon/core", async (importOriginal) => {
   const original = await importOriginal<typeof import("@pyreon/core")>()
   return {
     ...original,
-    pushContext: (...args: any[]) => {
-      mockPushContext(...args)
-    },
-    popContext: (...args: any[]) => {
-      mockPopContext(...args)
-    },
-    onUnmount: (...args: any[]) => {
-      mockOnUnmount(...args)
+    provide: (...args: any[]) => {
+      mockProvide(...args)
     },
     useContext: (ctx: any) => {
       if (mockUseContext.mock.calls.length > 0) {
@@ -66,28 +58,16 @@ describe("Container", () => {
     expect(result.props.$coolgrid).toHaveProperty("width")
   })
 
-  it("pushes ContainerContext", async () => {
+  it("provides ContainerContext", async () => {
     const Container = (await import("../Container")).default
     Container({ columns: 12, gap: 16, children: "test" })
-    expect(mockPushContext).toHaveBeenCalledTimes(1)
-    const frame = mockPushContext.mock.calls[0]?.[0] as Map<symbol, unknown>
-    expect(frame).toBeInstanceOf(Map)
+    expect(mockProvide).toHaveBeenCalledTimes(1)
   })
 
-  it("registers onUnmount to pop context", async () => {
-    const Container = (await import("../Container")).default
-    Container({ children: "test" })
-    expect(mockOnUnmount).toHaveBeenCalledTimes(1)
-    const cleanup = mockOnUnmount.mock.calls[0]?.[0] as () => void
-    cleanup()
-    expect(mockPopContext).toHaveBeenCalledTimes(1)
-  })
-
-  it("pushes context config with grid values", async () => {
+  it("provides context with grid values", async () => {
     const Container = (await import("../Container")).default
     Container({ columns: 24, gap: 16, gutter: 8, children: "test" })
-    const frame = mockPushContext.mock.calls[0]?.[0] as Map<symbol, unknown>
-    const config = Array.from(frame.values())[0] as Record<string, unknown>
+    const config = mockProvide.mock.calls[0]?.[1] as Record<string, unknown>
     expect(config.columns).toBe(24)
     expect(config.gap).toBe(16)
     expect(config.gutter).toBe(8)

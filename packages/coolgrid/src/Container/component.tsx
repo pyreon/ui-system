@@ -1,4 +1,4 @@
-import { onUnmount, popContext, pushContext } from "@pyreon/core"
+import { provide } from "@pyreon/core"
 import { PKG_NAME } from "~/constants"
 import ContainerContext from "~/context/ContainerContext"
 import type { ElementType } from "~/types"
@@ -64,9 +64,7 @@ const Component: ElementType<["containerWidth"]> = ({
   }
 
   // Provide container context to descendant Row/Col components
-  const frame = new Map<symbol, unknown>([[ContainerContext.id, context]])
-  pushContext(frame)
-  onUnmount(() => popContext())
+  provide(ContainerContext, context)
 
   return (
     <Styled {...omitCtxKeys(props)} as={component} {...finalProps} {...DEV_PROPS}>
