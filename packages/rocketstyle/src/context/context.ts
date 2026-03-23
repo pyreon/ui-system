@@ -1,4 +1,4 @@
-import type { VNode, VNodeChild } from "@pyreon/core"
+import type { VNodeChild } from "@pyreon/core"
 import { useContext } from "@pyreon/core"
 import { Provider as CoreProvider, context } from "@pyreon/ui-core"
 import { MODE_DEFAULT, THEME_MODES_INVERSED } from "~/constants"
@@ -9,7 +9,7 @@ type Theme = {
 } & Record<string, unknown>
 
 export type TProvider = {
-  children: VNode | VNode[] | null
+  children: VNodeChild
   theme?: Theme | undefined
   mode?: "light" | "dark" | undefined
   inversed?: boolean | undefined
@@ -21,9 +21,9 @@ export type TProvider = {
  * Reads the parent context, merges incoming props, and resolves
  * the active mode (with optional inversion for nested dark/light switching).
  *
- * In Pyreon, context is provided via pushContext/popContext instead of React.Provider.
+ * In Pyreon, context is provided via provide() instead of React.Provider.
  */
-const Provider = ({ provider = CoreProvider, inversed, ...props }: TProvider): VNode | null => {
+const Provider = ({ provider = CoreProvider, inversed, ...props }: TProvider): VNodeChild => {
   const ctx = useContext<TProvider>(context)
 
   const { theme, mode, provider: RocketstyleProvider, children } = { ...ctx, ...props, provider }
@@ -43,7 +43,7 @@ const Provider = ({ provider = CoreProvider, inversed, ...props }: TProvider): V
     children,
   })
 
-  return (result ?? null) as VNode | null
+  return result ?? null
 }
 
 export { context }

@@ -1,5 +1,5 @@
 import type { VNodeChild } from "@pyreon/core"
-import { createContext, onUnmount, popContext, pushContext } from "@pyreon/core"
+import { createContext, provide } from "@pyreon/core"
 import isEmpty from "./isEmpty"
 import type { Breakpoints } from "./types"
 
@@ -30,10 +30,7 @@ type ProviderType = Partial<
 function Provider({ theme, children, ...props }: ProviderType): VNodeChild {
   if (isEmpty(theme) || !theme) return children ?? null
 
-  const contextValue = { theme, ...props }
-  const frame = new Map<symbol, unknown>([[context.id, contextValue]])
-  pushContext(frame)
-  onUnmount(() => popContext())
+  provide(context, { theme, ...props })
 
   return children ?? null
 }

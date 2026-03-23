@@ -5,7 +5,7 @@
  */
 
 import type { VNodeChild } from "@pyreon/core"
-import { createContext, onUnmount, popContext, pushContext, useContext } from "@pyreon/core"
+import { createContext, provide, useContext } from "@pyreon/core"
 
 export interface OverlayContext {
   blocked: boolean | (() => boolean)
@@ -29,8 +29,7 @@ const Component = ({
     setUnblocked,
   }
 
-  pushContext(new Map([[context.id, ctx]]))
-  onUnmount(() => popContext())
+  provide(context, ctx)
 
   return <>{children}</>
 }

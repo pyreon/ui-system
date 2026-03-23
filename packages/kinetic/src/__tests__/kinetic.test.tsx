@@ -1,4 +1,4 @@
-import type { VNode } from "@pyreon/core"
+import type { VNode, VNodeChild } from "@pyreon/core"
 import { signal } from "@pyreon/reactivity"
 import { kinetic } from "../index"
 import { fade, slideUp } from "../presets"
@@ -97,16 +97,18 @@ const wireRef = (vnode: VNode | null, el: HTMLElement) => {
  * We call it once to execute the component and set up watches/refs,
  * but do NOT recurse into framework components like Show.
  */
-const resolveComponent = (vnode: VNode | null): VNode | null => {
-  if (!vnode) return null
+const resolveComponent = (vnode: VNodeChild): VNode | null => {
+  if (!vnode || typeof vnode !== "object" || !("type" in vnode)) return null
   if (typeof vnode.type === "function") {
     const props = vnode.props as Record<string, unknown>
     const children = vnode.children
     // Call the component function with props (children merged in)
-    return (vnode.type as (p: Record<string, unknown>) => VNode | null)({
+    const result = (vnode.type as (p: Record<string, unknown>) => VNodeChild)({
       ...props,
       ...(children != null ? { children } : {}),
     })
+    if (!result || typeof result !== "object" || !("type" in result)) return null
+    return result
   }
   return vnode
 }

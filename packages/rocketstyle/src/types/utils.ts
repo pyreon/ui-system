@@ -1,4 +1,4 @@
-import type { VNode } from "@pyreon/core"
+import type { VNodeChild } from "@pyreon/core"
 
 export type TObj = Record<string, unknown>
 export type TFn = (...args: any) => any
@@ -6,7 +6,7 @@ export type CallBackParam = TObj | TFn
 export type DisplayName = string
 
 /** In Pyreon, components are plain functions — no forwardRef needed. */
-export type ComponentFn<P = any> = ((props: P) => VNode | null) & Partial<Record<string, any>>
+export type ComponentFn<P = any> = ((props: P) => VNodeChild) & Partial<Record<string, any>>
 
 export type ElementType<T extends TObj | unknown = any> = ComponentFn<T>
 

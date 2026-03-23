@@ -1,4 +1,4 @@
-import type { VNode } from "@pyreon/core"
+import type { VNodeChild } from "@pyreon/core"
 import type { AttrsCb } from "./attrs"
 import type { ConfigAttrs } from "./config"
 import type { DefaultProps } from "./configuration"
@@ -79,7 +79,7 @@ export interface IRocketStyleComponent<
   DFP = MergeTypes<[OA, EA, DefaultProps, ExtractDimensionProps<D, DKP, UB>]>,
 > {
   // The component is callable — Pyreon components are plain functions
-  (props: DFP): VNode | null
+  (props: DFP): VNodeChild
 
   // CONFIG chaining method
   config: <NC extends ElementType | unknown = unknown>({

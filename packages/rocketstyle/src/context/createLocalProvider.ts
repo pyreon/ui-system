@@ -1,4 +1,4 @@
-import { onUnmount, popContext, pushContext } from "@pyreon/core"
+import { provide } from "@pyreon/core"
 import { signal } from "@pyreon/reactivity"
 import type { PseudoProps } from "~/types/pseudo"
 import type { ComponentFn } from "~/types/utils"
@@ -11,8 +11,8 @@ type Props = PseudoProps & Record<string, any>
  * detecting pseudo-states (hover, focus, pressed) via mouse/focus events
  * and broadcasting them through local context to child rocketstyle components.
  *
- * In Pyreon, context is provided via pushContext/popContext, and state is
- * managed with signals instead of useState.
+ * In Pyreon, context is provided via provide(), and state is managed
+ * with signals instead of useState.
  */
 const createLocalProvider = (WrappedComponent: ComponentFn<any>) => {
   const HOCComponent: ComponentFn<Props> = ({
@@ -69,8 +69,7 @@ const createLocalProvider = (WrappedComponent: ComponentFn<any>) => {
     }
 
     // Provide local context for child rocketstyle components
-    pushContext(new Map([[localContext.id, updatedState]]))
-    onUnmount(() => popContext())
+    provide(localContext, updatedState)
 
     return WrappedComponent({
       ...props,
