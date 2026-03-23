@@ -69,4 +69,4 @@ export type ElementType<O extends string[]> = ComponentFn<
   PYREON__COMPONENT: string
 }
 
-export type Context = Partial<ConfigurationProps>
+export type Context = { [K in keyof ConfigurationProps]?: ConfigurationProps[K] | undefined }
