@@ -18,6 +18,7 @@ const BORDER_STYLE_VALUES = new Set(["solid", "dashed", "dotted"])
  * Only extracts properties that `ResolvedStyles` supports — everything else
  * (transitions, cursor, display, etc.) is silently ignored.
  */
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: tree walking/style mapping inherently branches per type
 export function resolveStyles(rocketstyle: Record<string, unknown>, rootSize = 16): ResolvedStyles {
   const styles: ResolvedStyles = {}
 
@@ -31,13 +32,13 @@ export function resolveStyles(rocketstyle: Record<string, unknown>, rootSize = 1
   if (fontWeight != null) styles.fontWeight = fontWeight
 
   if (typeof rocketstyle.fontStyle === "string" && FONT_STYLE_VALUES.has(rocketstyle.fontStyle))
-    styles.fontStyle = rocketstyle.fontStyle as ResolvedStyles["fontStyle"]
+    styles.fontStyle = rocketstyle.fontStyle as "normal" | "italic"
 
   if (
     typeof rocketstyle.textDecoration === "string" &&
     TEXT_DECORATION_VALUES.has(rocketstyle.textDecoration)
   )
-    styles.textDecoration = rocketstyle.textDecoration as ResolvedStyles["textDecoration"]
+    styles.textDecoration = rocketstyle.textDecoration as "none" | "underline" | "line-through"
 
   if (typeof rocketstyle.color === "string") styles.color = rocketstyle.color
 
@@ -45,7 +46,7 @@ export function resolveStyles(rocketstyle: Record<string, unknown>, rootSize = 1
     styles.backgroundColor = rocketstyle.backgroundColor
 
   if (typeof rocketstyle.textAlign === "string" && TEXT_ALIGN_VALUES.has(rocketstyle.textAlign))
-    styles.textAlign = rocketstyle.textAlign as ResolvedStyles["textAlign"]
+    styles.textAlign = rocketstyle.textAlign as "left" | "center" | "right" | "justify"
 
   const lineHeight = parseLineHeight(
     rocketstyle.lineHeight as string | number | undefined,
@@ -76,7 +77,7 @@ export function resolveStyles(rocketstyle: Record<string, unknown>, rootSize = 1
     typeof rocketstyle.borderStyle === "string" &&
     BORDER_STYLE_VALUES.has(rocketstyle.borderStyle)
   )
-    styles.borderStyle = rocketstyle.borderStyle as ResolvedStyles["borderStyle"]
+    styles.borderStyle = rocketstyle.borderStyle as "solid" | "dashed" | "dotted"
 
   // Sizing
   if (rocketstyle.width != null) {

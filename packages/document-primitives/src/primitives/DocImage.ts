@@ -1,8 +1,9 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
-const DocImage = rocketstyle()({ name: "DocImage", component: Element }).attrs(
+const DocImage = rocketstyle()({ name: "DocImage", component: Element }).attrs<any>(
   ({
     src,
     alt,

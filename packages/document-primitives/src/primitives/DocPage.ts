@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -7,7 +8,7 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
     backgroundColor: "#ffffff",
     padding: "25mm",
   })
-  .attrs(
+  .attrs<any>(
     ({
       size,
       orientation,

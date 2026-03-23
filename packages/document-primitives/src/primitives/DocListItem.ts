@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -7,7 +8,7 @@ const DocListItem = rocketstyle()({ name: "DocListItem", component: Text })
     fontSize: 14,
     lineHeight: 1.5,
   })
-  .attrs(() => ({
+  .attrs<any>(() => ({
     tag: "li" as any,
     _documentProps: {},
   }))

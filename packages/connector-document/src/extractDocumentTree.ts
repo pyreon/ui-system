@@ -47,6 +47,7 @@ function flattenChildren(children: unknown[]): unknown[] {
   return result
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: tree walking/style mapping inherently branches per type
 function extractChildren(children: unknown[], options: ExtractOptions): DocChild[] {
   const flat = flattenChildren(children)
   const result: DocChild[] = []
@@ -77,6 +78,7 @@ function extractChildren(children: unknown[], options: ExtractOptions): DocChild
   return result
 }
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: tree walking/style mapping inherently branches per type
 function extractNode(vnode: VNodeLike, options: ExtractOptions): DocNode | DocChild[] | null {
   const { type, props, children } = vnode
   const includeStyles = options.includeStyles !== false

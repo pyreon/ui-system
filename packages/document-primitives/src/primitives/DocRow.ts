@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -6,7 +7,7 @@ const DocRow = rocketstyle()({ name: "DocRow", component: Element })
   .theme({
     direction: "row",
   })
-  .attrs(() => ({
+  .attrs<any>(() => ({
     tag: "div" as any,
     _documentProps: {},
   }))

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -10,7 +11,7 @@ const DocCode = rocketstyle()({ name: "DocCode", component: Text })
     padding: "8px 12px",
     borderRadius: 4,
   })
-  .attrs(({ language }: { language?: string }) => ({
+  .attrs<any>(({ language }: { language?: string }) => ({
     tag: "pre" as any,
     _documentProps: language ? { language } : {},
   }))

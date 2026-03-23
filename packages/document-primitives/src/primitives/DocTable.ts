@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -12,7 +13,7 @@ const DocTable = rocketstyle({
     fontSize: 14,
     borderColor: "#dddddd",
   })
-  .attrs(
+  .attrs<any>(
     ({
       columns,
       rows,

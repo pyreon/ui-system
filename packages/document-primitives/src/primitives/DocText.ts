@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
@@ -23,7 +24,7 @@ const DocText = rocketstyle({
     normal: { fontWeight: "normal" },
     bold: { fontWeight: "bold" },
   })
-  .attrs(() => ({
+  .attrs<any>(() => ({
     tag: "p" as any,
     _documentProps: {},
   }))

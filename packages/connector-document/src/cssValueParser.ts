@@ -26,16 +26,16 @@ export function parseCssDimension(
   const trimmed = value.trim()
 
   const pxMatch = PX_RE.exec(trimmed)
-  if (pxMatch) return Number.parseFloat(pxMatch[1])
+  if (pxMatch?.[1]) return Number.parseFloat(pxMatch[1])
 
   const remMatch = REM_RE.exec(trimmed)
-  if (remMatch) return Number.parseFloat(remMatch[1]) * rootSize
+  if (remMatch?.[1]) return Number.parseFloat(remMatch[1]) * rootSize
 
   const emMatch = EM_RE.exec(trimmed)
-  if (emMatch) return Number.parseFloat(emMatch[1]) * rootSize
+  if (emMatch?.[1]) return Number.parseFloat(emMatch[1]) * rootSize
 
   const ptMatch = PT_RE.exec(trimmed)
-  if (ptMatch) return Number.parseFloat(ptMatch[1]) * (4 / 3)
+  if (ptMatch?.[1]) return Number.parseFloat(ptMatch[1]) * (4 / 3)
 
   if (NUMBER_RE.test(trimmed)) return Number.parseFloat(trimmed)
 
@@ -65,14 +65,15 @@ export function parseBoxModel(
     .split(/\s+/)
     .map((p) => parseCssDimension(p, rootSize))
 
-  if (parts.some((p) => p == null)) return undefined
-
-  const nums = parts as number[]
+  const nums = parts.filter((p): p is number => p != null)
+  if (nums.length !== parts.length) return undefined
 
   if (nums.length === 1) return nums[0]
-  if (nums.length === 2) return [nums[0], nums[1]]
-  if (nums.length === 3) return [nums[0], nums[1], nums[2], nums[1]]
-  if (nums.length === 4) return [nums[0], nums[1], nums[2], nums[3]]
+  if (nums.length === 2) return [nums[0], nums[1]] as [number, number]
+  if (nums.length === 3)
+    return [nums[0], nums[1], nums[2], nums[1]] as [number, number, number, number]
+  if (nums.length === 4)
+    return [nums[0], nums[1], nums[2], nums[3]] as [number, number, number, number]
 
   return undefined
 }

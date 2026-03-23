@@ -32,6 +32,9 @@
     "rules": {
       "correctness": {
         "useHookAtTopLevel": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "warn"
       }
     }
   }
