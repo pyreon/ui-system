@@ -1,4 +1,5 @@
 import { createVitestConfig } from "@vitus-labs/tools-vitest"
+import tildeResolve from "./vitest.tilde-plugin"
 
 type Options = {
   name: string
@@ -13,6 +14,7 @@ export default ({ name, define }: Options) => {
   return {
     ...config,
     ...(define ? { define } : {}),
+    plugins: [...(config.plugins ?? []), tildeResolve()],
     resolve: {
       ...config.resolve,
       conditions: ["bun", "source"],
