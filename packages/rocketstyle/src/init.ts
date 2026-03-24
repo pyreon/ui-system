@@ -12,7 +12,10 @@ import {
   getTransformDimensions,
 } from "~/utils/dimensions"
 
-export type Rocketstyle = <D extends Dimensions = DefaultDimensions, UB extends boolean = true>({
+export type Rocketstyle = <
+  const D extends Dimensions = DefaultDimensions,
+  UB extends boolean = true,
+>({
   dimensions,
   useBooleans,
 }?: {
