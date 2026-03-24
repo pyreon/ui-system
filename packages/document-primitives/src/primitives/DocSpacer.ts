@@ -1,9 +1,10 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
 
-const DocSpacer = rocketstyle()({ name: "DocSpacer", component: Element }).attrs<any>(
+const rocketstyle = _rocketstyle as any
+
+const DocSpacer = rocketstyle()({ name: "DocSpacer", component: Element }).attrs(
   ({ height = 16 }: { height?: number }) => ({
     tag: "div" as any,
     _documentProps: { height },

@@ -1,9 +1,10 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
 
-const DocDocument = rocketstyle()({ name: "DocDocument", component: Element }).attrs<any>(
+const rocketstyle = _rocketstyle as any
+
+const DocDocument = rocketstyle()({ name: "DocDocument", component: Element }).attrs(
   ({ title, author, subject }: { title?: string; author?: string; subject?: string }) => ({
     tag: "div" as any,
     _documentProps: {

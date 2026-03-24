@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { isEmpty } from "@pyreon/ui-core"
 import { ALL_RESERVED_KEYS } from "~/constants"
 import defaultDimensions from "~/constants/defaultDimensions"
@@ -69,14 +68,13 @@ const validateInit = (name: string, component: unknown, dimensions: Dimensions) 
   }
 }
 
-const rocketstyle: Rocketstyle =
-  ({ dimensions = defaultDimensions, useBooleans = true } = {}) =>
-  ({ name, component }) => {
+const rocketstyle = (({ dimensions = defaultDimensions, useBooleans = true } = {}) =>
+  ({ name, component }: { name: string; component: any }) => {
     if (process.env.NODE_ENV !== "production") {
       validateInit(name, component, dimensions)
     }
 
-    return rocketComponent({
+    return (rocketComponent as any)({
       name,
       component,
       useBooleans,
@@ -87,6 +85,6 @@ const rocketstyle: Rocketstyle =
       transformKeys: getTransformDimensions(dimensions),
       styled: true,
     })
-  }
+  }) as unknown as Rocketstyle
 
 export default rocketstyle

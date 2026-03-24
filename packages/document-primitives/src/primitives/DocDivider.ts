@@ -1,14 +1,15 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
+
+const rocketstyle = _rocketstyle as any
 
 const DocDivider = rocketstyle()({ name: "DocDivider", component: Element })
   .theme({
     borderColor: "#dddddd",
     borderWidth: 1,
   })
-  .attrs<any>(({ color, thickness }: { color?: string; thickness?: number }) => ({
+  .attrs(({ color, thickness }: { color?: string; thickness?: number }) => ({
     tag: "hr" as any,
     _documentProps: {
       ...(color ? { color } : {}),

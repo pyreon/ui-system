@@ -15,6 +15,12 @@ export default ({ name, define }: Options) => {
     ...config,
     ...(define ? { define } : {}),
     plugins: [...(config.plugins ?? []), tildeResolve()],
+    oxc: {
+      jsx: {
+        runtime: "automatic",
+        importSource: "@pyreon/core",
+      },
+    },
     resolve: {
       ...config.resolve,
       conditions: ["bun", "source"],

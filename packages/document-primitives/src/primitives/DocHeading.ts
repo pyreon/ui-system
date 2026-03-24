@@ -1,7 +1,8 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
+
+const rocketstyle = _rocketstyle as any
 
 const DocHeading = rocketstyle({
   dimensions: {
@@ -22,7 +23,7 @@ const DocHeading = rocketstyle({
     h5: { fontSize: 16, lineHeight: 1.5 },
     h6: { fontSize: 14, lineHeight: 1.5 },
   })
-  .attrs<any>(({ level }: { level?: string }) => {
+  .attrs(({ level }: { level?: string }) => {
     const lvl = level ?? "h1"
     const num = Number.parseInt(lvl.replace("h", ""), 10) || 1
     return {

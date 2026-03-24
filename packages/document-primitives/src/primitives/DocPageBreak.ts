@@ -1,9 +1,10 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
 
-const DocPageBreak = rocketstyle()({ name: "DocPageBreak", component: Element }).attrs<any>(() => ({
+const rocketstyle = _rocketstyle as any
+
+const DocPageBreak = rocketstyle()({ name: "DocPageBreak", component: Element }).attrs(() => ({
   tag: "div" as any,
   _documentProps: {},
 }))

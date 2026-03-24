@@ -1,7 +1,8 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
+
+const rocketstyle = _rocketstyle as any
 
 const DocButton = rocketstyle({
   dimensions: {
@@ -30,7 +31,7 @@ const DocButton = rocketstyle({
       borderStyle: "solid",
     },
   })
-  .attrs<any>(({ href }: { href?: string }) => ({
+  .attrs(({ href }: { href?: string }) => ({
     tag: "a" as any,
     _documentProps: { href: href ?? "#" },
   }))

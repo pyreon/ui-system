@@ -1,7 +1,8 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
+
+const rocketstyle = _rocketstyle as any
 
 const DocumentPreview = rocketstyle({
   dimensions: {
@@ -35,7 +36,7 @@ const DocumentPreview = rocketstyle({
     }
   `,
   )
-  .attrs<any>(({ size, showPageBreaks }: { size?: string; showPageBreaks?: boolean }) => ({
+  .attrs(({ size, showPageBreaks }: { size?: string; showPageBreaks?: boolean }) => ({
     tag: "div" as any,
     _documentProps: {
       ...(size ? { size } : { size: "A4" }),

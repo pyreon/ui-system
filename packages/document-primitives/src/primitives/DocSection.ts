@@ -1,7 +1,8 @@
-// @ts-nocheck
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import rocketstyle from "@pyreon/rocketstyle"
+import _rocketstyle from "@pyreon/rocketstyle"
+
+const rocketstyle = _rocketstyle as any
 
 const DocSection = rocketstyle({
   dimensions: {
@@ -16,7 +17,7 @@ const DocSection = rocketstyle({
     column: {},
     row: { direction: "row" },
   })
-  .attrs<any>(({ direction }: { direction?: string }) => ({
+  .attrs(({ direction }: { direction?: string }) => ({
     tag: "div" as any,
     _documentProps: { direction: direction ?? "column" },
   }))
