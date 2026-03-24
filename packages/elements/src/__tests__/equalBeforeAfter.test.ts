@@ -73,8 +73,8 @@ describe("Element equalBeforeAfter", () => {
   })
 
   it("merged ref calls external function ref", () => {
-    let captured: HTMLElement | null = null
-    const ref = (node: HTMLElement | null) => {
+    let captured: Element | null = null
+    const ref = (node: Element | null) => {
       captured = node
     }
     const result = asVNode(
@@ -86,13 +86,13 @@ describe("Element equalBeforeAfter", () => {
         children: "Main",
       }),
     )
-    const fakeNode = {} as HTMLElement
-    ;(result.props.ref as (node: HTMLElement | null) => void)(fakeNode)
+    const fakeNode = {} as Element
+    ;(result.props.ref as (node: Element | null) => void)(fakeNode)
     expect(captured).toBe(fakeNode)
   })
 
   it("merged ref sets object ref current", () => {
-    const ref = { current: null as HTMLElement | null }
+    const ref = { current: null as Element | null }
     const result = asVNode(
       Element({
         equalBeforeAfter: true,
@@ -102,8 +102,8 @@ describe("Element equalBeforeAfter", () => {
         children: "Main",
       }),
     )
-    const fakeNode = {} as HTMLElement
-    ;(result.props.ref as (node: HTMLElement | null) => void)(fakeNode)
+    const fakeNode = {} as Element
+    ;(result.props.ref as (node: Element | null) => void)(fakeNode)
     expect(ref.current).toBe(fakeNode)
   })
 

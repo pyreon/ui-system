@@ -162,7 +162,7 @@ export type Props = Partial<{
    */
   afterContentCss: ExtendCss
 }> &
-  Record<string, unknown>
+  JSX.IntrinsicElements["div"]
 
 export type PyreonElement<P extends Record<string, unknown> = {}> = ComponentFn<Props & P> &
   PyreonStatic

@@ -36,7 +36,7 @@ const Component: PyreonElement<Props> = (({
   rootElement = false,
   ref,
   ...props
-}: Partial<Props> & { ref?: unknown }) => {
+}: Partial<Props> & { ref?: { current: unknown } | ((el: Element | null) => void) }) => {
   const renderedList = <Iterator {...pick(props, Iterator.RESERVED_PROPS)} />
 
   if (!rootElement) return renderedList
