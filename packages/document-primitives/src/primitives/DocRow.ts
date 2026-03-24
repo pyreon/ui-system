@@ -6,12 +6,9 @@ const DocRow = rocketstyle()({ name: "DocRow", component: Element })
     direction: "row",
   })
   .statics({ _documentType: "row" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "div",
-        _documentProps: {},
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "div",
+    _documentProps: {},
+  }))
 
 export default DocRow

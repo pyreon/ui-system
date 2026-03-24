@@ -3,12 +3,9 @@ import rocketstyle from "@pyreon/rocketstyle"
 
 const DocPageBreak = rocketstyle()({ name: "DocPageBreak", component: Element })
   .statics({ _documentType: "page-break" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "div",
-        _documentProps: {},
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "div",
+    _documentProps: {},
+  }))
 
 export default DocPageBreak

@@ -7,15 +7,12 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
     padding: "25mm",
   })
   .statics({ _documentType: "page" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "div",
-        _documentProps: {
-          ...(props.size ? { size: props.size } : {}),
-          ...(props.orientation ? { orientation: props.orientation } : {}),
-        },
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "div",
+    _documentProps: {
+      ...(props.size ? { size: props.size } : {}),
+      ...(props.orientation ? { orientation: props.orientation } : {}),
+    },
+  }))
 
 export default DocPage

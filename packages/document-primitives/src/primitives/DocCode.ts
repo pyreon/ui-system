@@ -10,12 +10,9 @@ const DocCode = rocketstyle()({ name: "DocCode", component: Text })
     borderRadius: 4,
   })
   .statics({ _documentType: "code" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "pre",
-        _documentProps: props.language ? { language: props.language } : {},
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "pre",
+    _documentProps: props.language ? { language: props.language } : {},
+  }))
 
 export default DocCode

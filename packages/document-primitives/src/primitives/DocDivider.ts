@@ -7,15 +7,12 @@ const DocDivider = rocketstyle()({ name: "DocDivider", component: Element })
     borderWidth: 1,
   })
   .statics({ _documentType: "divider" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "hr",
-        _documentProps: {
-          ...(props.color ? { color: props.color } : {}),
-          ...(props.thickness ? { thickness: props.thickness } : {}),
-        },
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "hr",
+    _documentProps: {
+      ...(props.color ? { color: props.color } : {}),
+      ...(props.thickness ? { thickness: props.thickness } : {}),
+    },
+  }))
 
 export default DocDivider

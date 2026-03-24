@@ -7,12 +7,9 @@ const DocList = rocketstyle()({ name: "DocList", component: Element })
     paddingLeft: 20,
   })
   .statics({ _documentType: "list" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: props.ordered ? "ol" : "ul",
-        _documentProps: props.ordered ? { ordered: props.ordered } : {},
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: props.ordered ? "ol" : "ul",
+    _documentProps: props.ordered ? { ordered: props.ordered } : {},
+  }))
 
 export default DocList

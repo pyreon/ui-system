@@ -3,12 +3,9 @@ import rocketstyle from "@pyreon/rocketstyle"
 
 const DocSpacer = rocketstyle()({ name: "DocSpacer", component: Element })
   .statics({ _documentType: "spacer" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "div",
-        _documentProps: { height: props.height ?? 16 },
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: { height: number } }>((props) => ({
+    tag: "div",
+    _documentProps: { height: props.height ?? 16 },
+  }))
 
 export default DocSpacer

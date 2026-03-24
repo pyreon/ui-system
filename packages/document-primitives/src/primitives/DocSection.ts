@@ -15,12 +15,9 @@ const DocSection = rocketstyle({
     row: { direction: "row" },
   })
   .statics({ _documentType: "section" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "div",
-        _documentProps: { direction: props.direction ?? "column" },
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: { direction: string } }>((props) => ({
+    tag: "div",
+    _documentProps: { direction: props.direction ?? "column" },
+  }))
 
 export default DocSection

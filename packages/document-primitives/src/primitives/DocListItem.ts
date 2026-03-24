@@ -7,12 +7,9 @@ const DocListItem = rocketstyle()({ name: "DocListItem", component: Text })
     lineHeight: 1.5,
   })
   .statics({ _documentType: "list-item" as const })
-  .attrs(
-    (props: any) =>
-      ({
-        tag: "li",
-        _documentProps: {},
-      }) as any,
-  )
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+    tag: "li",
+    _documentProps: {},
+  }))
 
 export default DocListItem
