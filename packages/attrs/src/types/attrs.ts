@@ -1,4 +1,2 @@
 /** Callback form of `.attrs()` — receives current props and returns partial overrides. */
-export type AttrsCb<A> = (
-  props: Partial<A>,
-) => Partial<{ [K in keyof A]: unknown }> & Record<string, unknown>
+export type AttrsCb<A> = (props: Partial<A>) => Partial<A>

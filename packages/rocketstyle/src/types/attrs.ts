@@ -10,4 +10,4 @@ export type AttrsCb<A, T> = (
     isLight?: boolean
     createElement: typeof render
   },
-) => Partial<{ [K in keyof A]: unknown }> & Record<string, unknown>
+) => Partial<A>
