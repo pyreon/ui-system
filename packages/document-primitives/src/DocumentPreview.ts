@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -34,6 +33,7 @@ const DocumentPreview = rocketstyle({
     }
   `,
   )
+  .statics({ _documentType: "document" as const })
   .attrs(
     (props: any) =>
       ({
@@ -44,7 +44,5 @@ const DocumentPreview = rocketstyle({
         },
       }) as any,
   )
-
-;(DocumentPreview as any)._documentType = "document" satisfies NodeType
 
 export default DocumentPreview

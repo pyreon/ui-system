@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -9,6 +8,7 @@ const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
     fontStyle: "italic",
     color: "#666666",
   })
+  .statics({ _documentType: "quote" as const })
   .attrs(
     (props: any) =>
       ({
@@ -16,7 +16,5 @@ const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
         _documentProps: props.borderColor ? { borderColor: props.borderColor } : {},
       }) as any,
   )
-
-;(DocQuote as any)._documentType = "quote" satisfies NodeType
 
 export default DocQuote

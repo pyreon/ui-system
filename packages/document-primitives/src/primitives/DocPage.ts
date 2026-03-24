@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -7,6 +6,7 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
     backgroundColor: "#ffffff",
     padding: "25mm",
   })
+  .statics({ _documentType: "page" as const })
   .attrs(
     (props: any) =>
       ({
@@ -17,7 +17,5 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
         },
       }) as any,
   )
-
-;(DocPage as any)._documentType = "page" satisfies NodeType
 
 export default DocPage

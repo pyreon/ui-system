@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -10,6 +9,7 @@ const DocCode = rocketstyle()({ name: "DocCode", component: Text })
     padding: "8px 12px",
     borderRadius: 4,
   })
+  .statics({ _documentType: "code" as const })
   .attrs(
     (props: any) =>
       ({
@@ -17,7 +17,5 @@ const DocCode = rocketstyle()({ name: "DocCode", component: Text })
         _documentProps: props.language ? { language: props.language } : {},
       }) as any,
   )
-
-;(DocCode as any)._documentType = "code" satisfies NodeType
 
 export default DocCode

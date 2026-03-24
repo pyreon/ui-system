@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -12,6 +11,7 @@ const DocTable = rocketstyle({
     fontSize: 14,
     borderColor: "#dddddd",
   })
+  .statics({ _documentType: "table" as const })
   .attrs(
     (props: any) =>
       ({
@@ -26,7 +26,5 @@ const DocTable = rocketstyle({
         },
       }) as any,
   )
-
-;(DocTable as any)._documentType = "table" satisfies NodeType
 
 export default DocTable

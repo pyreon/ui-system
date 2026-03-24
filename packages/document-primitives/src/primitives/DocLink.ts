@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -7,6 +6,7 @@ const DocLink = rocketstyle()({ name: "DocLink", component: Text })
     color: "#4f46e5",
     textDecoration: "underline",
   })
+  .statics({ _documentType: "link" as const })
   .attrs(
     (props: any) =>
       ({
@@ -14,7 +14,5 @@ const DocLink = rocketstyle()({ name: "DocLink", component: Text })
         _documentProps: { href: props.href ?? "#" },
       }) as any,
   )
-
-;(DocLink as any)._documentType = "link" satisfies NodeType
 
 export default DocLink

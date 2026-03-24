@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -6,6 +5,7 @@ const DocRow = rocketstyle()({ name: "DocRow", component: Element })
   .theme({
     direction: "row",
   })
+  .statics({ _documentType: "row" as const })
   .attrs(
     (props: any) =>
       ({
@@ -13,7 +13,5 @@ const DocRow = rocketstyle()({ name: "DocRow", component: Element })
         _documentProps: {},
       }) as any,
   )
-
-;(DocRow as any)._documentType = "row" satisfies NodeType
 
 export default DocRow

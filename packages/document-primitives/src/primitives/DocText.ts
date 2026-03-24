@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -23,6 +22,7 @@ const DocText = rocketstyle({
     normal: { fontWeight: "normal" },
     bold: { fontWeight: "bold" },
   })
+  .statics({ _documentType: "text" as const })
   .attrs(
     (props: any) =>
       ({
@@ -30,7 +30,5 @@ const DocText = rocketstyle({
         _documentProps: {},
       }) as any,
   )
-
-;(DocText as any)._documentType = "text" satisfies NodeType
 
 export default DocText

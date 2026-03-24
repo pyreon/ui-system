@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -15,6 +14,7 @@ const DocSection = rocketstyle({
     column: {},
     row: { direction: "row" },
   })
+  .statics({ _documentType: "section" as const })
   .attrs(
     (props: any) =>
       ({
@@ -22,7 +22,5 @@ const DocSection = rocketstyle({
         _documentProps: { direction: props.direction ?? "column" },
       }) as any,
   )
-
-;(DocSection as any)._documentType = "section" satisfies NodeType
 
 export default DocSection

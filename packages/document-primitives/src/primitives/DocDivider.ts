@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -7,6 +6,7 @@ const DocDivider = rocketstyle()({ name: "DocDivider", component: Element })
     borderColor: "#dddddd",
     borderWidth: 1,
   })
+  .statics({ _documentType: "divider" as const })
   .attrs(
     (props: any) =>
       ({
@@ -17,7 +17,5 @@ const DocDivider = rocketstyle()({ name: "DocDivider", component: Element })
         },
       }) as any,
   )
-
-;(DocDivider as any)._documentType = "divider" satisfies NodeType
 
 export default DocDivider

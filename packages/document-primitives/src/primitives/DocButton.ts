@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -29,16 +28,13 @@ const DocButton = rocketstyle({
       borderStyle: "solid",
     },
   })
+  .statics({ _documentType: "button" as const })
   .attrs(
     (props: any) =>
       ({
         tag: "a",
         _documentProps: { href: props.href ?? "#" },
       }) as any,
-  ).statics({
-    _documentType: "button"
-  })
-
-;(DocButton as any)._documentType = "button" satisfies NodeType
+  )
 
 export default DocButton

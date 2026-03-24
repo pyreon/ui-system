@@ -1,4 +1,3 @@
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -21,6 +20,7 @@ const DocHeading = rocketstyle({
     h5: { fontSize: 16, lineHeight: 1.5 },
     h6: { fontSize: 14, lineHeight: 1.5 },
   })
+  .statics({ _documentType: "heading" as const })
   .attrs((props: any) => {
     const lvl = props.level ?? "h1"
     const num = Number.parseInt(lvl.replace("h", ""), 10) || 1
@@ -29,7 +29,5 @@ const DocHeading = rocketstyle({
       _documentProps: { level: num },
     } as any
   })
-
-;(DocHeading as any)._documentType = "heading" satisfies NodeType
 
 export default DocHeading

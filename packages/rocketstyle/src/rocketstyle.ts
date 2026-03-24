@@ -251,6 +251,13 @@ const rocketComponent: RocketComponent = (options) => {
     options: options.statics,
   })
 
+  // Also assign statics directly onto the component so they are
+  // discoverable via `"key" in Component` checks (e.g. _documentType).
+  createStaticsEnhancers({
+    context: FinalComponent,
+    options: options.statics,
+  })
+
   Object.assign(FinalComponent, {
     attrs: (attrs: any, { priority, filter }: any = {}) => {
       const result: Record<string, any> = {}
