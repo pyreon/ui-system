@@ -27,7 +27,7 @@ const DocText = rocketstyle({
   //   (props: any) =>
   //     ({
   //       tag: "p",
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((_props) => ({
     tag: "p",
     _documentProps: {},
   }))

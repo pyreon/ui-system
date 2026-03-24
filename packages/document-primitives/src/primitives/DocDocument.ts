@@ -3,7 +3,13 @@ import rocketstyle from "@pyreon/rocketstyle"
 
 const DocDocument = rocketstyle()({ name: "DocDocument", component: Element })
   .statics({ _documentType: "document" as const })
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+  .attrs<{
+    title?: string
+    author?: string
+    subject?: string
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
     tag: "div",
     _documentProps: {
       ...(props.title ? { title: props.title } : {}),

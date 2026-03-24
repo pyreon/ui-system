@@ -1,4 +1,4 @@
-import type { ComponentFn } from "@pyreon/core"
+import type { ComponentFn, PyreonHTMLAttributes } from "@pyreon/core"
 import type { HTMLTags } from "@pyreon/ui-core"
 import type {
   AlignX,
@@ -162,7 +162,7 @@ export type Props = Partial<{
    */
   afterContentCss: ExtendCss
 }> &
-  JSX.IntrinsicElements["div"]
+  PyreonHTMLAttributes
 
 export type PyreonElement<P extends Record<string, unknown> = {}> = ComponentFn<Props & P> &
   PyreonStatic

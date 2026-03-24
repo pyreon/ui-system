@@ -12,7 +12,16 @@ const DocTable = rocketstyle({
     borderColor: "#dddddd",
   })
   .statics({ _documentType: "table" as const })
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+  .attrs<{
+    columns?: unknown[]
+    rows?: unknown[]
+    headerStyle?: Record<string, unknown>
+    striped?: boolean
+    bordered?: boolean
+    caption?: string
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
     tag: "table",
     _documentProps: {
       columns: props.columns ?? [],

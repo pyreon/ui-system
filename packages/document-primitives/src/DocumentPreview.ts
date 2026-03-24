@@ -34,7 +34,12 @@ const DocumentPreview = rocketstyle({
   `,
   )
   .statics({ _documentType: "document" as const })
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+  .attrs<{
+    size?: string
+    showPageBreaks?: boolean
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
     tag: "div",
     _documentProps: {
       ...(props.size ? { size: props.size } : { size: "A4" }),

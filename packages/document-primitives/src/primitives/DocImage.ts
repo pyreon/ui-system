@@ -3,7 +3,15 @@ import rocketstyle from "@pyreon/rocketstyle"
 
 const DocImage = rocketstyle()({ name: "DocImage", component: Element })
   .statics({ _documentType: "image" as const })
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
+  .attrs<{
+    src?: string
+    alt?: string
+    width?: number | string
+    height?: number | string
+    caption?: string
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
     tag: "img",
     _documentProps: {
       src: props.src ?? "",

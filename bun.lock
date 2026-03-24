@@ -8,13 +8,13 @@
         "@biomejs/biome": "^2.4.8",
         "@changesets/changelog-github": "^0.6.0",
         "@changesets/cli": "^2.30.0",
-        "@pyreon/compiler": "0.7.6",
-        "@pyreon/core": "0.7.6",
-        "@pyreon/mcp": "0.7.6",
-        "@pyreon/reactivity": "0.7.6",
-        "@pyreon/runtime-dom": "0.7.6",
-        "@pyreon/typescript": "0.7.6",
-        "@pyreon/vite-plugin": "0.7.6",
+        "@pyreon/compiler": "0.7.8",
+        "@pyreon/core": "0.7.8",
+        "@pyreon/mcp": "0.7.8",
+        "@pyreon/reactivity": "0.7.8",
+        "@pyreon/runtime-dom": "0.7.8",
+        "@pyreon/typescript": "0.7.8",
+        "@pyreon/vite-plugin": "0.7.8",
         "@types/bun": "^1.3.11",
         "@vitest/coverage-v8": "^4.1.1",
         "@vitus-labs/tools-atlas": "^1.15.4",
@@ -460,13 +460,13 @@
 
     "@pyreon/attrs": ["@pyreon/attrs@workspace:packages/attrs"],
 
-    "@pyreon/compiler": ["@pyreon/compiler@0.7.6", "", { "peerDependencies": { "typescript": ">=5.0.0" } }, "sha512-7Q9JxQKVhxJuY87iYZood+edaPYby2C6M0oDxYV/V/hOEV6gmN24BBJweSo+aLXFbTwcGFUvTSNTaYh1L6LBeA=="],
+    "@pyreon/compiler": ["@pyreon/compiler@0.7.8", "", { "peerDependencies": { "typescript": ">=5.0.0" } }, "sha512-sWUi5O4anDcsO4XkgS5qM4pzpweD0G3whojll6uhVeIiZKFYzs97FB/zK+xJpSSqkzmMdtDWyt+pRNsrum1JWA=="],
 
     "@pyreon/connector-document": ["@pyreon/connector-document@workspace:packages/connector-document"],
 
     "@pyreon/coolgrid": ["@pyreon/coolgrid@workspace:packages/coolgrid"],
 
-    "@pyreon/core": ["@pyreon/core@0.7.6", "", { "dependencies": { "@pyreon/reactivity": "^0.7.6" } }, "sha512-YZkbjmXMQ8iI4MupxHwJR/hh0quNUch8S3wqe/cXNvSJNcIIXQLzEoqYLOHKU+whaT4a+JXdoUDuwoaUCOtP6A=="],
+    "@pyreon/core": ["@pyreon/core@0.7.8", "", { "dependencies": { "@pyreon/reactivity": "^0.7.8" } }, "sha512-JiAe/olkXIu8wVWebsBlPShJKC+wOfeBKcfMob8JmZEL4ISjZiqRkXCMAv3eK5N+0OiNb5m0fvc7jngMfF7eFg=="],
 
     "@pyreon/document-primitives": ["@pyreon/document-primitives@workspace:packages/document-primitives"],
 
@@ -484,23 +484,23 @@
 
     "@pyreon/kinetic-presets": ["@pyreon/kinetic-presets@workspace:packages/kinetic-presets"],
 
-    "@pyreon/mcp": ["@pyreon/mcp@0.7.6", "", { "dependencies": { "@modelcontextprotocol/sdk": "^1.27.1", "@pyreon/compiler": "^0.7.6", "zod": "^3.25.76" }, "peerDependencies": { "typescript": ">=5.0.0" }, "bin": { "pyreon-mcp": "lib/index.js" } }, "sha512-7ZlbXV/ekURa6CUJkOXQQjGxgYs/mNu/8QuyP6jjLtRLMS/2iHHQA73d9b8yMgDLPsTKusSkLjm5iftBnRiiQQ=="],
+    "@pyreon/mcp": ["@pyreon/mcp@0.7.8", "", { "dependencies": { "@modelcontextprotocol/sdk": "^1.27.1", "@pyreon/compiler": "^0.7.8", "zod": "^3.25.76" }, "peerDependencies": { "typescript": ">=5.0.0" }, "bin": { "pyreon-mcp": "lib/index.js" } }, "sha512-NbzBrlKTfk3svXJ6VpNA+LYJyNeWcQeMlcgQj1h/NT8kd0YB0GQiZa3Un4rLC0m2MF4+1KpnM4MIEChHeIuB0w=="],
 
-    "@pyreon/reactivity": ["@pyreon/reactivity@0.7.6", "", {}, "sha512-ip2JTOlp5z5SesC/bu/IB+MKnKhk/f1M1sti+tpkvOP+KcFLzpXJqhVvX8GhFtAoc6pb+x9kRTOL8zb0r/drwA=="],
+    "@pyreon/reactivity": ["@pyreon/reactivity@0.7.8", "", {}, "sha512-E/cnx/05/fVEIitrtzxr/RiTRsMcz6pZp47jX3cLVYsbThLvkC5N4zpoAQKVq5jRB6GT6djrNhTMMqGmlR9Jww=="],
 
     "@pyreon/rocketstyle": ["@pyreon/rocketstyle@workspace:packages/rocketstyle"],
 
-    "@pyreon/runtime-dom": ["@pyreon/runtime-dom@0.7.6", "", { "dependencies": { "@pyreon/core": "^0.7.6", "@pyreon/reactivity": "^0.7.6" } }, "sha512-xMwMKcGicXynXaNJuktK/wIgHaqbo9fOk5I+7q8RtXpLjCpapiF+8cfErVFL/03r9DhLomsMZhs6gobFyiqbpw=="],
+    "@pyreon/runtime-dom": ["@pyreon/runtime-dom@0.7.8", "", { "dependencies": { "@pyreon/core": "^0.7.8", "@pyreon/reactivity": "^0.7.8" } }, "sha512-doj4tJ7br1xOWDv8teJzfMZ34uCGoz+nu9UadGhWe4MZR0Ji6u0m76hEDg65yTBZKPlcDqkzEd0/nFvwAq9OAA=="],
 
     "@pyreon/styler": ["@pyreon/styler@workspace:packages/styler"],
 
-    "@pyreon/typescript": ["@pyreon/typescript@0.7.6", "", { "peerDependencies": { "@pyreon/core": ">=0.7.2", "typescript": ">=5.9.0" } }, "sha512-DdYOAFxuH7xCn7rHax+L28nuZA38jah9LTZrfC2LuHiyRvKavmHw/i7UNBW68zfsHgMMY7EzGVgMWpzbW7DtAg=="],
+    "@pyreon/typescript": ["@pyreon/typescript@0.7.8", "", { "peerDependencies": { "@pyreon/core": ">=0.7.2", "typescript": ">=5.9.0" } }, "sha512-VUu6uL3STuD+2rIXrT0pN+Ab1t+uzxN1R+AvArJPxJNfVrEG532Uj9fdPlfXRPZNYVUCP+/9i3UArXKfIRFhaw=="],
 
     "@pyreon/ui-core": ["@pyreon/ui-core@workspace:packages/ui-core"],
 
     "@pyreon/unistyle": ["@pyreon/unistyle@workspace:packages/unistyle"],
 
-    "@pyreon/vite-plugin": ["@pyreon/vite-plugin@0.7.6", "", { "dependencies": { "@pyreon/compiler": "^0.7.6" }, "peerDependencies": { "vite": ">=8.0.0" } }, "sha512-Bp09NF3ySHBoziiLXQIpcBBsoZyd/SGBpkiRSGrM4swfGG1oZH/NP1NTmaraIFOqvxQQ+J12WrQHU4MUZOQDlw=="],
+    "@pyreon/vite-plugin": ["@pyreon/vite-plugin@0.7.8", "", { "dependencies": { "@pyreon/compiler": "^0.7.8" }, "peerDependencies": { "vite": ">=8.0.0" } }, "sha512-Z8Yr1AvmK78BKx5sNqAqhw20oooWOf/2TamEHsIrGRihxgXkT13sJh8ThOdgZ17BOYlftSGx3/RPApC2j0qACA=="],
 
     "@rolldown/binding-android-arm64": ["@rolldown/binding-android-arm64@1.0.0-rc.10", "", { "os": "android", "cpu": "arm64" }, "sha512-jOHxwXhxmFKuXztiu1ORieJeTbx5vrTkcOkkkn2d35726+iwhrY1w/+nYY/AGgF12thg33qC3R1LMBF5tHTZHg=="],
 

@@ -29,7 +29,7 @@ const DocButton = rocketstyle({
     },
   })
   .statics({ _documentType: "button" as const })
-  .attrs<{ tag: string; _documentProps: { href: string } }>((props) => ({
+  .attrs<{ href?: string; tag: string; _documentProps: { href: string } }>((props) => ({
     tag: "a",
     _documentProps: { href: props.href ?? "#" },
   }))

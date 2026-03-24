@@ -7,7 +7,7 @@
  */
 import { omit, pick } from "@pyreon/ui-core"
 import { PKG_NAME } from "~/constants"
-import type { PyreonElement } from "~/Element"
+import type { ElementProps, PyreonElement } from "~/Element"
 import { Element } from "~/Element"
 import type { Props as IteratorProps } from "~/helpers/Iterator"
 import Iterator from "~/helpers/Iterator"
@@ -36,15 +36,13 @@ const Component: PyreonElement<Props> = (({
   rootElement = false,
   ref,
   ...props
-}: Partial<Props> & {
-  ref?: { current: HTMLElement | null } | ((el: HTMLElement | null) => void)
-}) => {
+}: Partial<Props & ElementProps>) => {
   const renderedList = <Iterator {...pick(props, Iterator.RESERVED_PROPS)} />
 
   if (!rootElement) return renderedList
 
   return (
-    <Element ref={ref} {...omit(props, Iterator.RESERVED_PROPS)}>
+    <Element {...(ref ? { ref } : {})} {...omit(props, Iterator.RESERVED_PROPS)}>
       {renderedList}
     </Element>
   )

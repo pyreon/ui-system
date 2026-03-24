@@ -97,7 +97,13 @@ export interface IRocketStyleComponent<
   // ATTRS chaining method
   attrs: <P extends TObj | unknown = unknown>(
     param: P extends TObj
-      ? Partial<DFP & P> | AttrsCb<DFP & P, Theme<T>>
+      ?
+          | Partial<DFP & P>
+          | ((
+              props: Partial<DFP & P>,
+              theme: Theme<T>,
+              helpers: any,
+            ) => Partial<P> & Record<string, unknown>)
       : Partial<DFP> | AttrsCb<DFP, Theme<T>>,
     config?: Partial<{
       priority: boolean

@@ -384,6 +384,7 @@ describe("Element", () => {
     })
 
     it("passes through tabindex", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tabindex: 0, children: "test" }))
       expect(result.props.tabindex).toBe(0)
     })
@@ -394,11 +395,13 @@ describe("Element", () => {
     })
 
     it("passes through href for anchor tag", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tag: "a", href: "/link", children: "test" }))
       expect(result.props.href).toBe("/link")
     })
 
     it("passes through disabled for button tag", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tag: "button", disabled: true, children: "test" }))
       expect(result.props.disabled).toBe(true)
     })
@@ -469,6 +472,7 @@ describe("Element", () => {
 
   describe("void / empty elements", () => {
     it("renders img with no children", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tag: "img", src: "/pic.png" }))
       expect(result.type).toBe(Wrapper)
       expect(result.props.tag).toBe("img")
@@ -477,6 +481,7 @@ describe("Element", () => {
     })
 
     it("renders input with no children", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tag: "input", type: "text" }))
       expect(result.type).toBe(Wrapper)
       expect(result.props.tag).toBe("input")
@@ -511,6 +516,7 @@ describe("Element", () => {
     })
 
     it("passes isInline=true for anchor tag", () => {
+      // @ts-expect-error — testing element-specific attr forwarding
       const result = asVNode(Element({ tag: "a", href: "#", children: "link" }))
       expect(result.props.isInline).toBe(true)
     })

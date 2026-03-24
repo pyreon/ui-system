@@ -9,9 +9,11 @@ const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
     color: "#666666",
   })
   .statics({ _documentType: "quote" as const })
-  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((props) => ({
-    tag: "blockquote",
-    _documentProps: props.borderColor ? { borderColor: props.borderColor } : {},
-  }))
+  .attrs<{ borderColor?: string; tag: string; _documentProps: Record<string, unknown> }>(
+    (props) => ({
+      tag: "blockquote",
+      _documentProps: props.borderColor ? { borderColor: props.borderColor } : {},
+    }),
+  )
 
 export default DocQuote
