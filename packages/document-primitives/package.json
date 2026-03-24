@@ -1,6 +1,6 @@
 {
   "name": "@pyreon/document-primitives",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/pyreon/ui-system",
@@ -43,10 +43,10 @@
   "peerDependencies": {
     "@pyreon/core": ">=0.7.0",
     "@pyreon/document": ">=0.10.0",
-    "@pyreon/elements": ">=0.2.0",
-    "@pyreon/rocketstyle": ">=0.2.0",
-    "@pyreon/styler": ">=0.2.0",
-    "@pyreon/ui-core": ">=0.2.0"
+    "@pyreon/elements": ">=0.3.0",
+    "@pyreon/rocketstyle": ">=0.3.0",
+    "@pyreon/styler": ">=0.3.0",
+    "@pyreon/ui-core": ">=0.3.0"
   },
   "dependencies": {
     "@pyreon/connector-document": "workspace:*"
