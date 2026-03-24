@@ -23,7 +23,7 @@
   "devDependencies": {
     "@pyreon/vite-plugin": "*",
     "@pyreon/compiler": "*",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.2",
     "vite": "^7.3.1"
   }
 }
