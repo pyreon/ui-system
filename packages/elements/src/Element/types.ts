@@ -161,7 +161,8 @@ export type Props = Partial<{
    * An additional prop for extending styling of the **afterContent** wrapper element.
    */
   afterContentCss: ExtendCss
-}>
+}> &
+  Record<string, unknown>
 
-export type PyreonElement<P extends Record<string, unknown> = Record<string, unknown>> =
-  ComponentFn<Props & P> & PyreonStatic
+export type PyreonElement<P extends Record<string, unknown> = {}> = ComponentFn<Props & P> &
+  PyreonStatic
