@@ -42,6 +42,7 @@
   },
   "peerDependencies": {
     "@pyreon/core": ">=0.7.0",
+    "@pyreon/document": ">=0.10.0",
     "@pyreon/elements": ">=0.2.0",
     "@pyreon/rocketstyle": ">=0.2.0",
     "@pyreon/styler": ">=0.2.0",
