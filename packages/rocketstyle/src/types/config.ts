@@ -43,6 +43,6 @@ export type ConfigAttrs<
   consumer: ConsumerCb<D, DKP>
   DEBUG: boolean
   inversed: boolean
-  passProps: UB extends true ? keyof DimensionBooleanAttrs<DKP>[] : never
+  passProps: UB extends true ? keyof DimensionBooleanAttrs<D, DKP>[] : never
   styled: boolean
 }>

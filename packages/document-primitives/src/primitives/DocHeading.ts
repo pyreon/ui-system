@@ -21,13 +21,13 @@ const DocHeading = rocketstyle({
     h6: { fontSize: 14, lineHeight: 1.5 },
   })
   .statics({ _documentType: "heading" as const })
-  .attrs((props: any) => {
+  .attrs<{ tag: string; _documentProps: { level: number } }>((props) => {
     const lvl = props.level ?? "h1"
-    const num = Number.parseInt(lvl.replace("h", ""), 10) || 1
+    const num = Number.parseInt(String(lvl).replace("h", ""), 10) || 1
     return {
       tag: lvl,
       _documentProps: { level: num },
-    } as any
+    }
   })
 
 export default DocHeading
