@@ -446,23 +446,23 @@ describe("Element", () => {
     })
 
     it("wraps function ref in mergedRef", () => {
-      let captured: Element | null = null
-      const ref = (node: Element | null) => {
+      let captured: HTMLElement | null = null
+      const ref = (node: HTMLElement | null) => {
         captured = node
       }
       const result = asVNode(Element({ ref, children: "test" }))
       expect(typeof result.props.ref).toBe("function")
-      const fakeNode = {} as Element
-      ;(result.props.ref as (node: Element | null) => void)(fakeNode)
+      const fakeNode = {} as HTMLElement
+      ;(result.props.ref as (node: HTMLElement | null) => void)(fakeNode)
       expect(captured).toBe(fakeNode)
     })
 
     it("wraps object ref in mergedRef", () => {
-      const ref = { current: null as Element | null }
+      const ref = { current: null as HTMLElement | null }
       const result = asVNode(Element({ ref, children: "test" }))
       expect(typeof result.props.ref).toBe("function")
-      const fakeNode = {} as Element
-      ;(result.props.ref as (node: Element | null) => void)(fakeNode)
+      const fakeNode = {} as HTMLElement
+      ;(result.props.ref as (node: HTMLElement | null) => void)(fakeNode)
       expect(ref.current).toBe(fakeNode)
     })
   })
