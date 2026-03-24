@@ -46,12 +46,10 @@ export interface AttrsComponent<
 
   // ATTRS chaining method
   attrs: <P extends TObj | unknown = unknown>(
-    param: P extends TObj
-      ? Partial<MergeTypes<[DFP, P]>> | AttrsCb<MergeTypes<[DFP, P]>>
-      : Partial<DFP> | AttrsCb<DFP>,
+    param: P extends TObj ? Partial<DFP & P> | AttrsCb<DFP & P> : Partial<DFP> | AttrsCb<DFP>,
     config?: Partial<{
       priority: boolean
-      filter: unknown extends P ? string[] : (keyof MergeTypes<[EA, P]>)[]
+      filter: unknown extends P ? string[] : (keyof (EA & P))[]
     }>,
   ) => P extends TObj
     ? AttrsComponent<C, OA, MergeTypes<[EA, P]>, S, HOC>
