@@ -1,18 +1,19 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocListItem = rocketstyle()({ name: "DocListItem", component: Text })
   .theme({
     fontSize: 14,
     lineHeight: 1.5,
   })
-  .attrs(() => ({
-    tag: "li" as any,
-    _documentProps: {},
-  }))
+  .attrs(
+    (props: any) =>
+      ({
+        tag: "li",
+        _documentProps: {},
+      }) as any,
+  )
 
 ;(DocListItem as any)._documentType = "list-item" satisfies NodeType
 

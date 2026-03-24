@@ -1,8 +1,6 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocPage = rocketstyle()({ name: "DocPage", component: Element })
   .theme({
@@ -10,19 +8,14 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
     padding: "25mm",
   })
   .attrs(
-    ({
-      size,
-      orientation,
-    }: {
-      size?: "A4" | "A3" | "A5" | "letter" | "legal" | "tabloid"
-      orientation?: "portrait" | "landscape"
-    }) => ({
-      tag: "div" as any,
-      _documentProps: {
-        ...(size ? { size } : {}),
-        ...(orientation ? { orientation } : {}),
-      },
-    }),
+    (props: any) =>
+      ({
+        tag: "div",
+        _documentProps: {
+          ...(props.size ? { size: props.size } : {}),
+          ...(props.orientation ? { orientation: props.orientation } : {}),
+        },
+      }) as any,
   )
 
 ;(DocPage as any)._documentType = "page" satisfies NodeType

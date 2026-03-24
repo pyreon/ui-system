@@ -1,12 +1,10 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocTable = rocketstyle({
   dimensions: {
-    variant: ["default", "striped", "bordered"],
+    variants: "variant",
   },
   useBooleans: true,
 })({ name: "DocTable", component: Element })
@@ -15,31 +13,18 @@ const DocTable = rocketstyle({
     borderColor: "#dddddd",
   })
   .attrs(
-    ({
-      columns,
-      rows,
-      headerStyle,
-      striped,
-      bordered,
-      caption,
-    }: {
-      columns?: (string | { header: string; width?: number | string; align?: string })[]
-      rows?: (string | number)[][]
-      headerStyle?: { background?: string; color?: string; bold?: boolean }
-      striped?: boolean
-      bordered?: boolean
-      caption?: string
-    }) => ({
-      tag: "table" as any,
-      _documentProps: {
-        columns: columns ?? [],
-        rows: rows ?? [],
-        ...(headerStyle ? { headerStyle } : {}),
-        ...(striped ? { striped } : {}),
-        ...(bordered ? { bordered } : {}),
-        ...(caption ? { caption } : {}),
-      },
-    }),
+    (props: any) =>
+      ({
+        tag: "table",
+        _documentProps: {
+          columns: props.columns ?? [],
+          rows: props.rows ?? [],
+          ...(props.headerStyle ? { headerStyle: props.headerStyle } : {}),
+          ...(props.striped ? { striped: props.striped } : {}),
+          ...(props.bordered ? { bordered: props.bordered } : {}),
+          ...(props.caption ? { caption: props.caption } : {}),
+        },
+      }) as any,
   )
 
 ;(DocTable as any)._documentType = "table" satisfies NodeType

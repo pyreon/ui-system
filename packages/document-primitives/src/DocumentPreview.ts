@@ -1,12 +1,10 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocumentPreview = rocketstyle({
   dimensions: {
-    size: ["A4", "A3", "A5", "letter", "legal"],
+    sizes: "size",
   },
   useBooleans: true,
 })({ name: "DocumentPreview", component: Element })
@@ -14,7 +12,7 @@ const DocumentPreview = rocketstyle({
     backgroundColor: "#f5f5f5",
     padding: 40,
   })
-  .size({
+  .sizes({
     A4: { width: "210mm", minHeight: "297mm" },
     A3: { width: "297mm", minHeight: "420mm" },
     A5: { width: "148mm", minHeight: "210mm" },
@@ -36,13 +34,16 @@ const DocumentPreview = rocketstyle({
     }
   `,
   )
-  .attrs(({ size, showPageBreaks }: { size?: string; showPageBreaks?: boolean }) => ({
-    tag: "div" as any,
-    _documentProps: {
-      ...(size ? { size } : { size: "A4" }),
-      ...(showPageBreaks ? { showPageBreaks } : {}),
-    },
-  }))
+  .attrs(
+    (props: any) =>
+      ({
+        tag: "div",
+        _documentProps: {
+          ...(props.size ? { size: props.size } : { size: "A4" }),
+          ...(props.showPageBreaks ? { showPageBreaks: props.showPageBreaks } : {}),
+        },
+      }) as any,
+  )
 
 ;(DocumentPreview as any)._documentType = "document" satisfies NodeType
 

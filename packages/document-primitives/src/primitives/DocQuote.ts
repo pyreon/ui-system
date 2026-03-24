@@ -1,8 +1,6 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
   .theme({
@@ -11,10 +9,13 @@ const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
     fontStyle: "italic",
     color: "#666666",
   })
-  .attrs(({ borderColor }: { borderColor?: string }) => ({
-    tag: "blockquote" as any,
-    _documentProps: borderColor ? { borderColor } : {},
-  }))
+  .attrs(
+    (props: any) =>
+      ({
+        tag: "blockquote",
+        _documentProps: props.borderColor ? { borderColor: props.borderColor } : {},
+      }) as any,
+  )
 
 ;(DocQuote as any)._documentType = "quote" satisfies NodeType
 

@@ -1,14 +1,13 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocSpacer = rocketstyle()({ name: "DocSpacer", component: Element }).attrs(
-  ({ height = 16 }: { height?: number }) => ({
-    tag: "div" as any,
-    _documentProps: { height },
-  }),
+  (props: any) =>
+    ({
+      tag: "div",
+      _documentProps: { height: props.height ?? 16 },
+    }) as any,
 )
 
 ;(DocSpacer as any)._documentType = "spacer" satisfies NodeType

@@ -1,14 +1,13 @@
 import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
-import _rocketstyle from "@pyreon/rocketstyle"
-
-const rocketstyle = _rocketstyle as any
+import rocketstyle from "@pyreon/rocketstyle"
 
 const DocColumn = rocketstyle()({ name: "DocColumn", component: Element }).attrs(
-  ({ width }: { width?: number | string }) => ({
-    tag: "div" as any,
-    _documentProps: width != null ? { width } : {},
-  }),
+  (props: any) =>
+    ({
+      tag: "div",
+      _documentProps: props.width != null ? { width: props.width } : {},
+    }) as any,
 )
 
 ;(DocColumn as any)._documentType = "column" satisfies NodeType
