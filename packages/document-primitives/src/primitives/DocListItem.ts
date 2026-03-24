@@ -1,5 +1,3 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -8,11 +6,10 @@ const DocListItem = rocketstyle()({ name: "DocListItem", component: Text })
     fontSize: 14,
     lineHeight: 1.5,
   })
-  .attrs<any>(() => ({
-    tag: "li" as any,
+  .statics({ _documentType: "list-item" as const })
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((_props) => ({
+    tag: "li",
     _documentProps: {},
   }))
-
-;(DocListItem as any)._documentType = "list-item" satisfies NodeType
 
 export default DocListItem

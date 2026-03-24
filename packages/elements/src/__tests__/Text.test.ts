@@ -186,7 +186,7 @@ describe("Text", () => {
     })
 
     it("passes through ref", () => {
-      const ref = {}
+      const ref = { current: null }
       const result = asVNode(Text({ ref, children: "text" }))
       expect(result.props.ref).toBe(ref)
     })
@@ -254,7 +254,7 @@ describe("Text", () => {
     })
 
     it("renders with tag, ref, and event handler together", () => {
-      const ref = {}
+      const ref = { current: null }
       const handler = () => undefined
       const result = asVNode(
         Text({

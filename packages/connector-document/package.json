@@ -46,6 +46,6 @@
   "devDependencies": {
     "@pyreon/core": "^0.7.0",
     "@vitus-labs/tools-rolldown": "^1.15.4",
-    "@vitus-labs/tools-typescript": "^1.15.4"
+    "@pyreon/typescript": "^0.7.4"
   }
 }

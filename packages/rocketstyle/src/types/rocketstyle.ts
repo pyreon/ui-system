@@ -97,11 +97,17 @@ export interface IRocketStyleComponent<
   // ATTRS chaining method
   attrs: <P extends TObj | unknown = unknown>(
     param: P extends TObj
-      ? Partial<MergeTypes<[DFP, P]>> | AttrsCb<MergeTypes<[DFP, P]>, Theme<T>>
+      ?
+          | Partial<DFP & P>
+          | ((
+              props: Partial<DFP & P>,
+              theme: Theme<T>,
+              helpers: any,
+            ) => Partial<P> & Record<string, unknown>)
       : Partial<DFP> | AttrsCb<DFP, Theme<T>>,
     config?: Partial<{
       priority: boolean
-      filter: P extends TObj ? Partial<keyof MergeTypes<[EA, P]>>[] : Partial<keyof EA>[]
+      filter: P extends TObj ? Partial<keyof (EA & P)>[] : Partial<keyof EA>[]
     }>,
   ) => P extends TObj
     ? RocketStyleComponent<OA, MergeTypes<[EA, P]>, T, CSS, S, HOC, D, UB, DKP>

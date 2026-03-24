@@ -1,5 +1,3 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -8,11 +6,10 @@ const DocLink = rocketstyle()({ name: "DocLink", component: Text })
     color: "#4f46e5",
     textDecoration: "underline",
   })
-  .attrs<any>(({ href }: { href?: string }) => ({
-    tag: "a" as any,
-    _documentProps: { href: href ?? "#" },
+  .statics({ _documentType: "link" as const })
+  .attrs<{ href?: string; tag: string; _documentProps: { href: string } }>((props) => ({
+    tag: "a",
+    _documentProps: { href: props.href ?? "#" },
   }))
-
-;(DocLink as any)._documentType = "link" satisfies NodeType
 
 export default DocLink

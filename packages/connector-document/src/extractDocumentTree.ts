@@ -23,8 +23,13 @@ function isVNode(value: unknown): value is VNodeLike {
   return value != null && typeof value === "object" && "type" in value && "props" in value
 }
 
-function hasDocumentType(fn: unknown): fn is ((...args: any[]) => any) & DocumentMarker {
-  return typeof fn === "function" && "_documentType" in fn
+function getDocumentType(fn: unknown): NodeType | undefined {
+  if (typeof fn !== "function") return undefined
+  const meta = (fn as any).meta
+  if (meta?._documentType) return meta._documentType as NodeType
+  // Fallback: check directly on function (non-rocketstyle components)
+  if ("_documentType" in fn) return (fn as any)._documentType as NodeType
+  return undefined
 }
 
 function flattenChildren(children: unknown[]): unknown[] {
@@ -84,9 +89,9 @@ function extractNode(vnode: VNodeLike, options: ExtractOptions): DocNode | DocCh
   const includeStyles = options.includeStyles !== false
   const rootSize = options.rootSize ?? 16
 
-  // Component function with _documentType marker
-  if (hasDocumentType(type)) {
-    const docType = type._documentType
+  // Component function with _documentType marker (via .statics() or direct)
+  const docType = getDocumentType(type)
+  if (docType) {
     const docProps: Record<string, unknown> = {}
 
     // Extract document-specific props from _documentProps

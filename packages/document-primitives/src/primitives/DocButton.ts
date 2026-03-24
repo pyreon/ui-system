@@ -1,11 +1,9 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
 const DocButton = rocketstyle({
   dimensions: {
-    variant: ["primary", "secondary"],
+    variants: "variant",
   },
   useBooleans: true,
 })({ name: "DocButton", component: Text })
@@ -17,7 +15,7 @@ const DocButton = rocketstyle({
     textAlign: "center",
     textDecoration: "none",
   })
-  .variant({
+  .variants({
     primary: {
       backgroundColor: "#4f46e5",
       color: "#ffffff",
@@ -30,11 +28,10 @@ const DocButton = rocketstyle({
       borderStyle: "solid",
     },
   })
-  .attrs<any>(({ href }: { href?: string }) => ({
-    tag: "a" as any,
-    _documentProps: { href: href ?? "#" },
+  .statics({ _documentType: "button" as const })
+  .attrs<{ href?: string; tag: string; _documentProps: { href: string } }>((props) => ({
+    tag: "a",
+    _documentProps: { href: props.href ?? "#" },
   }))
-
-;(DocButton as any)._documentType = "button" satisfies NodeType
 
 export default DocButton

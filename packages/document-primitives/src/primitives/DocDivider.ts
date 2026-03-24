@@ -1,5 +1,3 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -8,14 +6,18 @@ const DocDivider = rocketstyle()({ name: "DocDivider", component: Element })
     borderColor: "#dddddd",
     borderWidth: 1,
   })
-  .attrs<any>(({ color, thickness }: { color?: string; thickness?: number }) => ({
-    tag: "hr" as any,
+  .statics({ _documentType: "divider" as const })
+  .attrs<{
+    color?: string
+    thickness?: number
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
+    tag: "hr",
     _documentProps: {
-      ...(color ? { color } : {}),
-      ...(thickness ? { thickness } : {}),
+      ...(props.color ? { color: props.color } : {}),
+      ...(props.thickness ? { thickness: props.thickness } : {}),
     },
   }))
-
-;(DocDivider as any)._documentType = "divider" satisfies NodeType
 
 export default DocDivider

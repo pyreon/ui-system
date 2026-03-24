@@ -1,11 +1,9 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
 const DocHeading = rocketstyle({
   dimensions: {
-    level: ["h1", "h2", "h3", "h4", "h5", "h6"],
+    levels: "level",
   },
   useBooleans: true,
 })({ name: "DocHeading", component: Text })
@@ -14,7 +12,7 @@ const DocHeading = rocketstyle({
     color: "#1a1a2e",
     marginBottom: 12,
   })
-  .level({
+  .levels({
     h1: { fontSize: 32, lineHeight: 1.2 },
     h2: { fontSize: 24, lineHeight: 1.3 },
     h3: { fontSize: 20, lineHeight: 1.4 },
@@ -22,15 +20,14 @@ const DocHeading = rocketstyle({
     h5: { fontSize: 16, lineHeight: 1.5 },
     h6: { fontSize: 14, lineHeight: 1.5 },
   })
-  .attrs<any>(({ level }: { level?: string }) => {
-    const lvl = level ?? "h1"
-    const num = Number.parseInt(lvl.replace("h", ""), 10) || 1
+  .statics({ _documentType: "heading" as const })
+  .attrs<{ level?: string; tag: string; _documentProps: { level: number } }>((props) => {
+    const lvl = props.level ?? "h1"
+    const num = Number.parseInt(String(lvl).replace("h", ""), 10) || 1
     return {
-      tag: lvl as any,
+      tag: lvl,
       _documentProps: { level: num },
     }
   })
-
-;(DocHeading as any)._documentType = "heading" satisfies NodeType
 
 export default DocHeading

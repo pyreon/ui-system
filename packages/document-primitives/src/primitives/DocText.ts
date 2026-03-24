@@ -1,12 +1,10 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Text } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
 const DocText = rocketstyle({
   dimensions: {
-    variant: ["body", "caption", "label"],
-    weight: ["normal", "bold"],
+    variants: "variant",
+    weights: "weight",
   },
   useBooleans: true,
 })({ name: "DocText", component: Text })
@@ -15,20 +13,23 @@ const DocText = rocketstyle({
     lineHeight: 1.5,
     marginBottom: 8,
   })
-  .variant({
+  .variants({
     body: { fontSize: 14 },
     caption: { fontSize: 12, color: "#666666" },
     label: { fontSize: 11, fontWeight: "bold" },
   })
-  .weight({
+  .weights({
     normal: { fontWeight: "normal" },
     bold: { fontWeight: "bold" },
   })
-  .attrs<any>(() => ({
-    tag: "p" as any,
+  .statics({ _documentType: "text" as const })
+  // .attrs(
+  //   (props: any) =>
+  //     ({
+  //       tag: "p",
+  .attrs<{ tag: string; _documentProps: Record<string, unknown> }>((_props) => ({
+    tag: "p",
     _documentProps: {},
   }))
-
-;(DocText as any)._documentType = "text" satisfies NodeType
 
 export default DocText

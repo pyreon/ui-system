@@ -1,5 +1,3 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -8,22 +6,18 @@ const DocPage = rocketstyle()({ name: "DocPage", component: Element })
     backgroundColor: "#ffffff",
     padding: "25mm",
   })
-  .attrs<any>(
-    ({
-      size,
-      orientation,
-    }: {
-      size?: "A4" | "A3" | "A5" | "letter" | "legal" | "tabloid"
-      orientation?: "portrait" | "landscape"
-    }) => ({
-      tag: "div" as any,
-      _documentProps: {
-        ...(size ? { size } : {}),
-        ...(orientation ? { orientation } : {}),
-      },
-    }),
-  )
-
-;(DocPage as any)._documentType = "page" satisfies NodeType
+  .statics({ _documentType: "page" as const })
+  .attrs<{
+    size?: string
+    orientation?: string
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
+    tag: "div",
+    _documentProps: {
+      ...(props.size ? { size: props.size } : {}),
+      ...(props.orientation ? { orientation: props.orientation } : {}),
+    },
+  }))
 
 export default DocPage

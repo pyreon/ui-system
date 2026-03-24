@@ -5,7 +5,7 @@
  * a static `isText` flag so other components can detect text children.
  */
 
-import type { VNodeChild } from "@pyreon/core"
+import type { PyreonHTMLAttributes, VNodeChild } from "@pyreon/core"
 import type { HTMLTextTags } from "@pyreon/ui-core"
 import { PKG_NAME } from "~/constants"
 import type { ExtendCss, PyreonComponent } from "~/types"
@@ -33,7 +33,7 @@ export type Props = Partial<{
    */
   css: ExtendCss
 }> &
-  Record<string, unknown>
+  PyreonHTMLAttributes
 
 const Component: PyreonComponent<Props> & {
   isText?: true

@@ -63,10 +63,7 @@ export type DimensionCallbackParam<T, CT> = DimensionObj<CT, T> | DimensionCb<T,
 
 export type DimensionReturn<P, A> = P extends TObj ? A & P : A
 
-export type TDKP = Record<
-  ExtractDimensionKey<Dimensions[keyof Dimensions]>,
-  Record<string, boolean | never | Record<string, boolean>> | unknown
->
+export type TDKP = Record<string, unknown>
 
 export type DimensionProps<
   K extends DimensionValue,
@@ -79,17 +76,20 @@ export type DimensionProps<
     : DKP[I]
 }
 
-type DimensionTypesHelper<DKP extends TDKP> = {
-  [I in keyof DKP]: keyof DKP[I]
+type DimensionTypesHelper<D extends Dimensions, DKP extends TDKP> = {
+  [I in ExtractDimensionKey<D[keyof D]> & keyof DKP]: keyof DKP[I]
 }
 
 export type DimensionObjAttrs<D extends Dimensions, DKP extends TDKP> = {
-  // @ts-expect-error
-  [I in keyof DKP]: ExtractDimensionMulti<D[I]> extends true ? Array<keyof DKP[I]> : keyof DKP[I]
+  [I in ExtractDimensionKey<D[keyof D]> & keyof DKP]: ExtractDimensionMulti<
+    D[I & keyof D]
+  > extends true
+    ? Array<keyof DKP[I]>
+    : keyof DKP[I]
 }
 
-export type DimensionBooleanAttrs<DKP extends TDKP> = Partial<
-  Record<ValueOf<DimensionTypesHelper<DKP>>, boolean>
+export type DimensionBooleanAttrs<D extends Dimensions, DKP extends TDKP> = Partial<
+  Record<ValueOf<DimensionTypesHelper<D, DKP>>, boolean>
 >
 
 export type ExtractDimensionProps<
@@ -97,7 +97,7 @@ export type ExtractDimensionProps<
   DKP extends TDKP,
   UB extends boolean,
 > = UB extends true
-  ? Partial<ExtractNullableDimensionKeys<DimensionObjAttrs<D, DKP> & DimensionBooleanAttrs<DKP>>>
+  ? Partial<ExtractNullableDimensionKeys<DimensionObjAttrs<D, DKP> & DimensionBooleanAttrs<D, DKP>>>
   : Partial<ExtractNullableDimensionKeys<DimensionObjAttrs<D, DKP>>>
 
 export type ExtractDimensions<

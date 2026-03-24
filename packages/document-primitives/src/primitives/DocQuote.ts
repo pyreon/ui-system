@@ -1,5 +1,3 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
@@ -10,11 +8,12 @@ const DocQuote = rocketstyle()({ name: "DocQuote", component: Element })
     fontStyle: "italic",
     color: "#666666",
   })
-  .attrs<any>(({ borderColor }: { borderColor?: string }) => ({
-    tag: "blockquote" as any,
-    _documentProps: borderColor ? { borderColor } : {},
-  }))
-
-;(DocQuote as any)._documentType = "quote" satisfies NodeType
+  .statics({ _documentType: "quote" as const })
+  .attrs<{ borderColor?: string; tag: string; _documentProps: Record<string, unknown> }>(
+    (props) => ({
+      tag: "blockquote",
+      _documentProps: props.borderColor ? { borderColor: props.borderColor } : {},
+    }),
+  )
 
 export default DocQuote

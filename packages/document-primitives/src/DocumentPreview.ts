@@ -1,11 +1,9 @@
-// @ts-nocheck
-import type { NodeType } from "@pyreon/connector-document"
 import { Element } from "@pyreon/elements"
 import rocketstyle from "@pyreon/rocketstyle"
 
 const DocumentPreview = rocketstyle({
   dimensions: {
-    size: ["A4", "A3", "A5", "letter", "legal"],
+    sizes: "size",
   },
   useBooleans: true,
 })({ name: "DocumentPreview", component: Element })
@@ -13,7 +11,7 @@ const DocumentPreview = rocketstyle({
     backgroundColor: "#f5f5f5",
     padding: 40,
   })
-  .size({
+  .sizes({
     A4: { width: "210mm", minHeight: "297mm" },
     A3: { width: "297mm", minHeight: "420mm" },
     A5: { width: "148mm", minHeight: "210mm" },
@@ -35,14 +33,18 @@ const DocumentPreview = rocketstyle({
     }
   `,
   )
-  .attrs<any>(({ size, showPageBreaks }: { size?: string; showPageBreaks?: boolean }) => ({
-    tag: "div" as any,
+  .statics({ _documentType: "document" as const })
+  .attrs<{
+    size?: string
+    showPageBreaks?: boolean
+    tag: string
+    _documentProps: Record<string, unknown>
+  }>((props) => ({
+    tag: "div",
     _documentProps: {
-      ...(size ? { size } : { size: "A4" }),
-      ...(showPageBreaks ? { showPageBreaks } : {}),
+      ...(props.size ? { size: props.size } : { size: "A4" }),
+      ...(props.showPageBreaks ? { showPageBreaks: props.showPageBreaks } : {}),
     },
   }))
-
-;(DocumentPreview as any)._documentType = "document" satisfies NodeType
 
 export default DocumentPreview

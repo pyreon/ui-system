@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "customConditions": ["bun"],
-    "skipLibCheck": true
+    "customConditions": ["bun"]
   },
   "include": ["src"]
 }

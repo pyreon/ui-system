@@ -1,12 +1,7 @@
 {
-  "extends": "@vitus-labs/tools-typescript/lib",
+  "extends": "@pyreon/typescript/lib",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@pyreon/core",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "exactOptionalPropertyTypes": true,
-    "noImplicitOverride": true,
-    "isolatedModules": true,
     "customConditions": ["bun", "source"],
     "types": ["vitest/globals", "@types/bun"]
   },
