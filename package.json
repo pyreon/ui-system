@@ -7,10 +7,11 @@
   "workspaces": ["packages/*", "examples/*"],
   "scripts": {
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "bun run scripts/version.ts",
     "release": "bun run build && bun run scripts/publish.ts",
+    "verify": "bun run lint && bun run typecheck && bun run test",
     "lint": "biome check packages/*/src/ examples/*/src/",
-    "format": "biome format --write packages/*/src/ examples/*/src/",
+    "format": "bunx biome format --write ./packages/",
     "pkgs:build": "bun run --filter='./packages/*' build",
     "pkgs:clean": "rm -rf node_modules packages/*/node_modules && bun install",
     "build": "bun run --filter='./packages/*' build",

@@ -13,7 +13,9 @@
       "@pyreon/coolgrid",
       "@pyreon/kinetic",
       "@pyreon/kinetic-presets",
-      "@pyreon/rocketstyle"
+      "@pyreon/rocketstyle",
+      "@pyreon/connector-document",
+      "@pyreon/document-primitives"
     ]
   ],
   "linked": [],
