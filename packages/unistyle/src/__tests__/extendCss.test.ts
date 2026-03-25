@@ -37,7 +37,9 @@ describe("extendCss", () => {
   })
 
   it("handles function with null/undefined interpolated values as empty string", () => {
-    const result = extendCss((css) => css`color: ${null}; font-size: ${undefined}px;`)
+    const nullVal = null as string | null
+    const undefVal = undefined as string | undefined
+    const result = extendCss((css) => css`color: ${nullVal}; font-size: ${undefVal}px;`)
     expect(result).toBe("color: ; font-size: px;")
   })
 })
