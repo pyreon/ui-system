@@ -34,8 +34,24 @@
         "useHookAtTopLevel": "off"
       },
       "complexity": {
-        "noBannedTypes": "warn"
+        "noBannedTypes": "warn",
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": { "maxAllowedComplexity": 30 }
+        }
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/tests/**", "**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ]
 }

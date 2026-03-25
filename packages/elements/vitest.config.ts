@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from "node:path"
 import createConfig from "../../vitest.shared"
 
 const base = createConfig({ name: "@pyreon/elements" })
@@ -10,7 +10,7 @@ export default {
     ...baseResolve,
     alias: {
       ...baseResolve.alias,
-      '~': path.resolve(import.meta.dirname, 'src'),
+      "~": path.resolve(import.meta.dirname, "src"),
     },
   },
 }
