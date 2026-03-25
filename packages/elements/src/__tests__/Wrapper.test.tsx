@@ -75,7 +75,7 @@ describe("Wrapper component", () => {
     it("renders parent Styled with parentFixElement for button", () => {
       const result = asVNode(Wrapper({ tag: "button", children: "Click me" }))
       expect(result.type).toBe(Styled)
-      expect(result.props.$element.parentFix).toBe(true)
+      expect((result.props.$element as any).parentFix).toBe(true)
     })
 
     it("parent Styled receives parentFixElement props (block + extraStyles only)", () => {
@@ -146,7 +146,7 @@ describe("Wrapper component", () => {
 
       // Should be the normal (non-fix) path
       expect(result.type).toBe(Styled)
-      expect(result.props.$element.parentFix).toBeUndefined()
+      expect((result.props.$element as any).parentFix).toBeUndefined()
     })
   })
 })

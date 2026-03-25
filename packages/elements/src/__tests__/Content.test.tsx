@@ -90,7 +90,7 @@ describe("Content component", () => {
 
   it("maps extendCss to extraStyles in $element", () => {
     const result = asVNode(Content({ extendCss: "font-size: 14px;" }))
-    expect(result.props.$element.extraStyles).toBe("font-size: 14px;")
+    expect((result.props.$element as any).extraStyles).toBe("font-size: 14px;")
   })
 })
 

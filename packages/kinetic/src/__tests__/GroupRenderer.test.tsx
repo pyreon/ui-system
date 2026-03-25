@@ -1,4 +1,4 @@
-import type { VNode, VNodeChild } from "@pyreon/core"
+import type { VNode } from "@pyreon/core"
 import GroupRenderer from "../kinetic/GroupRenderer"
 import type { KineticConfig } from "../kinetic/types"
 
@@ -28,12 +28,6 @@ afterEach(() => {
   vi.stubGlobal("cancelAnimationFrame", originalCaf)
 })
 
-const fireTransitionEnd = (el: HTMLElement) => {
-  const event = new Event("transitionend", { bubbles: true })
-  Object.defineProperty(event, "target", { value: el })
-  el.dispatchEvent(event)
-}
-
 const makeConfig = (overrides: Partial<KineticConfig> = {}): KineticConfig => ({
   tag: "div",
   mode: "group",
@@ -52,76 +46,6 @@ const makeKeyedChild = (key: string | number, text: string): VNode => ({
   children: [text],
   key,
 })
-
-/**
- * Recursively wire refs in a VNode tree to mock elements.
- * Returns a map of key -> HTMLElement for inspection.
- */
-const wireAllRefs = (vnode: VNode | null): Map<string, HTMLElement> => {
-  const elements = new Map<string, HTMLElement>()
-  if (!vnode) return elements
-
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: test helper
-  const visitNode = (node: VNode) => {
-    const nodeProps = node.props as Record<string, unknown>
-
-    // Create a mock element for each ref we find
-    if (
-      typeof nodeProps?.ref === "function" ||
-      (nodeProps?.ref && typeof nodeProps.ref === "object")
-    ) {
-      const el = document.createElement("div")
-      const testId = (nodeProps["data-testid"] as string) ?? `el-${elements.size}`
-      elements.set(testId, el)
-
-      if (typeof nodeProps.ref === "function") {
-        ;(nodeProps.ref as (element: HTMLElement | null) => void)(el)
-      } else if (nodeProps.ref && typeof nodeProps.ref === "object") {
-        ;(nodeProps.ref as { current: HTMLElement | null }).current = el
-      }
-    }
-
-    if (node.children) {
-      const ch = Array.isArray(node.children) ? node.children : [node.children]
-      for (const c of ch) {
-        if (c && typeof c === "object" && "type" in (c as object)) visitNode(c as VNode)
-      }
-    }
-    if (nodeProps?.children) {
-      const pc = Array.isArray(nodeProps.children) ? nodeProps.children : [nodeProps.children]
-      for (const c of pc) {
-        if (c && typeof c === "object" && "type" in (c as object)) visitNode(c as VNode)
-      }
-    }
-    if (
-      nodeProps?.fallback &&
-      typeof nodeProps.fallback === "object" &&
-      "type" in (nodeProps.fallback as object)
-    ) {
-      visitNode(nodeProps.fallback as VNode)
-    }
-  }
-  visitNode(vnode)
-  return elements
-}
-
-/**
- * Resolve component VNodes by calling function-type nodes.
- */
-const resolveComponent = (vnode: VNodeChild): VNode | null => {
-  if (!vnode || typeof vnode !== "object" || !("type" in vnode)) return null
-  if (typeof vnode.type === "function") {
-    const props = vnode.props as Record<string, unknown>
-    const children = vnode.children
-    const result = (vnode.type as (p: Record<string, unknown>) => VNodeChild)({
-      ...props,
-      ...(children != null ? { children } : {}),
-    })
-    if (!result || typeof result !== "object" || !("type" in result)) return null
-    return result
-  }
-  return vnode
-}
 
 describe("GroupRenderer", () => {
   it("returns a VNode wrapping children in config.tag", () => {

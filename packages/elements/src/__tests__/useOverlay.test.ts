@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 // ---------------------------------------------------------------------------
 
 vi.mock("@pyreon/reactivity", () => {
-  const signal = <T,>(initial: T) => {
+  const signal = <T>(initial: T) => {
     let value = initial
     const s = (() => value) as (() => T) & {
       set: (v: T) => void

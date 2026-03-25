@@ -28,16 +28,12 @@ describe("alignContent", () => {
 
     it("maps right/bottom correctly", () => {
       const result = alignContent({ direction: "inline", alignX: "right", alignY: "bottom" })
-      expect(result).toBe(
-        "flex-direction: row; align-items: flex-end; justify-content: flex-end;",
-      )
+      expect(result).toBe("flex-direction: row; align-items: flex-end; justify-content: flex-end;")
     })
 
     it("maps center/center", () => {
       const result = alignContent({ direction: "inline", alignX: "center", alignY: "center" })
-      expect(result).toBe(
-        "flex-direction: row; align-items: center; justify-content: center;",
-      )
+      expect(result).toBe("flex-direction: row; align-items: center; justify-content: center;")
     })
 
     it("maps spaceBetween/spaceAround", () => {
@@ -53,9 +49,7 @@ describe("alignContent", () => {
 
     it("maps block/block", () => {
       const result = alignContent({ direction: "inline", alignX: "block", alignY: "block" })
-      expect(result).toBe(
-        "flex-direction: row; align-items: stretch; justify-content: stretch;",
-      )
+      expect(result).toBe("flex-direction: row; align-items: stretch; justify-content: stretch;")
     })
   })
 
