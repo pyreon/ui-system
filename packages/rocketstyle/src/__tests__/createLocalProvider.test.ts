@@ -18,7 +18,7 @@ beforeEach(() => {
 })
 
 /** Simple base component that returns its received props as a VNode for inspection. */
-const BaseComponent = vi.fn((props: Record<string, unknown>) => ({
+const BaseComponent: any = vi.fn((props: Record<string, unknown>) => ({
   type: "div",
   props,
   children: props.children,

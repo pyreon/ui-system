@@ -25,6 +25,13 @@ import Provider, { context } from "../context"
 
 const mockCoreProvider = CoreProvider as ReturnType<typeof vi.fn>
 
+/** Extract the first argument from the first mock call. */
+const firstCallArg = () => {
+  const calls = mockCoreProvider.mock.calls
+  expect(calls.length).toBeGreaterThan(0)
+  return (calls[0] as any[])[0] as any
+}
+
 describe("Provider", () => {
   it("exports context from @pyreon/ui-core", () => {
     expect(context).toBeDefined()
@@ -40,7 +47,7 @@ describe("Provider", () => {
     })
 
     expect(mockCoreProvider).toHaveBeenCalledTimes(1)
-    const calledWith = mockCoreProvider.mock.calls[0][0]
+    const calledWith = firstCallArg()
     expect(calledWith.theme).toHaveProperty("__PYREON__")
   })
 
@@ -52,7 +59,7 @@ describe("Provider", () => {
       children: null,
     })
 
-    const enrichedTheme = mockCoreProvider.mock.calls[0][0].theme
+    const enrichedTheme = firstCallArg().theme
     expect(enrichedTheme.__PYREON__.sortedBreakpoints).toBeUndefined()
     expect(enrichedTheme.__PYREON__.media).toBeUndefined()
   })
@@ -65,7 +72,7 @@ describe("Provider", () => {
       children: null,
     })
 
-    const enrichedTheme = mockCoreProvider.mock.calls[0][0].theme
+    const enrichedTheme = firstCallArg().theme
     expect(enrichedTheme.__PYREON__.sortedBreakpoints).toBeUndefined()
     expect(enrichedTheme.__PYREON__.media).toBeUndefined()
   })
@@ -81,7 +88,7 @@ describe("Provider", () => {
       children: null,
     })
 
-    const enrichedTheme = mockCoreProvider.mock.calls[0][0].theme
+    const enrichedTheme = firstCallArg().theme
     expect(enrichedTheme.__PYREON__.sortedBreakpoints).toEqual(["xs", "sm", "md"])
     expect(enrichedTheme.__PYREON__.media).toBeDefined()
     expect(Object.keys(enrichedTheme.__PYREON__.media)).toEqual(["xs", "sm", "md"])
@@ -96,7 +103,7 @@ describe("Provider", () => {
       children: mockChild,
     })
 
-    const calledWith = mockCoreProvider.mock.calls[0][0]
+    const calledWith = firstCallArg()
     expect(calledWith.children).toBe(mockChild)
   })
 
@@ -108,7 +115,7 @@ describe("Provider", () => {
       children: null,
     })
 
-    const enrichedTheme = mockCoreProvider.mock.calls[0][0].theme
+    const enrichedTheme = firstCallArg().theme
     expect(enrichedTheme.rootSize).toBe(16)
     expect(enrichedTheme.customProp).toBe("hello")
   })
@@ -124,7 +131,7 @@ describe("Provider", () => {
       children: null,
     })
 
-    const media = mockCoreProvider.mock.calls[0][0].theme.__PYREON__.media
+    const media = firstCallArg().theme.__PYREON__.media
     expect(typeof media.xs).toBe("function")
     expect(typeof media.sm).toBe("function")
 

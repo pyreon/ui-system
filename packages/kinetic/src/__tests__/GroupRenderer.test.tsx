@@ -28,12 +28,6 @@ afterEach(() => {
   vi.stubGlobal("cancelAnimationFrame", originalCaf)
 })
 
-const flushRaf = () => {
-  const cbs = [...rafCallbacks]
-  rafCallbacks = []
-  for (const cb of cbs) cb()
-}
-
 const fireTransitionEnd = (el: HTMLElement) => {
   const event = new Event("transitionend", { bubbles: true })
   Object.defineProperty(event, "target", { value: el })
@@ -72,7 +66,10 @@ const wireAllRefs = (vnode: VNode | null): Map<string, HTMLElement> => {
     const nodeProps = node.props as Record<string, unknown>
 
     // Create a mock element for each ref we find
-    if (typeof nodeProps?.ref === "function" || (nodeProps?.ref && typeof nodeProps.ref === "object")) {
+    if (
+      typeof nodeProps?.ref === "function" ||
+      (nodeProps?.ref && typeof nodeProps.ref === "object")
+    ) {
       const el = document.createElement("div")
       const testId = (nodeProps["data-testid"] as string) ?? `el-${elements.size}`
       elements.set(testId, el)

@@ -17,12 +17,12 @@ vi.mock("@pyreon/ui-core", async (importOriginal) => {
   const original = await importOriginal<typeof import("@pyreon/ui-core")>()
   return {
     ...original,
-    Provider: vi.fn((props: Record<string, unknown>) => ({
+    Provider: vi.fn(((props: Record<string, unknown>) => ({
       type: "div",
       props: { ...props, "data-provider": "core" },
       children: props.children,
       key: null,
-    })),
+    })) as any),
     context: original.context,
   }
 })
@@ -34,12 +34,12 @@ beforeEach(() => {
   vi.clearAllMocks()
   // Default: empty context
   mockedUseContext.mockReturnValue({} as any)
-  mockedCoreProvider.mockImplementation((props: Record<string, unknown>) => ({
+  mockedCoreProvider.mockImplementation(((props: Record<string, unknown>) => ({
     type: "div",
     props: { ...props, "data-provider": "core" },
     children: props.children as VNodeChild,
     key: null,
-  }))
+  })) as any)
 })
 
 describe("Provider (context)", () => {

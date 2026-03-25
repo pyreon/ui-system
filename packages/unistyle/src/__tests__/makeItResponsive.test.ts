@@ -6,13 +6,14 @@ vi.mock("@pyreon/ui-core", () => ({
   set: (obj: any, path: (string | number)[], value: unknown) => {
     let current = obj
     for (let i = 0; i < path.length - 1; i++) {
-      const key = path[i]
+      const key = path[i] as string | number
       if (current[key] == null || typeof current[key] !== "object") {
         current[key] = {}
       }
       current = current[key]
     }
-    current[path[path.length - 1]] = value
+    const lastKey = path[path.length - 1] as string | number
+    current[lastKey] = value
   },
 }))
 
@@ -36,7 +37,6 @@ const mockStyles = ({ theme }: { theme: Record<string, unknown> }) => {
 describe("makeItResponsive", () => {
   it("returns empty string when customTheme is empty/undefined", () => {
     const responsive = makeItResponsive({
-      theme: undefined,
       key: "styles",
       css: mockCss,
       styles: mockStyles,
