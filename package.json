@@ -22,13 +22,13 @@
     "@biomejs/biome": "^2.4.8",
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
-    "@pyreon/compiler": "^0.7.11",
-    "@pyreon/core": "^0.7.11",
-    "@pyreon/mcp": "^0.7.11",
-    "@pyreon/reactivity": "^0.7.11",
-    "@pyreon/runtime-dom": "^0.7.11",
-    "@pyreon/typescript": "^0.7.11",
-    "@pyreon/vite-plugin": "^0.7.11",
+    "@pyreon/compiler": "^0.7.12",
+    "@pyreon/core": "^0.7.12",
+    "@pyreon/mcp": "^0.7.12",
+    "@pyreon/reactivity": "^0.7.12",
+    "@pyreon/runtime-dom": "^0.7.12",
+    "@pyreon/typescript": "^0.7.12",
+    "@pyreon/vite-plugin": "^0.7.12",
     "@types/bun": "^1.3.11",
     "@vitest/coverage-v8": "^4.1.1",
     "@vitus-labs/tools-atlas": "^1.15.4",
@@ -39,5 +39,8 @@
     "jsdom": "^29.0.1",
     "typescript": "^6.0.2",
     "vitest": "^4.1.1"
+  },
+  "dependencies": {
+    "@pyreon/document": "0.10.0"
   }
 }
