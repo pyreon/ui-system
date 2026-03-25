@@ -38,7 +38,6 @@ const TransitionGroup = ({
 }: TransitionGroupProps): VNode | null => {
   const prevMap = new Map<string | number, VNode>()
   const leavingMap = new Map<string | number, VNode>()
-  let initialKeys: Set<string | number> | null = null
   const forceUpdateSignal = signal(0)
 
   // Build current keyed children map
@@ -49,9 +48,7 @@ const TransitionGroup = ({
   }
 
   // Track initial keys to know which children were present on first render
-  if (initialKeys === null) {
-    initialKeys = new Set(currentMap.keys())
-  }
+  const initialKeys: Set<string | number> = new Set(currentMap.keys())
 
   // Detect leaving children (were in prev but not in current)
   for (const [key, child] of prevMap) {
@@ -88,7 +85,7 @@ const TransitionGroup = ({
     <>
       {allEntries.map(({ key, element }) => {
         // New children (not in initial render) must appear with animation
-        const isInitial = initialKeys?.has(key) ?? false
+        const isInitial = initialKeys.has(key)
         const isShowing = currentMap.has(key)
 
         return (

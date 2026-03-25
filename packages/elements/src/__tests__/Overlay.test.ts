@@ -65,7 +65,7 @@ vi.mock("@pyreon/ui-core", async () => {
     if (typeof content === "function") {
       return createElement(content as ComponentFn, (attachProps ?? {}) as any)
     }
-    if (typeof content === "object" && content !== null) {
+    if (typeof content === "object") {
       return content as VNodeChild
     }
     return content as VNodeChild

@@ -5,7 +5,6 @@ const isRocketComponent: IsRocketComponent = (component) => {
   if (
     component &&
     (typeof component === "object" || typeof component === "function") &&
-    component !== null &&
     Object.hasOwn(component as object, "IS_ROCKETSTYLE")
   ) {
     return true

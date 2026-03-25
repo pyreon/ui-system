@@ -34,7 +34,7 @@ const render: Render = (content, attachProps) => {
   }
 
   // VNode object — return directly
-  if (typeof content === "object" && content !== null) {
+  if (typeof content === "object") {
     return content as VNodeChild
   }
 

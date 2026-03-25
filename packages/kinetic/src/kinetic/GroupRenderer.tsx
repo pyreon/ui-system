@@ -51,7 +51,6 @@ const GroupRenderer = ({
 
   const prevMap = new Map<string | number, VNode>()
   const leavingMap = new Map<string | number, VNode>()
-  let initialKeys: Set<string | number> | null = null
   const forceUpdateSignal = signal(0)
 
   const currentKeyed = getKeyedChildren(children)
@@ -60,9 +59,7 @@ const GroupRenderer = ({
     currentMap.set(key, element)
   }
 
-  if (initialKeys === null) {
-    initialKeys = new Set(currentMap.keys())
-  }
+  const initialKeys: Set<string | number> = new Set(currentMap.keys())
 
   // Detect leaving children
   for (const [key, child] of prevMap) {
@@ -94,7 +91,7 @@ const GroupRenderer = ({
   }
 
   const groupedChildren = allEntries.map(({ key, element }) => {
-    const isInitial = initialKeys?.has(key) ?? false
+    const isInitial = initialKeys.has(key)
     const isShowing = currentMap.has(key)
 
     return (

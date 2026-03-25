@@ -14,7 +14,7 @@ const mockCss = (strings: TemplateStringsArray, ...vals: any[]) => {
 }
 
 const mockCalc = (...params: any[]) => {
-  const val = params.find((p) => p != null && p !== undefined)
+  const val = params.find((p) => p != null)
   if (val == null) return null
   if (typeof val === "string") return val
   return `${val / 16}rem`
