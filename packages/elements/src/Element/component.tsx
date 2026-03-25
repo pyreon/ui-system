@@ -74,7 +74,6 @@ const Component: PyreonElement = ({
 
   ref,
   ...props
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
 }) => {
   // --------------------------------------------------------
   // check if should render only single element

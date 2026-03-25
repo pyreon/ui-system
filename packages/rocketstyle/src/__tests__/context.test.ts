@@ -1,6 +1,6 @@
 import type { VNodeChild } from "@pyreon/core"
 import { useContext } from "@pyreon/core"
-import { Provider as CoreProvider, context } from "@pyreon/ui-core"
+import { Provider as CoreProvider } from "@pyreon/ui-core"
 import Provider from "~/context/context"
 
 // Mock @pyreon/core useContext to return controlled values

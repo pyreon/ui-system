@@ -1,5 +1,4 @@
 import { provide } from "@pyreon/core"
-import { signal } from "@pyreon/reactivity"
 import createLocalProvider from "~/context/createLocalProvider"
 
 // Mock @pyreon/core provide

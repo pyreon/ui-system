@@ -459,7 +459,6 @@ const useOverlay = ({
   // --------------------------------------------------------------------------
   // Set up all event listeners on mount, clean up on unmount
   // --------------------------------------------------------------------------
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complex logic is inherent to this function
   const setupListeners = () => {
     const cleanups: (() => void)[] = []
 

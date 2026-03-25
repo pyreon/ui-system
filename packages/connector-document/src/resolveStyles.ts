@@ -18,7 +18,6 @@ const BORDER_STYLE_VALUES = new Set(["solid", "dashed", "dotted"])
  * Only extracts properties that `ResolvedStyles` supports — everything else
  * (transitions, cursor, display, etc.) is silently ignored.
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: tree walking/style mapping inherently branches per type
 export function resolveStyles(rocketstyle: Record<string, unknown>, rootSize = 16): ResolvedStyles {
   const styles: ResolvedStyles = {}
 
