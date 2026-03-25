@@ -101,11 +101,11 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@e03543dad62555ecf6606aabe9724fd07e1cd632 # v3.32.6
+        uses: github/codeql-action/init@c03c7286b23a2c4c2a10abb7eed1512b7580b4c5 # v3.34.1
         with:
           languages: javascript-typescript
           queries: security-and-quality
       - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@e03543dad62555ecf6606aabe9724fd07e1cd632 # v3.32.6
+        uses: github/codeql-action/analyze@c03c7286b23a2c4c2a10abb7eed1512b7580b4c5 # v3.34.1
         with:
           category: /language:javascript-typescript

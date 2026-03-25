@@ -1,5 +1,12 @@
 import type { VNode } from "@pyreon/core"
 import { signal } from "@pyreon/reactivity"
+
+let _reducedMotion = false
+
+vi.mock("../useReducedMotion", () => ({
+  useReducedMotion: () => () => _reducedMotion,
+}))
+
 import Transition from "../Transition"
 
 // Mock rAF for deterministic double-rAF testing
@@ -329,5 +336,71 @@ describe("Transition", () => {
     // After entering -> entered, transition reset and enter class removed
     expect(el.style.transition).toBe("")
     expect(el.classList.contains("t-enter")).toBe(false)
+  })
+})
+
+describe("Transition — reduced motion", () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    rafCallbacks = []
+    _reducedMotion = true
+
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      vi.fn((cb: () => void) => {
+        rafCallbacks.push(cb)
+        return rafCallbacks.length
+      }),
+    )
+    vi.stubGlobal("cancelAnimationFrame", vi.fn())
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.stubGlobal("requestAnimationFrame", originalRaf)
+    vi.stubGlobal("cancelAnimationFrame", originalCaf)
+    _reducedMotion = false
+  })
+
+  it("reduced motion: entering fires onEnter and onAfterEnter immediately", () => {
+    const show = signal(false)
+    const onEnter = vi.fn()
+    const onAfterEnter = vi.fn()
+
+    setupTransition({ show, onEnter, onAfterEnter })
+
+    show.set(true)
+
+    expect(onEnter).toHaveBeenCalledTimes(1)
+    expect(onAfterEnter).toHaveBeenCalledTimes(1)
+  })
+
+  it("reduced motion: leaving fires onLeave and onAfterLeave immediately", () => {
+    const show = signal(true)
+    const onLeave = vi.fn()
+    const onAfterLeave = vi.fn()
+
+    setupTransition({ show, onLeave, onAfterLeave })
+
+    show.set(false)
+
+    expect(onLeave).toHaveBeenCalledTimes(1)
+    expect(onAfterLeave).toHaveBeenCalledTimes(1)
+  })
+
+  it("reduced motion: does not use rAF or apply CSS classes", () => {
+    const show = signal(false)
+    const { el } = setupTransition({
+      show,
+      enter: "t-enter",
+      enterFrom: "t-enter-from",
+      enterTo: "t-enter-to",
+    })
+
+    show.set(true)
+
+    expect(el.classList.contains("t-enter")).toBe(false)
+    expect(el.classList.contains("t-enter-from")).toBe(false)
+    expect(rafCallbacks.length).toBe(0)
   })
 })

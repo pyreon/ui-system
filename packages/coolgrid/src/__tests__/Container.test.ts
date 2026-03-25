@@ -98,4 +98,50 @@ describe("Container", () => {
     )
     expect(result.props["data-testid"]).toBe("container")
   })
+
+  it("passes css as extraStyles in $coolgrid", async () => {
+    const Container = (await import("../Container")).default
+    const customCss = "background: red;"
+    const result = asVNode(Container({ css: customCss, children: "test" }))
+    expect((result.props.$coolgrid as Record<string, unknown>).extraStyles).toBe(customCss)
+  })
+
+  it("provides context with all grid keys", async () => {
+    const Container = (await import("../Container")).default
+    Container({
+      columns: 12,
+      gap: 16,
+      gutter: 8,
+      padding: 4,
+      size: 6,
+      contentAlignX: "center",
+      children: "test",
+    })
+    const config = mockProvide.mock.calls[0]?.[1] as Record<string, unknown>
+    expect(config).toHaveProperty("columns")
+    expect(config).toHaveProperty("gap")
+    expect(config).toHaveProperty("gutter")
+    expect(config).toHaveProperty("padding")
+    expect(config).toHaveProperty("size")
+    expect(config).toHaveProperty("contentAlignX")
+  })
+
+  it("renders with data-coolgrid attribute in dev mode", async () => {
+    const Container = (await import("../Container")).default
+    const result = asVNode(Container({ children: "test" }))
+    expect(result.props["data-coolgrid"]).toBe("container")
+  })
+
+  it("passes component prop as 'as'", async () => {
+    const Container = (await import("../Container")).default
+    const customComponent = (() => null) as any
+    const result = asVNode(Container({ component: customComponent, children: "test" }))
+    expect(result.props.as).toBe(customComponent)
+  })
+
+  it("renders children in VNode", async () => {
+    const Container = (await import("../Container")).default
+    const result = asVNode(Container({ children: "hello world" }))
+    expect(result.children).toBeDefined()
+  })
 })

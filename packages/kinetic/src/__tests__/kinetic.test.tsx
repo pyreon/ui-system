@@ -1,5 +1,12 @@
 import type { VNode, VNodeChild } from "@pyreon/core"
 import { signal } from "@pyreon/reactivity"
+
+let _reducedMotion = false
+
+vi.mock("../useReducedMotion", () => ({
+  useReducedMotion: () => () => _reducedMotion,
+}))
+
 import { kinetic } from "../index"
 import { fade, slideUp } from "../presets"
 
@@ -504,5 +511,52 @@ describe("kinetic() — displayName", () => {
   it("uses tag string for displayName", () => {
     const FadeDiv = kinetic("div").preset(fade)
     expect(FadeDiv.displayName).toBe("kinetic(div)")
+  })
+})
+
+// ─── Reduced Motion ───────────────────────────────────────
+
+describe("kinetic() — transition reduced motion", () => {
+  beforeEach(() => {
+    _reducedMotion = true
+  })
+
+  afterEach(() => {
+    _reducedMotion = false
+  })
+
+  it("reduced motion: entering fires onEnter and onAfterEnter immediately without rAF", () => {
+    const show = signal(false)
+    const onEnter = vi.fn()
+    const onAfterEnter = vi.fn()
+    const FadeDiv = kinetic("div").preset(fade)
+
+    const el = document.createElement("div")
+    const vnode = resolveComponent(FadeDiv({ show, onEnter, onAfterEnter, children: "Hello" }))
+    wireRef(vnode, el)
+
+    show.set(true)
+
+    expect(onEnter).toHaveBeenCalledTimes(1)
+    expect(onAfterEnter).toHaveBeenCalledTimes(1)
+    // No rAF should have been used
+    expect(rafCallbacks.length).toBe(0)
+  })
+
+  it("reduced motion: leaving fires onLeave and onAfterLeave immediately without rAF", () => {
+    const show = signal(true)
+    const onLeave = vi.fn()
+    const onAfterLeave = vi.fn()
+    const FadeDiv = kinetic("div").preset(fade)
+
+    const el = document.createElement("div")
+    const vnode = resolveComponent(FadeDiv({ show, onLeave, onAfterLeave, children: "Hello" }))
+    wireRef(vnode, el)
+
+    show.set(false)
+
+    expect(onLeave).toHaveBeenCalledTimes(1)
+    expect(onAfterLeave).toHaveBeenCalledTimes(1)
+    expect(rafCallbacks.length).toBe(0)
   })
 })

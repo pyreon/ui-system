@@ -130,7 +130,6 @@ const Component = (props: Props) => {
 
     // if children is Fragment — check VNode type
     if (
-      children &&
       typeof children === "object" &&
       "type" in (children as VNode) &&
       (children as VNode).type === Fragment

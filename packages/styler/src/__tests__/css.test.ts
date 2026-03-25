@@ -48,7 +48,11 @@ describe("css", () => {
   })
 
   it("handles null/undefined/boolean interpolations lazily", () => {
-    const result = css`a${null}b${undefined}c${false}d${true}e`
+    const n = null
+    const u = undefined
+    const f = false
+    const t = true
+    const result = css`a${n}b${u}c${f}d${t}e`
     expect(result.values).toEqual([null, undefined, false, true])
   })
 

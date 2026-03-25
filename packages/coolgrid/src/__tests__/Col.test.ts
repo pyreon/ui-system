@@ -87,4 +87,45 @@ describe("Col", () => {
     expect(result.props.$coolgrid).toBeDefined()
     expect(result.props["data-testid"]).toBe("my-col")
   })
+
+  it("passes css as extraStyles when provided", async () => {
+    const Col = (await import("../Col")).default
+    const customCss = "background: green;"
+    const result = asVNode(Col({ css: customCss, children: "test" }))
+    expect((result.props.$coolgrid as Record<string, unknown>).extraStyles).toBe(customCss)
+  })
+
+  it("includes columns and gap in $coolgrid", async () => {
+    const Col = (await import("../Col")).default
+    const result = asVNode(Col({ columns: 12, gap: 16, size: 6, children: "test" }))
+    const coolgrid = result.props.$coolgrid as Record<string, unknown>
+    expect(coolgrid.columns).toBe(12)
+    expect(coolgrid.gap).toBe(16)
+    expect(coolgrid.size).toBe(6)
+  })
+
+  it("renders with data-coolgrid attribute in dev mode", async () => {
+    const Col = (await import("../Col")).default
+    const result = asVNode(Col({ children: "test" }))
+    expect(result.props["data-coolgrid"]).toBe("col")
+  })
+
+  it("passes component prop as 'as'", async () => {
+    const Col = (await import("../Col")).default
+    const customComponent = (() => null) as any
+    const result = asVNode(Col({ component: customComponent, children: "test" }))
+    expect(result.props.as).toBe(customComponent)
+  })
+
+  it("includes padding in $coolgrid", async () => {
+    const Col = (await import("../Col")).default
+    const result = asVNode(Col({ padding: 8, children: "test" }))
+    expect((result.props.$coolgrid as Record<string, unknown>).padding).toBe(8)
+  })
+
+  it("renders children in VNode", async () => {
+    const Col = (await import("../Col")).default
+    const result = asVNode(Col({ children: "hello" }))
+    expect(result.children).toBeDefined()
+  })
 })
